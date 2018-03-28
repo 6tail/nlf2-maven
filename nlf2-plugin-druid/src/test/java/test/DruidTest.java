@@ -1,7 +1,6 @@
 package test;
 
 import com.nlf.core.ScannerFactory;
-import com.nlf.extend.dao.noSql.NoSqlDaoFactory;
 import com.nlf.extend.dao.sql.SqlDaoFactory;
 import org.junit.After;
 import org.junit.Assert;

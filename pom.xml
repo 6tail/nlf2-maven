@@ -16,6 +16,7 @@
         <module>nlf2-plugin-redis</module>
         <module>nlf2-plugin-druid</module>
         <module>nlf2-plugin-wechat</module>
+        <module>nlf2-plugin-log4j</module>
     </modules>
     <licenses>
         <license>
