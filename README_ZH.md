@@ -1,12 +1,12 @@
 # NLF2 [![License](https://img.shields.io/badge/license-MIT-4EB1BA.svg?style=flat-square)](https://github.com/6tail/nlf2/blob/master/LICENSE)
 
-NLF2 is a lightweight java framework.
+NLF2框架是一款原创的、低调的轻量级java框架，它无侵入、无依赖、零配置、无注解，看一点例子，你很快就能上手。
 
-[简体中文](https://github.com/6tail/nlf2-maven/blob/master/README_ZH.md)
+[English](https://github.com/6tail/nlf2-maven/blob/master/README.md)
 
-## Usage
+## 使用
 
-nlf2-core v1.8.6 on [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Cnlf2) works not well, so I suggest you to use this repository and snapshot version below:
+[Maven仓库](http://search.maven.org/#search%7Cga%7C1%7Cnlf2)中的nlf2-core v1.8.6存在一些问题，在发布新的稳定版本前，建议使用下边的快照版本：
 
 ```xml
 <repository>
@@ -27,7 +27,7 @@ nlf2-core v1.8.6 on [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Cn
   <version>1.8.8-SNAPSHOT</version>
 </dependency>
 ```
-## Example
+## 示例
 
 ```java
 package test;
@@ -39,11 +39,11 @@ import com.nlf.extend.web.WebView;
 import com.nlf.extend.dao.sql.SqlDaoFactory;
 
 /**
- * Controller without extends or implements
+ * 我是一个没有束缚的控制器
  */
 public class User{
   /**
-   * Auto mapped URL: ${ctx}/test.User/info?id=xxx
+   * 自动映射地址：${ctx}/test.User/info?id=xxx
    */
   public Object info(){
     IRequest r = App.getRequest();
@@ -54,11 +54,11 @@ public class User{
 }
 ```
 
-## Documentation
+## 文档
 
-Please visit [http://6tail.cn/nlfdemo](http://6tail.cn/nlfdemo "http://6tail.cn/nlfdemo")
+请移步至 [http://6tail.cn/nlfdemo](http://6tail.cn/nlfdemo "http://6tail.cn/nlfdemo")
 
-## Contact
+## 联系
 
 <a target="_blank" href="https://jq.qq.com/?_wv=1027&k=5F9Pbf0"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="NLF" title="NLF"></a>
 
