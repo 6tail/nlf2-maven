@@ -17,6 +17,7 @@
         <module>nlf2-plugin-druid</module>
         <module>nlf2-plugin-wechat</module>
         <module>nlf2-plugin-log4j</module>
+        <module>nlf2-plugin-commons-logging</module>
     </modules>
     <licenses>
         <license>
