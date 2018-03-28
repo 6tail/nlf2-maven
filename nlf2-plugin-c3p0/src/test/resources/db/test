@@ -1,0 +1,21 @@
+{
+  alias:'myalias',
+  dbtype:'mysql',
+  server:'localhost',
+  port:3306,
+  dbname:'mysql',
+  user:'root',
+  password:'',
+  type:'c3p0',
+  minPoolSize:1,
+  maxPoolSize:20,
+  initialPoolSize:1,
+  maxIdleTime:25000,
+  acquireIncrement:1,
+  acquireRetryAttempts:30,
+  acquireRetryDelay:1000,
+  testConnectionOnCheckin:true,
+  automaticTestTable:'C3P0_TEST_TABLE',
+  idleConnectionTestPeriod:18000,
+  checkoutTimeout:3000
+}

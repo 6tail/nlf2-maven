@@ -27,8 +27,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <testOutputDirectory>target/classes</testOutputDirectory>
-    </build>
-
 </project>

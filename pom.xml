@@ -18,6 +18,7 @@
         <module>nlf2-plugin-wechat</module>
         <module>nlf2-plugin-log4j</module>
         <module>nlf2-plugin-commons-logging</module>
+        <module>nlf2-plugin-c3p0</module>
     </modules>
     <licenses>
         <license>
@@ -63,6 +64,13 @@
         </dependency>
     </dependencies>
     <build>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
+        <testOutputDirectory>target/classes</testOutputDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
