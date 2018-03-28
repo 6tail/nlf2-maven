@@ -1,0 +1,14 @@
+{
+  alias:'test',
+  dbtype:'redis',
+  server:'localhost',
+  port:6379,
+  password:'',
+  type:'redis',
+  maxTotal:1024,
+  maxIdle:200,
+  maxWaitMillis:1000,
+  timeOut:1000,
+  testOnBorrow:true,
+  blockWhenExhausted:false
+}
