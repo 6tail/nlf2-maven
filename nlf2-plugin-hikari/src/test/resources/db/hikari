@@ -1,0 +1,16 @@
+{
+  alias:'myalias',
+  dbtype:'mysql',
+  server:'localhost',
+  port:3306,
+  dbname:'mysql',
+  user:'root',
+  password:'',
+  type:'HikariCP',
+  minimumIdle:2,
+  maximumPoolSize:50,
+  properties:{
+    useUnicode:true,
+    characterEncoding:'utf8'
+  }
+}

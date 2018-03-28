@@ -1,0 +1,10 @@
+{
+  alias:'test',
+  dbtype:'oracle11g',
+  server:'localhost',
+  port:1521,
+  dbname:'dbname',
+  user:'username',
+  password:'password',
+  type:'jdbc'
+}

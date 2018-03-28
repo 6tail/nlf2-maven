@@ -19,6 +19,11 @@
         <module>nlf2-plugin-log4j</module>
         <module>nlf2-plugin-commons-logging</module>
         <module>nlf2-plugin-c3p0</module>
+        <module>nlf2-plugin-dbcp</module>
+        <module>nlf2-plugin-proxool</module>
+        <module>nlf2-plugin-hsqldb</module>
+        <module>nlf2-plugin-hikari</module>
+        <module>nlf2-plugin-oracle11g</module>
     </modules>
     <licenses>
         <license>

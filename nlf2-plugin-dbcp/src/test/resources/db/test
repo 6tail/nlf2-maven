@@ -1,0 +1,20 @@
+{
+  alias:'myalias',
+  dbtype:'mysql',
+  server:'localhost',
+  port:3306,
+  dbname:'mysql',
+  user:'root',
+  password:'',
+  type:'dbcp',
+  initialSize:1,
+  minIdle:1,
+  maxActive:20,
+  maxWait:60000,
+  timeBetweenEvictionRunsMillis:60000,
+  minEvictableIdleTimeMillis:300000,
+  testWhileIdle:true,
+  testOnBorrow:false,
+  testOnReturn:'false',
+  poolPreparedStatements:true
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>nlf2</artifactId>
+        <groupId>cn.6tail</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>nlf2-plugin-oracle11g</artifactId>
+    <version>1.8.6-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>${project.groupId}:nlf2-plugin-oracle11g</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.6tail</groupId>
+            <artifactId>nlf2-core</artifactId>
+            <version>1.8.8-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>11.2.0.3</version>
+        </dependency>
+    </dependencies>
+
+</project>

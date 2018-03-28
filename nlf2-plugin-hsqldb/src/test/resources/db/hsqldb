@@ -1,0 +1,10 @@
+{
+  alias:'test',
+  dbtype:'hsqldb',
+  server:'',
+  port:'',
+  dbname:'file:e:/hsqldb/testdb;hsqldb.write_delay=false',
+  user:'SA',
+  password:'',
+  type:'jdbc'
+}
