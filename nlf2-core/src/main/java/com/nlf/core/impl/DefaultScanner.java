@@ -59,7 +59,7 @@ public class DefaultScanner extends AbstractScanner{
   public DefaultScanner(){
     ignoreJarByManifestAttribute("Bundle-Vendor","*Apache*","*Eclipse*","%bundleProvider","%Bundle-Vendor*");
     ignoreJarByManifestAttribute("Created-By","*Alibaba*","*Apache*","*Apple*","*IBM*","*Oracle*","*Signtool*","*Sun Microsystems*","*JetBrains*");
-    ignoreJarByManifestAttribute("Implementation-Vendor","*Alibaba*","*Apache*","*MetaStuff*","*MySQL*","*Oracle*","*Sun Microsystems*");
+    ignoreJarByManifestAttribute("Implementation-Vendor","*Alibaba*","*Apache*","*MetaStuff*","*MySQL*","*Oracle*","*Sun Microsystems*","*Hibernate*","*aspectj*");
     allowJarByManifestAttribute("Built-By","6tail");
     allow("nlf2*");
   }
@@ -137,13 +137,8 @@ public class DefaultScanner extends AbstractScanner{
           }
           callerClassName = className;
         }
-        URL url = callerClass.getClassLoader().getResource("/");
-        if(null==url){
-          url = callerClass.getProtectionDomain().getCodeSource().getLocation();
-        }else if("jar".equals(url.getProtocol())){
-          url = callerClass.getResource("/");
-        }
-        App.caller = new File(URLDecoder.decode(url.getPath(),CHARSET)).getAbsolutePath();
+        String callerPath = callerClass.getProtectionDomain().getCodeSource().getLocation().getPath();
+        App.caller = new File(URLDecoder.decode(callerPath,CHARSET)).getAbsolutePath();
       }else{
         App.caller = caller;
       }
@@ -154,25 +149,7 @@ public class DefaultScanner extends AbstractScanner{
   protected String findFramePath() throws UnsupportedEncodingException {
     if(null==App.frame) {
       Class<?> i = IScanner.class;
-      String framePath = null;
-      URL url = i.getClassLoader().getResource("/");
-      if(null == url){
-        framePath = i.getProtectionDomain().getCodeSource().getLocation().getPath();
-      }else if("jar".equals(url.getProtocol())){
-        String path = url.getPath();
-        if(!path.contains("nlf2")){
-          path = i.getResource("").getPath();
-        }
-        if(path.contains("!")){
-          path = path.substring(0,path.lastIndexOf("!"));
-        }
-        if(path.startsWith("file:/")){
-          path = path.substring("file:/".length());
-        }
-        framePath = path;
-      }else{
-        framePath = url.getPath();
-      }
+      String framePath = i.getProtectionDomain().getCodeSource().getLocation().getPath();
       App.frame = new File(URLDecoder.decode(framePath,CHARSET)).getAbsolutePath();
     }
     return App.frame;

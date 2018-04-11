@@ -58,6 +58,21 @@ public class Bean implements Map<String,Object>,java.io.Serializable{
   }
 
   /**
+   * 当条件满足时设置值
+   *
+   * @param key 键
+   * @param value 值
+   * @param condition 条件
+   * @return 自己
+   */
+  public Bean setIf(String key,Object value,boolean condition){
+    if(condition){
+      values.put(key, value);
+    }
+    return this;
+  }
+
+  /**
    * 移除指定键值
    *
    * @param key 键
