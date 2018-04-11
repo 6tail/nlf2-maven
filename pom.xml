@@ -24,6 +24,7 @@
         <module>nlf2-plugin-hsqldb</module>
         <module>nlf2-plugin-hikari</module>
         <module>nlf2-plugin-oracle11g</module>
+        <module>nlf2-plugin-hotswap</module>
     </modules>
     <licenses>
         <license>
