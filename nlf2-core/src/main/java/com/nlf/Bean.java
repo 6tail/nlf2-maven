@@ -46,6 +46,30 @@ public class Bean implements Map<String,Object>,java.io.Serializable{
   }
 
   /**
+   * 获取Object值，可能返回null
+   *
+   * @param key 键
+   * @param klass 指定返回类型
+   * @return 值
+   */
+  public <E>E get(String key,Class<E> klass){
+    return (E)values.get(key);
+  }
+
+  /**
+   * 获取Object值，如果为null,返回默认值
+   *
+   * @param key 键
+   * @param klass 指定返回类型
+   * @param defaultValue 默认值
+   * @return 值
+   */
+  public <E>E get(String key,Class<E> klass,E defaultValue){
+    Object o = values.get(key);
+    return null==o?defaultValue:(E)o;
+  }
+
+  /**
    * 设置值
    *
    * @param key 键
@@ -247,6 +271,25 @@ public class Bean implements Map<String,Object>,java.io.Serializable{
       l.addAll((Collection<T>)o);
     }else{
       l.add((T)o);
+    }
+    return l;
+  }
+
+  /**
+   * 强制获取List，即使是非Collection，也会强制返回只有1个元素的List。如果不存在该键，返回0个元素的List。
+   *
+   * @param key 键
+   * @param klass 指定的返回类型
+   * @return List
+   */
+  public <E> List<E> getList(String key,Class<E> klass){
+    List<E> l = new ArrayList<E>();
+    Object o = values.get(key);
+    if(null==o) return l;
+    if(o instanceof Collection){
+      l.addAll((Collection<E>)o);
+    }else{
+      l.add((E)o);
     }
     return l;
   }
