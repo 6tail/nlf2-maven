@@ -53,7 +53,7 @@ public class ByteArray{
   /**
    * 获取头部数据
    * @param n 数量
-   * @return
+   * @return 头部数据
    */
   public ByteArray getHead(int n) {
     return sub(0,n);
@@ -62,7 +62,7 @@ public class ByteArray{
   /**
    * 获取头部字节
    * @param n 数量
-   * @return
+   * @return 头部字节
    */
   public byte[] getHeads(int n) {
     return getHead(n).toArray();
@@ -71,7 +71,7 @@ public class ByteArray{
   /**
    * 获取尾部数据
    * @param n 数量
-   * @return
+   * @return 尾部数据
    */
   public ByteArray getTail(int n) {
     int l = size();
@@ -81,7 +81,7 @@ public class ByteArray{
   /**
    * 获取尾部字节
    * @param n 数量
-   * @return
+   * @return 尾部字节
    */
   public byte[] getTails(int n) {
     return getTail(n).toArray();
@@ -129,7 +129,7 @@ public class ByteArray{
    * 截取
    * @param fromIndex 开始下标（包含）
    * @param toIndex 截止下标（不包含）
-   * @return
+   * @return 截取的数据
    */
   public ByteArray sub(int fromIndex,int toIndex){
     return new ByteArray(l.subList(fromIndex,toIndex));
@@ -189,7 +189,7 @@ public class ByteArray{
     int n = size();
     byte[] b = new byte[n];
     for(int i = 0;i<n;i++){
-      b[i] = l.get(i).byteValue();
+      b[i] = l.get(i);
     }
     return b;
   }
@@ -197,7 +197,7 @@ public class ByteArray{
   /**
    * byte[]出现的下标，如果不存在，返回-1
    * @param bytes byte[]
-   * @return
+   * @return 下标
    */
   public int indexOf(byte[] bytes){
     int m = bytes.length;
@@ -220,7 +220,7 @@ public class ByteArray{
   /**
    * byte出现的下标，如果不存在，返回-1
    * @param b byte
-   * @return
+   * @return 下标
    */
   public int indexOf(byte b){
     for(int i = 0,n=size();i<n;i++){
@@ -251,7 +251,7 @@ public class ByteArray{
    * 获取16进制字符串
    * @param prefix 前缀，如：0x
    * @param separator 分隔符，如：,
-   * @return
+   * @return 16进制字符串
    */
   public String toString(String prefix,String separator){
     String pre = null==prefix?"":prefix;

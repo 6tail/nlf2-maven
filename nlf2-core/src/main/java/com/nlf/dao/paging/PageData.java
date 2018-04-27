@@ -125,7 +125,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
   /**
    * 获取前后相邻的页码
    * 
-   * @param size 页码个数
+   * @param count 页码个数
    * @return 相邻的页码数组
    */
   public int[] getNearPageNumbers(int count){
@@ -282,6 +282,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
   }
 
   public <T>T[] toArray(T[] a){
+
     return data.toArray(a);
   }
 

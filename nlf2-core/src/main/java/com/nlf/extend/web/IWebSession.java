@@ -11,7 +11,7 @@ import com.nlf.core.ISession;
 public interface IWebSession extends ISession{
   /**
    * 获取HttpSession
-   * @return
+   * @return HttpSession
    * @see javax.servlet.http.HttpSession
    */
   HttpSession getSession();

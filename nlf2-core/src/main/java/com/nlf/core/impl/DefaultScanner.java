@@ -7,7 +7,6 @@ import static com.nlf.App.INTERFACE_IMPLEMENTS;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.util.*;
 import java.util.Map.Entry;
@@ -30,7 +29,7 @@ import com.nlf.util.IOUtil;
 import com.nlf.util.StringUtil;
 
 /**
- * 扫描器
+ * 默认扫描器
  *
  * @author 6tail
  *
@@ -57,32 +56,19 @@ public class DefaultScanner extends AbstractScanner{
   protected Set<String> classes = new HashSet<String>();
 
   public DefaultScanner(){
-    ignoreJarByManifestAttribute("Bundle-Vendor","*Apache*","*Eclipse*","%bundleProvider","%Bundle-Vendor*");
-    ignoreJarByManifestAttribute("Created-By","*Alibaba*","*Apache*","*Apple*","*IBM*","*Oracle*","*Signtool*","*Sun Microsystems*","*JetBrains*");
-    ignoreJarByManifestAttribute("Implementation-Vendor","*Alibaba*","*Apache*","*MetaStuff*","*MySQL*","*Oracle*","*Sun Microsystems*","*Hibernate*","*aspectj*");
+    ignoreJarByManifestAttribute("Bundle-Name","*swagger*","*google*");
+    ignoreJarByManifestAttribute("Bundle-Vendor","*apache software*","*eclipse*","*google*","*oracle*","*springsource*","%bundleprovider","%bundle-vendor*","*mybatis*","*slf4j*","*fasterxml*","*terracotta*","*jboss*","*fasterml*");
+    ignoreJarByManifestAttribute("Created-By","*alibaba*","*apache software*","*apple*","*ibm*","*oracle*","*signtool*","*sun microsystems*","*jetbrains*");
+    ignoreJarByManifestAttribute("Implementation-Vendor","*alibaba*","*apache*","*metastuff*","*mysql*","*oracle*","*sun microsystems*","*hibernate*","*aspectj*","*junit*","*coobird*","*codehaus*");
     allowJarByManifestAttribute("Built-By","6tail");
-    allow("nlf2*");
   }
 
   /**
-   * 筛选jar路径
-   * @param paths
-   * @return
+   * 筛选路径
+   * @param paths 路径
+   * @return 筛选后的路径
    */
-  protected Set<String> filterJarPath(Collection<String> paths){
-    Set<String> l = new HashSet<String>();
-    for(String p:paths){
-      l.addAll(filterJarPath(p));
-    }
-    return l;
-  }
-
-  /**
-   * 筛选jar路径
-   * @param paths
-   * @return
-   */
-  protected Set<String> filterJarPath(String... paths){
+  protected Set<String> filterPath(String... paths){
     Set<String> l = new HashSet<String>();
     for(String p:paths){
       if(null==p) continue;
@@ -91,10 +77,11 @@ public class DefaultScanner extends AbstractScanner{
       File f = new File(p);
       if(!f.exists()) continue;
       if(f.isDirectory()){
-        File[] fs = f.listFiles(jarFilter);
-        for(File file:fs){
-          l.add(file.getAbsolutePath());
+        String path = f.getAbsolutePath();
+        if(path.endsWith(File.separator+".")){
+          path = path.substring(0,path.lastIndexOf(File.separator));
         }
+        l.add(path);
       }else if(f.getName().endsWith(SUF_JAR)){
         l.add(f.getAbsolutePath());
       }
@@ -107,16 +94,16 @@ public class DefaultScanner extends AbstractScanner{
    *
    * @return classpath们
    */
-  protected Set<String> findJarsFromClassPath(){
-    return filterJarPath(System.getProperty("java.class.path").split(File.pathSeparator));
+  protected Set<String> findFromClassPath(){
+    return filterPath(System.getProperty("java.class.path").split(File.pathSeparator));
   }
 
   /**
    * 寻找NLF框架调用者所在路径
    *
    * @return NLF框架调用者所在路径
-   * @throws ClassNotFoundException
-   * @throws UnsupportedEncodingException
+   * @throws ClassNotFoundException ClassNotFoundException
+   * @throws UnsupportedEncodingException UnsupportedEncodingException
    */
   protected String findCallerPath() throws ClassNotFoundException, UnsupportedEncodingException{
     if(null==App.caller){
@@ -159,9 +146,9 @@ public class DefaultScanner extends AbstractScanner{
    * 寻找框架调用者(如果是jar)引用的Class-Path
    *
    * @return classpath们
-   * @throws IOException
+   * @throws IOException IO异常
    */
-  protected Set<String> findJarsFromCallerClassPath() throws IOException{
+  protected Set<String> findFromCallerClassPath() throws IOException{
     Set<String> classPaths = new HashSet<String>();
     String callerPath = App.caller;
     if(callerPath.endsWith(SUF_JAR)){
@@ -174,7 +161,7 @@ public class DefaultScanner extends AbstractScanner{
           String classPath = attrs.getValue("Class-Path");
           if(null!=classPath){
             String[] cps = classPath.split(" ");
-            classPaths.addAll(filterJarPath(cps));
+            classPaths.addAll(filterPath(cps));
           }
         }
       }finally{
@@ -203,27 +190,22 @@ public class DefaultScanner extends AbstractScanner{
       System.out.println("App.caller         = "+App.caller);
       System.out.println("App.root           = "+App.root);
       System.out.println("App.frame          = "+App.frame);
-      if(App.caller.endsWith(SUF_JAR)){
-        jars.add(App.caller);
-      }else{
-        classes.add(App.caller);
+      Set<String> paths = new HashSet<String>();
+      paths.add(App.caller);
+      paths.add(App.root);
+      paths.add(App.frame);
+      paths.addAll(findFromClassPath());
+      paths.addAll(findFromCallerClassPath());
+      paths.addAll(addedAbsolutePaths);
+      paths.addAll(convertToAbsolutePaths(addedRelativePaths));
+
+      for(String p:paths){
+        if(p.endsWith(SUF_JAR)){
+          jars.add(p);
+        }else{
+          classes.add(p);
+        }
       }
-      if(App.root.endsWith(SUF_JAR)){
-        jars.add(App.root);
-      }else{
-        classes.add(App.root);
-      }
-      if(App.frame.endsWith(SUF_JAR)){
-        jars.add(App.frame);
-      }else{
-        classes.add(App.frame);
-      }
-      jars.addAll(findJarsFromClassPath());
-      jars.addAll(findJarsFromCallerClassPath());
-      jars.addAll(filterJarPath(addedAbsolutePaths));
-      jars.addAll(filterJarPath(convertToAbsolutePaths(addedRelativePaths)));
-      classes.addAll(addedAbsolutePaths);
-      classes.addAll(addedRelativePaths);
       scan();
       buildInterface();
       buildImpls();
@@ -276,8 +258,10 @@ public class DefaultScanner extends AbstractScanner{
   protected void scanClasses(File file,String root){
     if(file.isDirectory()){
       File[] fs = file.listFiles(resourceFilter);
-      for(File f:fs){
-        scanClasses(f,root);
+      if(null!=fs) {
+        for (File f : fs) {
+          scanClasses(f, root);
+        }
       }
       return;
     }
@@ -316,7 +300,8 @@ public class DefaultScanner extends AbstractScanner{
     for(Entry<String,Set<String>> entry:targets.entrySet()){
       for(String value:entry.getValue()){
         String attrValue = attrs.getValue(entry.getKey());
-        if(StringUtil.matches(attrValue,value)){
+        if(null==attrValue) continue;
+        if(StringUtil.matches(attrValue.toLowerCase(),value)){
           return true;
         }
       }
@@ -324,12 +309,19 @@ public class DefaultScanner extends AbstractScanner{
     return false;
   }
 
+  protected boolean matchPath(String path, Set<String> targets){
+    for(String t:targets){
+      if(StringUtil.matches(path,t)){
+        return true;
+      }
+    }
+    return false;
+  }
+
   protected void scanJar(File jarFile) throws IOException{
     String root = jarFile.getAbsolutePath();
-    for(String p:ignoredPaths){
-      if(StringUtil.matches(root,p)){
-        return;
-      }
+    if(matchPath(root,ignoredPaths)&&!matchPath(root,allowPaths)){
+      return;
     }
     JarFile jar = null;
     try{

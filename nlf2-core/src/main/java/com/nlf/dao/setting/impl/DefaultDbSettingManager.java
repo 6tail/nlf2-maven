@@ -7,6 +7,7 @@ import com.nlf.App;
 import com.nlf.dao.setting.IDbSetting;
 import com.nlf.dao.setting.IDbSettingFileFilter;
 import com.nlf.dao.setting.IDbSettingProvider;
+import com.nlf.log.Logger;
 
 /**
  * DB配置管理器
@@ -37,17 +38,25 @@ public class DefaultDbSettingManager implements com.nlf.dao.setting.IDbSettingMa
     if(dir.exists()) {
       File[] fs = dir.listFiles(filter);
       for (File f : fs) {
+        String fileName = f.getName();
         try {
           com.nlf.Bean o = com.nlf.serialize.json.JSON.toBean(com.nlf.util.FileUtil.readAsText(f));
           String type = o.getString("type", "").toUpperCase();
+          boolean support = false;
           for (IDbSettingProvider dsp : dbSettingProviders) {
             if (dsp.support(type)) {
               l.add(dsp.buildDbSetting(o));
+              support = true;
               break;
             }
           }
+          if(support){
+            Logger.getLog().info(App.getProperty("nlf.dao.setting.provider.found",type,fileName));
+          }else{
+            Logger.getLog().warn(App.getProperty("nlf.dao.setting.provider.not_found",fileName,type));
+          }
         } catch (Exception e) {
-          throw new com.nlf.dao.exception.DaoException(App.getProperty("nlf.exception.dao.setting.format", f.getName()), e);
+          throw new com.nlf.dao.exception.DaoException(App.getProperty("nlf.exception.dao.setting.format", fileName), e);
         }
       }
     }

@@ -189,7 +189,7 @@ public interface ISqlSelecter extends ISqlExecuter{
    * 获取一条记录，如果未获取到，抛出异常，如果获取到多条记录，返回第一条
    * 
    * @return Bean
-   * @throws DaoException
+   * @throws DaoException 数据异常
    */
   Bean one();
 
@@ -199,7 +199,7 @@ public interface ISqlSelecter extends ISqlExecuter{
   
   /**
    * 全自动分页
-   * @return
+   * @return 分页
    */
   PageData paging();
 

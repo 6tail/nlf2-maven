@@ -9,7 +9,6 @@ import com.nlf.serialize.node.impl.NodeBool;
 import com.nlf.serialize.node.impl.NodeList;
 import com.nlf.serialize.node.impl.NodeMap;
 import com.nlf.serialize.node.impl.NodeNumber;
-import com.nlf.serialize.node.impl.NodeString;
 
 public abstract class AbstractParser implements IParser{
   public abstract INode parseAll(String s);
@@ -34,8 +33,8 @@ public abstract class AbstractParser implements IParser{
   /**
    * 解析Map类型
    * 
-   * @param jm
-   * @return
+   * @param nm Map节点
+   * @return Bean
    */
   protected Bean genMap(NodeMap nm){
     Bean bean = new Bean();
@@ -47,7 +46,7 @@ public abstract class AbstractParser implements IParser{
       }
       switch(n.type()){
         case STRING:
-          bean.set(key,wrapAttributes(n,((NodeString)n).toString()));
+          bean.set(key,wrapAttributes(n,n.toString()));
           break;
         case NUMBER:
           bean.set(key,wrapAttributes(n,((NodeNumber)n).value()));
@@ -69,8 +68,8 @@ public abstract class AbstractParser implements IParser{
   /**
    * 解析List类型
    * 
-   * @param jm
-   * @return
+   * @param nl List节点
+   * @return Object列表
    */
   protected List<Object> genList(NodeList nl){
     List<Object> l = new ArrayList<Object>();
@@ -78,10 +77,11 @@ public abstract class AbstractParser implements IParser{
       INode n = nl.get(i);
       if(null==n){
         l.add(null);
+        continue;
       }
       switch(n.type()){
         case STRING:
-          l.add(wrapAttributes(n,((NodeString)n).toString()));
+          l.add(wrapAttributes(n,n.toString()));
           break;
         case NUMBER:
           l.add(wrapAttributes(n,((NodeNumber)n).value()));
@@ -107,7 +107,7 @@ public abstract class AbstractParser implements IParser{
     }
     switch(n.type()){
       case STRING:
-        return (T)(wrapAttributes(n,((NodeString)n).toString()));
+        return (T)(wrapAttributes(n,n.toString()));
       case NUMBER:
         return (T)(wrapAttributes(n,((NodeNumber)n).value()));
       case BOOL:

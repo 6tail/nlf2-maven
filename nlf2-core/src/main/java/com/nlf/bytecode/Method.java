@@ -47,7 +47,7 @@ public class Method{
   /**
    * 获取方法名
    * 
-   * @return
+   * @return 方法名
    */
   public String getName(){
     if(null==name){

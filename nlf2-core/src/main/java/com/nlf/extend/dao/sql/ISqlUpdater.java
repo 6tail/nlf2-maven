@@ -76,7 +76,7 @@ public interface ISqlUpdater extends ISqlExecuter{
    * 当满足条件时执行where
    * 
    * @param sql SQL语句，使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到values中key为age的值，:name将绑定到values中key为name的值
-   * @param value Bean
+   * @param values Bean
    * @param condition 条件是否满足
    * @return SQL更新器
    */

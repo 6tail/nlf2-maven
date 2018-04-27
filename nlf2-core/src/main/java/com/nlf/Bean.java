@@ -52,6 +52,7 @@ public class Bean implements Map<String,Object>,java.io.Serializable{
    * @param klass 指定返回类型
    * @return 值
    */
+  @SuppressWarnings("unchecked")
   public <E>E get(String key,Class<E> klass){
     return (E)values.get(key);
   }
@@ -64,6 +65,7 @@ public class Bean implements Map<String,Object>,java.io.Serializable{
    * @param defaultValue 默认值
    * @return 值
    */
+  @SuppressWarnings("unchecked")
   public <E>E get(String key,Class<E> klass,E defaultValue){
     Object o = values.get(key);
     return null==o?defaultValue:(E)o;
@@ -282,6 +284,7 @@ public class Bean implements Map<String,Object>,java.io.Serializable{
    * @param klass 指定的返回类型
    * @return List
    */
+  @SuppressWarnings("unchecked")
   public <E> List<E> getList(String key,Class<E> klass){
     List<E> l = new ArrayList<E>();
     Object o = values.get(key);
@@ -321,7 +324,7 @@ public class Bean implements Map<String,Object>,java.io.Serializable{
     return values.put(key,value);
   }
 
-  public void putAll(Map<? extends String,? extends Object> map){
+  public void putAll(Map<? extends String,?> map){
     values.putAll(map);
   }
 

@@ -47,7 +47,7 @@ public interface INoSqlExecuter extends IDaoExecuter{
   /**
    * 减少
    * @param key 键
-   * @param increment 数量
+   * @param decrement 数量
    * @return 减少后的值，如果键不存在，先赋值为0，再减少
    */
   long decrease(String key,long decrement);
@@ -77,7 +77,7 @@ public interface INoSqlExecuter extends IDaoExecuter{
    * 设置过期时间
    * @param key 键
    * @param seconds 秒数
-   * @return
+   * @return 结果
    */
   long expire(String key,int seconds);
 
@@ -91,7 +91,7 @@ public interface INoSqlExecuter extends IDaoExecuter{
   /**
    * 移除过期时间限制
    * @param key 键
-   * @return
+   * @return 结果
    */
   long persist(String key);
 
@@ -106,7 +106,7 @@ public interface INoSqlExecuter extends IDaoExecuter{
    * 在集合末尾添加元素
    * @param key 键
    * @param value 值
-   * @return
+   * @return 结果
    */
   long push(String key,String value);
 
@@ -128,7 +128,7 @@ public interface INoSqlExecuter extends IDaoExecuter{
    * 在集合头部添加元素
    * @param key 键
    * @param value 值
-   * @return
+   * @return 结果
    */
   long unshift(String key,String value);
 
@@ -167,14 +167,14 @@ public interface INoSqlExecuter extends IDaoExecuter{
    * @param key 键
    * @param pageNumber 页码，从1开始
    * @param pageSize 每页大小
-   * @return
+   * @return 分页
    */
   PageData page(String key,int pageNumber,int pageSize);
 
   /**
    * 集合全自动分页
    * @param key 键
-   * @return
+   * @return 分页
    */
   PageData paging(String key);
 }

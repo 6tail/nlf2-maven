@@ -127,27 +127,13 @@ public class App{
    * @return 实现类列表
    */
   public static List<String> getImplements(Class<?>... interfaceOrClasses){
-    List<String> l = null;
-    for(Class<?> klass:interfaceOrClasses){
-      String name = klass.getName();
-      ClassResource r = CLASS.get(name);
-      if(null==r) return new ArrayList<String>();
-      List<String> sub = new ArrayList<String>();
-      if(r.isInterfaceClass()){
-        List<String> impls = INTERFACE_IMPLEMENTS.get(name);
-        if(null!=impls){
-          sub.addAll(impls);
-        }
-      }else{
-        sub.add(name);
-      }
-      if(null==l){
-        l = sub;
-      }else{
-        l.retainAll(sub);
-      }
+    List<String> l = new ArrayList<String>();
+    for(Class<?> c:interfaceOrClasses){
+      l.add(c.getName());
     }
-    return l;
+    String[] arr = new String[l.size()];
+    l.toArray(arr);
+    return getImplements(arr);
   }
 
   /**

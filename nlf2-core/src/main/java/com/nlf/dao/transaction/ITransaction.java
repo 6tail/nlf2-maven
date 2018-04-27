@@ -31,7 +31,7 @@ public interface ITransaction{
 
   /**
    * 执行批处理
-   * @return
+   * @return 更新记录数
    */
   int[] executeBatch();
 }

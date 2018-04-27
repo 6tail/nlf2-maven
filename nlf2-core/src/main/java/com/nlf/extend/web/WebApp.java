@@ -1,5 +1,7 @@
 package com.nlf.extend.web;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -7,6 +9,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
 import com.nlf.core.ScannerFactory;
 import com.nlf.extend.web.impl.DefaultServlet;
+import com.nlf.resource.klass.filter.JarFileFilter;
 
 /**
  * WEB应用
@@ -32,6 +35,9 @@ public class WebApp{
     realPath = servletContext.getRealPath("");
     contextPath = servletContext.getContextPath();
     libPath = servletContext.getRealPath("/WEB-INF/lib");
+    System.out.println("WebApp.contextPath = "+contextPath);
+    System.out.println("WebApp.realPath    = "+realPath);
+    System.out.println("WebApp.libPath     = "+libPath);
     String servletClass = DefaultServlet.class.getName();
     for(Entry<String,?> entry:servletContext.getServletRegistrations().entrySet()){
       String key = entry.getKey();
@@ -50,10 +56,15 @@ public class WebApp{
         }
       }
     }
-    System.out.println("WebApp.contextPath = "+contextPath);
-    System.out.println("WebApp.realPath    = "+realPath);
-    System.out.println("WebApp.libPath     = "+libPath);
-    ScannerFactory.getScanner().setCaller(servletContext.getRealPath("/WEB-INF/classes")).addAbsolutePath(libPath);
+    //发现lib下的jar
+    File libDir = new File(libPath);
+    File[] jars = libDir.listFiles(new JarFileFilter());
+    int jarCount = jars.length;
+    String[] jarPaths = new String[jarCount];
+    for(int i=0;i<jarCount;i++){
+      jarPaths[i] = jars[i].getAbsolutePath();
+    }
+    ScannerFactory.getScanner().setCaller(servletContext.getRealPath("/WEB-INF/classes")).addAbsolutePath(libPath).addAbsolutePath(jarPaths);
     ScannerFactory.startScan();
   }
 }

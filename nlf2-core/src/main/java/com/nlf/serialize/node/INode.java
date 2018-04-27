@@ -20,7 +20,7 @@ public interface INode extends Serializable{
   /**
    * 获取节点名称
    * 
-   * @return
+   * @return 节点名称
    */
   String getName();
 

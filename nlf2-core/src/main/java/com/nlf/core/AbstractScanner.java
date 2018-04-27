@@ -1,9 +1,6 @@
 package com.nlf.core;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 扫描接口抽象
@@ -33,30 +30,22 @@ public abstract class AbstractScanner implements IScanner{
   }
 
   public IScanner addAbsolutePath(String... path){
-    for(String p:path){
-      addedAbsolutePaths.add(p);
-    }
+    Collections.addAll(addedAbsolutePaths,path);
     return this;
   }
 
   public IScanner addRelativePath(String... path){
-    for(String p:path){
-      addedRelativePaths.add(p);
-    }
+    Collections.addAll(addedRelativePaths,path);
     return this;
   }
 
   public IScanner ignore(String... path){
-    for(String p:path){
-      ignoredPaths.add(p);
-    }
+    Collections.addAll(ignoredPaths,path);
     return this;
   }
 
   public IScanner allow(String... path){
-    for(String p:path){
-      allowPaths.add(p);
-    }
+    Collections.addAll(allowPaths,path);
     return this;
   }
 
@@ -66,9 +55,7 @@ public abstract class AbstractScanner implements IScanner{
       values = new HashSet<String>();
       ignoredManifestAttributes.put(key,values);
     }
-    for(String v:value){
-      values.add(v);
-    }
+    Collections.addAll(values,value);
     return this;
   }
 
@@ -78,9 +65,7 @@ public abstract class AbstractScanner implements IScanner{
       values = new HashSet<String>();
       allowManifestAttributes.put(key,values);
     }
-    for(String v:value){
-      values.add(v);
-    }
+    Collections.addAll(values,value);
     return this;
   }
 }

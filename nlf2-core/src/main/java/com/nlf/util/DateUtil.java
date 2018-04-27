@@ -249,7 +249,7 @@ public class DateUtil{
    * 年份往后推的日期
    * 
    * @param date 参考日期
-   * @param months 推后几个月
+   * @param years 推后几年
    * @return 月份往后推的日期
    */
   public static Date nextYear(Date date,int years){
@@ -260,8 +260,8 @@ public class DateUtil{
    * 年份往前推的日期
    * 
    * @param date 参考日期
-   * @param months 前推几个月
-   * @return 月份往前推的日期
+   * @param years 前推几年
+   * @return 年份往前推的日期
    */
   public static Date previousYear(Date date,int years){
     return previous(Calendar.YEAR,date,years);

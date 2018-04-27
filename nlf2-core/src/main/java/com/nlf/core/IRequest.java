@@ -11,7 +11,7 @@ import com.nlf.exception.ValidateException;
 public interface IRequest extends IFileUploader{
   /**
    * 获取请求地址
-   * @return
+   * @return 请求地址
    */
   String getPath();
 
@@ -56,7 +56,7 @@ public interface IRequest extends IFileUploader{
    * @param key 参数名
    * @param rules 验证规则
    * @return 参数值
-   * @throws ValidateException
+   * @throws ValidateException 验证异常
    */
   String get(String key,String rules) throws ValidateException;
 
@@ -66,7 +66,7 @@ public interface IRequest extends IFileUploader{
    * @param key 参数名
    * @param rules 验证规则
    * @return 参数值数组
-   * @throws ValidateException
+   * @throws ValidateException 验证异常
    */
   String[] getArray(String key,String rules) throws ValidateException;
 
@@ -77,7 +77,7 @@ public interface IRequest extends IFileUploader{
    * @param rules 验证规则
    * @param name 名称，用于验证失败时提示
    * @return 参数值
-   * @throws ValidateException
+   * @throws ValidateException 验证异常
    */
   String get(String key,String rules,String name) throws ValidateException;
 
@@ -88,7 +88,7 @@ public interface IRequest extends IFileUploader{
    * @param rules 验证规则
    * @param name 名称，用于验证失败时提示
    * @return 参数值数组
-   * @throws ValidateException
+   * @throws ValidateException 验证异常
    */
   String[] getArray(String key,String rules,String name) throws ValidateException;
 
