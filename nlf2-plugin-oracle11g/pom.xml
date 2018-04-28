@@ -20,11 +20,6 @@
             <artifactId>nlf2-core</artifactId>
             <version>1.8.8-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc6</artifactId>
-            <version>11.2.0.3</version>
-        </dependency>
     </dependencies>
 
 </project>
