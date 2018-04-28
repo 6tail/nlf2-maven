@@ -12,7 +12,6 @@
     <artifactId>nlf2-plugin-hikari</artifactId>
     <version>1.8.6-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>${project.groupId}:nlf2-plugin-hikari</name>
 
     <dependencies>
         <dependency>
@@ -24,6 +23,7 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP-java6</artifactId>
             <version>2.3.13</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

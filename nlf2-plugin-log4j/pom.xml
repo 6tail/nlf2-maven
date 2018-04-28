@@ -12,7 +12,6 @@
     <artifactId>nlf2-plugin-log4j</artifactId>
     <version>1.8.6-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>${project.groupId}:nlf2-plugin-log4j</name>
 
     <dependencies>
         <dependency>
@@ -24,6 +23,7 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

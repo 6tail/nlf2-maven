@@ -8,7 +8,7 @@
     <artifactId>nlf2</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
-    <name>${project.groupId}:nlf2</name>
+    <name>${project.groupId}:${project.artifactId}</name>
     <url>https://github.com/6tail/nlf2-maven</url>
     <description>a lightweight java framework</description>
     <modules>
@@ -152,5 +152,6 @@
                 </executions>
             </plugin>
         </plugins>
+        <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
 </project>

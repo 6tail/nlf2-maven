@@ -12,7 +12,6 @@
     <artifactId>nlf2-plugin-druid</artifactId>
     <version>1.8.6-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>${project.groupId}:nlf2-plugin-druid</name>
 
     <dependencies>
         <dependency>
@@ -24,6 +23,7 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>1.0.31</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

@@ -12,7 +12,6 @@
     <artifactId>nlf2-plugin-commons-logging</artifactId>
     <version>1.8.6-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>${project.groupId}:nlf2-plugin-commons-logging</name>
 
     <dependencies>
         <dependency>
@@ -24,6 +23,7 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.2</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

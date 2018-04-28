@@ -12,7 +12,6 @@
     <artifactId>nlf2-plugin-proxool</artifactId>
     <version>1.8.6-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>${project.groupId}:nlf2-plugin-proxool</name>
 
     <dependencies>
         <dependency>
@@ -24,18 +23,19 @@
             <groupId>org.sction.proxool</groupId>
             <artifactId>proxool</artifactId>
             <version>0.9.1</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.cloudhopper.proxool</groupId>
             <artifactId>proxool-cglib</artifactId>
             <version>0.9.1</version>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.2</version>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

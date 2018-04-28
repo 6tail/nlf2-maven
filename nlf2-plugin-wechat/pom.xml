@@ -12,7 +12,6 @@
     <artifactId>nlf2-plugin-wechat</artifactId>
     <version>1.8.8-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>${project.groupId}:nlf2-plugin-wechat</name>
     <dependencies>
         <dependency>
             <groupId>cn.6tail</groupId>
