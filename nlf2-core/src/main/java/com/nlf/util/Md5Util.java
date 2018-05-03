@@ -23,7 +23,7 @@ public class Md5Util{
       MessageDigest md = MessageDigest.getInstance("MD5");
       md.update(s.getBytes(charsetName));
       byte[] b = md.digest();
-      StringBuffer sb = new StringBuffer();
+      StringBuilder sb = new StringBuilder();
       for(byte d:b){
         String hex = Integer.toHexString(d&0xFF);
         if(hex.length()<2) sb.append("0");

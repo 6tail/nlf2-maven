@@ -22,14 +22,14 @@ public class FileUtil{
   public static Map<String,byte[]> BOM = new HashMap<String,byte[]>();
   static{
     BOM.put("utf-8",new byte[]{(byte)0xEF,(byte)0xBB,(byte)0xBF});
-  };
+  }
 
   /**
    * 以文本形式读取文件内容，自动识别文件编码
    * 
    * @param file 文件
    * @return 文本内容
-   * @throws IOException
+   * @throws IOException IO异常
    */
   public static String readAsText(File file) throws IOException{
     String sutf8 = readAsText(file,"utf-8");
@@ -45,7 +45,7 @@ public class FileUtil{
    * @param file 文件
    * @param encode 编码
    * @return 文本内容
-   * @throws IOException
+   * @throws IOException IO异常
    */
   protected static String readAsText(File file,String encode) throws IOException{
     StringBuilder s = new StringBuilder();
@@ -54,7 +54,8 @@ public class FileUtil{
       br = new BufferedReader(new InputStreamReader(new FileInputStream(file),encode));
       String line = null;
       while(null!=(line = br.readLine())){
-        s.append(line+"\r\n");
+        s.append(line);
+        s.append("\r\n");
       }
     }finally{
       IOUtil.closeQuietly(br);
@@ -74,7 +75,7 @@ public class FileUtil{
    * 写到文件
    * @param inputStream 输入流
    * @param file 目标文件
-   * @throws IOException
+   * @throws IOException IO异常
    */
   public static void write(InputStream inputStream,File file) throws IOException{
     BufferedOutputStream bos = null;

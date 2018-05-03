@@ -35,22 +35,21 @@ public class ConnectionFactory{
     if(null!=connection&&!connection.isClosed()) return connection;
     com.nlf.dao.setting.IDbSetting setting = DbSettingFactory.getSetting(alias);
     String type = setting.getType();
-    String key = alias;
-    if(!pool.containsKey(key)){
+    if(!pool.containsKey(alias)){
       java.util.List<String> impls = App.getImplements(IConnectionProvider.class);
       for(String impl:impls){
         IConnectionProvider p = App.getProxy().newInstance(impl);
         if(p.support(type)){
-          pool.put(key,p);
+          pool.put(alias,p);
           p.setDbSetting(setting);
           IConnection conn = p.getConnection();
           connections.put(alias,conn);
           return conn;
         }
       }
-      pool.put(key,null);
+      pool.put(alias,null);
     }else{
-      IConnectionProvider p = pool.get(key);
+      IConnectionProvider p = pool.get(alias);
       if(null!=p){
         IConnection conn = p.getConnection();
         connections.put(alias,conn);

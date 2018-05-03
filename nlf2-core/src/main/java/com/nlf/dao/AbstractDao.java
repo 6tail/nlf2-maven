@@ -41,19 +41,18 @@ public abstract class AbstractDao implements IDao{
       impls = new HashMap<String,String>();
       executers.put(dbType,impls);
     }
-    String key = executerInterface;
-    if(!impls.containsKey(key)){
+    if(!impls.containsKey(executerInterface)){
       java.util.List<String> l = App.getImplements(executerInterface);
       for(String klass:l){
         IDaoExecuter executer = App.getProxy().newInstance(klass);
         if(executer.support(dbType)){
-          impls.put(key,klass);
+          impls.put(executerInterface,klass);
           return executer;
         }
       }
-      impls.put(key,null);
+      impls.put(executerInterface,null);
     }else{
-      String impl = impls.get(key);
+      String impl = impls.get(executerInterface);
       if(null!=impl){
         return App.getProxy().newInstance(impl);
       }

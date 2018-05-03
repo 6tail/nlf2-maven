@@ -18,19 +18,18 @@ public class DaoFactory{
    * @return Dao
    */
   public static IDao getDao(String alias){
-    String key = alias;
-    if(!daos.containsKey(key)){
+    if(!daos.containsKey(alias)){
       com.nlf.dao.setting.IDbSetting setting = DbSettingFactory.getSetting(alias);
       java.util.List<String> impls = App.getImplements(IDao.class);
       for(String klass:impls){
         AbstractDao dao = App.getProxy().newInstance(klass);
         if(dao.support(setting.getDbType())){
-          daos.put(key,klass);
+          daos.put(alias,klass);
           dao.setAlias(alias);
           return dao;
         }
       }
-      daos.put(key,null);
+      daos.put(alias,null);
     }else{
       String impl = daos.get(alias);
       if(null!=impl){

@@ -157,7 +157,7 @@ public abstract class AbstractDbSetting implements IDbSetting{
 
   /**
    * 设置数据库实例名
-   * @param dbName
+   * @param dbName 数据库实例名
    */
   public void setDbName(String dbName){
     this.dbName = dbName;

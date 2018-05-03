@@ -130,7 +130,7 @@ public class DateUtil{
    * @param s 字符串
    * @param pattern 格式
    * @return 日期
-   * @throws ParseException
+   * @throws ParseException 转换异常
    */
   public static Date parse(String s,String pattern) throws ParseException{
     return new SimpleDateFormat(pattern).parse(s);
@@ -393,7 +393,7 @@ public class DateUtil{
    */
   public static String yearCH(Date date){
     String[] y = (year(date)+"").split("");
-    StringBuffer s = new StringBuffer();
+    StringBuilder s = new StringBuilder();
     for(String o:y){
       String n = NUMBER.get(o);
       if(null!=n){

@@ -22,7 +22,7 @@ public class Base64Util{
       map1[i++] = c;
     }
     map1[i++] = '+';
-    map1[i++] = '/';
+    map1[i] = '/';
   }
   private static final byte[] map2 = new byte[128];
   static{

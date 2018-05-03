@@ -40,7 +40,7 @@ public class IOUtil{
   /**
    * 关闭
    * 
-   * @param closeable
+   * @param closeable Closeable
    */
   public static void closeQuietly(Closeable closeable){
     if(null==closeable) return;

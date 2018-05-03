@@ -57,12 +57,17 @@ public class WebApp{
       }
     }
     //发现lib下的jar
+    String[] jarPaths = new String[0];
     File libDir = new File(libPath);
-    File[] jars = libDir.listFiles(new JarFileFilter());
-    int jarCount = jars.length;
-    String[] jarPaths = new String[jarCount];
-    for(int i=0;i<jarCount;i++){
-      jarPaths[i] = jars[i].getAbsolutePath();
+    if(libDir.exists()) {
+      File[] jars = libDir.listFiles(new JarFileFilter());
+      if (null != jars) {
+        int jarCount = jars.length;
+        jarPaths = new String[jarCount];
+        for (int i = 0; i < jarCount; i++) {
+          jarPaths[i] = jars[i].getAbsolutePath();
+        }
+      }
     }
     ScannerFactory.getScanner().setCaller(servletContext.getRealPath("/WEB-INF/classes")).addAbsolutePath(libPath).addAbsolutePath(jarPaths);
     ScannerFactory.startScan();

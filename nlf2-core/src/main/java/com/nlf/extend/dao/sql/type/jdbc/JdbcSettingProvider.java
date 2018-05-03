@@ -8,7 +8,6 @@ import com.nlf.dao.setting.IDbSettingProvider;
 public class JdbcSettingProvider implements IDbSettingProvider{
 
   public IDbSetting buildDbSetting(Bean o){
-    String type = o.getString("type","");
     String alias = o.getString("alias","");
     String dbType = o.getString("dbtype","");
     String user = o.getString("user","");
@@ -16,7 +15,6 @@ public class JdbcSettingProvider implements IDbSettingProvider{
     String server = o.getString("server","");
     String port = o.getString("port","");
     String dbname = o.getString("dbname","");
-    type = type.toUpperCase();
     dbType = dbType.toLowerCase();
     JdbcSetting js = new JdbcSetting();
     js.setAlias(alias);

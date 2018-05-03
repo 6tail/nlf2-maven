@@ -131,7 +131,7 @@ public class DbSettingFactory{
    * 获取默认DB配置，如果有多个配置文件，返回别名alias最大的配置
    * 
    * @return 默认DB配置，如果有多个配置文件，返回别名alias最大的配置
-   * @throws DaoException
+   * @throws DaoException 数据访问异常
    */
   public static IDbSetting getDefaultSetting(){
     if(SETTING_LIST.size()<1){

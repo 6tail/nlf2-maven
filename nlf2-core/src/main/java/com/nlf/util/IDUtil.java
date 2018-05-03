@@ -72,10 +72,9 @@ public class IDUtil implements java.io.Serializable{
     }catch(Throwable t){}
     ClassLoader loader = IDUtil.class.getClassLoader();
     int loaderId = loader!=null?System.identityHashCode(loader):0;
-    StringBuilder s = new StringBuilder();
-    s.append(Integer.toHexString(processId));
-    s.append(Integer.toHexString(loaderId));
-    processPiece = s.toString().hashCode()&0xFFFF;
+    String s = Integer.toHexString(processId);
+    s += Integer.toHexString(loaderId);
+    processPiece = s.hashCode()&0xFFFF;
     _genmachine = machinePiece|processPiece;
   }
 }

@@ -75,14 +75,6 @@ public class ClassResource extends Resource{
   }
 
   public String toString(){
-    StringBuilder s = new StringBuilder();
-    s.append(super.toString());
-    s.append(" className=");
-    s.append(className);
-    s.append(" interface=");
-    s.append(interfaceClass);
-    s.append(" abstract=");
-    s.append(abstractClass);
-    return s.toString();
+    return super.toString()+" className="+className+" interface="+interfaceClass+" abstract="+abstractClass;
   }
 }

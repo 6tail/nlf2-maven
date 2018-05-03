@@ -57,7 +57,7 @@ public class Resource{
   /**
    * 获取文件最后修改时间
    * @return 文件最后修改时间
-   * @throws IOException
+   * @throws IOException IOException
    */
   public long lastModified() throws IOException{
     if(inJar){
@@ -80,15 +80,6 @@ public class Resource{
   }
 
   public String toString(){
-    StringBuilder s = new StringBuilder();
-    s.append("type=");
-    s.append(type);
-    s.append(" inJar=");
-    s.append(inJar);
-    s.append(" root=");
-    s.append(root);
-    s.append(" fileName=");
-    s.append(fileName);
-    return s.toString();
+    return "type="+type+" inJar="+inJar+" root="+root+" fileName="+fileName;
   }
 }

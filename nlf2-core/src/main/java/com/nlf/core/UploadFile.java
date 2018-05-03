@@ -40,7 +40,7 @@ public class UploadFile implements Serializable{
   /**
    * 获取输入流
    * @return 输入流
-   * @throws FileNotFoundException
+   * @throws FileNotFoundException 文件未找到异常
    */
   public java.io.InputStream getInputStream() throws java.io.FileNotFoundException{
     switch(type){
@@ -159,7 +159,7 @@ public class UploadFile implements Serializable{
   /**
    * 保存到文件
    * @param file 文件
-   * @throws IOException 
+   * @throws IOException IO异常
    */
   public void saveTo(File file) throws java.io.IOException{
     switch(type){

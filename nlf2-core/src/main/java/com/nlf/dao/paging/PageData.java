@@ -282,7 +282,6 @@ public class PageData implements List<Bean>,java.io.Serializable{
   }
 
   public <T>T[] toArray(T[] a){
-
     return data.toArray(a);
   }
 

@@ -23,15 +23,14 @@ public class RequestMapping{
    */
   public ClassMethod get(String uri){
     ClassMethod o = MAPPING.get(uri);
-    if(null==o){
-      return o;
-    }else{
-      ClassMethod cm = new ClassMethod();
+    ClassMethod cm = null;
+    if(null!=o){
+      cm = new ClassMethod();
       cm.setKlass(o.getKlass());
       cm.setMethod(o.getMethod());
       cm.setRet(o.getRet());
-      return cm;
     }
+    return cm;
   }
 
   public void remove(String uri){

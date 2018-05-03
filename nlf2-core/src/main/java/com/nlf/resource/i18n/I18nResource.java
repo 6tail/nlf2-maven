@@ -25,10 +25,6 @@ public class I18nResource extends Resource{
     this.name = name;
   }
   public String toString(){
-    StringBuilder s = new StringBuilder();
-    s.append(super.toString());
-    s.append(" name=");
-    s.append(name);
-    return s.toString();
+    return super.toString()+" name="+name;
   }
 }

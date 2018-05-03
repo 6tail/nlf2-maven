@@ -1,11 +1,6 @@
 package com.nlf.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 字符串处理工具
@@ -27,9 +22,7 @@ public class StringUtil{
   public static List<String> list(String s,String separator){
     String[] arr = s.split(separator,-1);
     List<String> l = new ArrayList<String>(arr.length);
-    for(String a:arr){
-      l.add(a);
-    }
+    Collections.addAll(l,arr);
     if(!s.startsWith(separator)){
       if(l.size()>0){
         if(l.get(0).length()<1){
@@ -76,7 +69,7 @@ public class StringUtil{
     if(null==array) return "";
     int len = array.length;
     if(len<1) return "";
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     for(int i=0;i<len;i++){
       if(i>0){
         sb.append(separator);
@@ -96,7 +89,7 @@ public class StringUtil{
   public static String join(Collection<String> l,String separator){
     if(null==l) return "";
     if(l.isEmpty()) return "";
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     int i = 0;
     for(String s:l){
       if(i++>0){
@@ -159,7 +152,7 @@ public class StringUtil{
   public static boolean matches(String s,String expression){
     if(null==s||null==expression) return false;
     int len = expression.length();
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     for(int i = 0;i<len;i++){
       char c = expression.charAt(i);
       if('?'==c){

@@ -121,7 +121,7 @@ public class DefaultJsonWrapper extends AbstractWrapper{
           if(null==method){
             s.append(wrap(null));
           }else{
-            s.append(wrap(method.invoke(o,new Object[0])));
+            s.append(wrap(method.invoke(o)));
           }
           if(i<props.length-1){
             s.append(",");

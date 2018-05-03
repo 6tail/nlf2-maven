@@ -5,7 +5,7 @@ import com.nlf.App;
 /**
  * 数据访问异常
  * 
- * @author 六特尔
+ * @author 6tail
  */
 public class DaoException extends com.nlf.exception.NlfException{
   private static final long serialVersionUID = 1;
