@@ -57,22 +57,13 @@ public interface ISqlSelecter extends ISqlExecuter{
   ISqlSelecter where(String sql);
 
   /**
-   * 带1个参数的where
+   * 带参数的where
    * 
-   * @param column 列
-   * @param value 参数值
+   * @param columnOrSql 列名或SQL语句，SQL语句使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到values中key为age的值，:name将绑定到values中key为name的值
+   * @param valueOrBean 参数值或Bean，Bean用于给多个参数赋值
    * @return SQL查询器
    */
-  ISqlSelecter where(String column,Object value);
-
-  /**
-   * 带多个参数的where
-   * 
-   * @param sql SQL语句，使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到values中key为age的值，:name将绑定到values中key为name的值
-   * @param param 参数
-   * @return SQL查询器
-   */
-  ISqlSelecter where(String sql,Bean param);
+  ISqlSelecter where(String columnOrSql,Object valueOrBean);
 
   /**
    * 当满足条件时执行where
@@ -85,23 +76,13 @@ public interface ISqlSelecter extends ISqlExecuter{
 
   /**
    * 当满足条件时执行where
-   * 
-   * @param column 列
-   * @param value 值
+   *
+   * @param columnOrSql 列名或SQL语句，SQL语句使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到values中key为age的值，:name将绑定到values中key为name的值
+   * @param valueOrBean 参数值或Bean，Bean用于给多个参数赋值
    * @param condition 条件是否满足
    * @return SQL查询器
    */
-  ISqlSelecter whereIf(String column,Object value,boolean condition);
-
-  /**
-   * 当满足条件时执行where
-   * 
-   * @param sql SQL语句，使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到values中key为age的值，:name将绑定到values中key为name的值
-   * @param param 参数
-   * @param condition 条件是否满足
-   * @return SQL查询器
-   */
-  ISqlSelecter whereIf(String sql,Bean param,boolean condition);
+  ISqlSelecter whereIf(String columnOrSql,Object valueOrBean,boolean condition);
 
   ISqlSelecter whereIn(String column,Object... values);
   ISqlSelecter whereNotIn(String column,Object... values);
@@ -120,22 +101,13 @@ public interface ISqlSelecter extends ISqlExecuter{
   ISqlSelecter having(String sql);
 
   /**
-   * 带1个参数的having
-   * 
-   * @param column 列
-   * @param value 参数值
+   * 带参数的having
+   *
+   * @param columnOrSql 列名或SQL语句，SQL语句使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到values中key为age的值，:name将绑定到values中key为name的值
+   * @param valueOrBean 参数值或Bean，Bean用于给多个参数赋值
    * @return SQL查询器
    */
-  ISqlSelecter having(String column,Object value);
-
-  /**
-   * 带多个参数的having
-   * 
-   * @param sql SQL语句，使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到values中key为age的值，:name将绑定到values中key为name的值
-   * @param param 参数
-   * @return SQL查询器
-   */
-  ISqlSelecter having(String sql,Bean param);
+  ISqlSelecter having(String columnOrSql,Object valueOrBean);
 
   /**
    * 当满足条件时执行having
@@ -148,23 +120,13 @@ public interface ISqlSelecter extends ISqlExecuter{
 
   /**
    * 当满足条件时执行having
-   * 
-   * @param column 列
-   * @param value 值
+   *
+   * @param columnOrSql 列名或SQL语句，SQL语句使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到values中key为age的值，:name将绑定到values中key为name的值
+   * @param valueOrBean 参数值或Bean，Bean用于给多个参数赋值
    * @param condition 条件是否满足
    * @return SQL查询器
    */
-  ISqlSelecter havingIf(String column,Object value,boolean condition);
-
-  /**
-   * 当满足条件时执行having
-   * 
-   * @param sql SQL语句，使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到values中key为age的值，:name将绑定到values中key为name的值
-   * @param param 参数
-   * @param condition 条件是否满足
-   * @return SQL查询器
-   */
-  ISqlSelecter havingIf(String sql,Bean param,boolean condition);
+  ISqlSelecter havingIf(String columnOrSql,Object valueOrBean,boolean condition);
 
   ISqlSelecter asc(String columns);
 

@@ -151,15 +151,23 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
     return this;
   }
 
-  protected ISqlExecuter where(String column,Object value){
+  protected ISqlExecuter where(String columnOrSql,Object valueOrBean){
     Condition cond = new Condition();
-    cond.setColumn(column);
-    if(null==value){
+    cond.setColumn(columnOrSql);
+    if(null==valueOrBean){
       cond.setStart(" IS");
       cond.setPlaceholder(" NULL");
       cond.setType(ConditionType.pure_sql);
     }else{
-      cond.setValue(value);
+      if(columnOrSql.contains(":")&&valueOrBean instanceof Bean){
+        cond.setStart("");
+        cond.setPlaceholder("");
+        cond.setEnd("");
+        cond.setValue(valueOrBean);
+        cond.setType(ConditionType.multi_params);
+      }else{
+        cond.setValue(valueOrBean);
+      }
     }
     wheres.add(cond);
     return this;
@@ -176,18 +184,6 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
       cond.setStart("!=");
       cond.setValue(value);
     }
-    wheres.add(cond);
-    return this;
-  }
-
-  protected ISqlExecuter where(String sql,Bean param){
-    Condition cond = new Condition();
-    cond.setColumn(sql);
-    cond.setStart("");
-    cond.setPlaceholder("");
-    cond.setEnd("");
-    cond.setValue(param);
-    cond.setType(ConditionType.multi_params);
     wheres.add(cond);
     return this;
   }

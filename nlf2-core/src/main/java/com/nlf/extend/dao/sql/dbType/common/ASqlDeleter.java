@@ -30,13 +30,8 @@ public class ASqlDeleter extends AbstractSqlExecuter implements ISqlDeleter{
     return this;
   }
 
-  public ISqlDeleter where(String column,Object value){
-    super.where(column,value);
-    return this;
-  }
-
-  public ISqlDeleter where(String sql,Bean param){
-    super.where(sql,param);
+  public ISqlDeleter where(String columnOrSql,Object valueOrBean){
+    super.where(columnOrSql,columnOrSql);
     return this;
   }
 
@@ -45,13 +40,8 @@ public class ASqlDeleter extends AbstractSqlExecuter implements ISqlDeleter{
     return this;
   }
 
-  public ISqlDeleter whereIf(String column,Object value,boolean condition){
-    if(condition) where(column,value);
-    return this;
-  }
-
-  public ISqlDeleter whereIf(String sql,Bean param,boolean condition){
-    if(condition) where(sql,param);
+  public ISqlDeleter whereIf(String columnOrSql,Object valueOrBean,boolean condition){
+    if(condition) where(columnOrSql,valueOrBean);
     return this;
   }
 

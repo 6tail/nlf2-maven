@@ -51,13 +51,8 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
     return this;
   }
 
-  public ISqlSelecter where(String column,Object value){
-    super.where(column,value);
-    return this;
-  }
-
-  public ISqlSelecter where(String sql,Bean param){
-    super.where(sql,param);
+  public ISqlSelecter where(String columnOrSql,Object valueOrBean){
+    super.where(columnOrSql,valueOrBean);
     return this;
   }
 
@@ -66,13 +61,8 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
     return this;
   }
 
-  public ISqlSelecter whereIf(String column,Object value,boolean condition){
-    if(condition) where(column,value);
-    return this;
-  }
-
-  public ISqlSelecter whereIf(String sql,Bean param,boolean condition){
-    if(condition) where(sql,param);
+  public ISqlSelecter whereIf(String columnOrSql,Object valueOrBean,boolean condition){
+    if(condition) where(columnOrSql,valueOrBean);
     return this;
   }
 
@@ -102,22 +92,24 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
     return this;
   }
 
-  public ISqlSelecter having(String column,Object value){
+  public ISqlSelecter having(String columnOrSql,Object valueOrBean){
     Condition cond = new Condition();
-    cond.setColumn(column);
-    cond.setValue(value);
-    havings.add(cond);
-    return this;
-  }
-
-  public ISqlSelecter having(String sql,Bean param){
-    Condition cond = new Condition();
-    cond.setColumn(sql);
-    cond.setStart("");
-    cond.setPlaceholder("");
-    cond.setEnd("");
-    cond.setValue(param);
-    cond.setType(ConditionType.multi_params);
+    cond.setColumn(columnOrSql);
+    if(null==valueOrBean){
+      cond.setStart(" IS");
+      cond.setPlaceholder(" NULL");
+      cond.setType(ConditionType.pure_sql);
+    }else{
+      if(columnOrSql.contains(":")&&valueOrBean instanceof Bean){
+        cond.setStart("");
+        cond.setPlaceholder("");
+        cond.setEnd("");
+        cond.setValue(valueOrBean);
+        cond.setType(ConditionType.multi_params);
+      }else{
+        cond.setValue(valueOrBean);
+      }
+    }
     havings.add(cond);
     return this;
   }
@@ -127,13 +119,8 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
     return this;
   }
 
-  public ISqlSelecter havingIf(String column,Object value,boolean condition){
-    if(condition) having(column,value);
-    return this;
-  }
-
-  public ISqlSelecter havingIf(String sql,Bean param,boolean condition){
-    if(condition) having(sql,param);
+  public ISqlSelecter havingIf(String columnOrSql,Object valueOrBean,boolean condition){
+    if(condition) having(columnOrSql,valueOrBean);
     return this;
   }
 

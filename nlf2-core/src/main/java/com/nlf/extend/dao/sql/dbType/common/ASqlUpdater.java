@@ -30,7 +30,7 @@ public class ASqlUpdater extends AbstractSqlExecuter implements ISqlUpdater{
   }
 
   public String buildSql(){
-    StringBuffer s = new StringBuffer();
+    StringBuilder s = new StringBuilder();
     s.append("UPDATE ");
     s.append(StringUtil.join(tables,","));
     s.append(" SET ");
@@ -124,31 +124,19 @@ public class ASqlUpdater extends AbstractSqlExecuter implements ISqlUpdater{
     return this;
   }
 
-  public ISqlUpdater set(String column,Object value){
+  public ISqlUpdater set(String columnOrSql,Object valueOrBean){
     Condition cond = new Condition();
-    cond.setType(ConditionType.one_param);
-    cond.setColumn(column);
-    cond.setStart("=");
-    cond.setPlaceholder("?");
+    cond.setColumn(columnOrSql);
+    cond.setValue(valueOrBean);
     cond.setEnd("");
-    cond.setValue(value);
-    columns.add(cond);
-    return this;
-  }
-
-  public ISqlUpdater set(String sql,Bean param){
-    Condition cond = new Condition();
-    cond.setColumn(sql);
-    cond.setValue(param);
-    cond.setEnd("");
-    if(null==param){
-      cond.setType(ConditionType.one_param);
-      cond.setStart("=");
-      cond.setPlaceholder("?");
-    }else{
+    if (null!=valueOrBean && columnOrSql.contains(":") && valueOrBean instanceof Bean) {
       cond.setType(ConditionType.multi_params);
       cond.setStart("");
       cond.setPlaceholder("");
+    } else {
+      cond.setType(ConditionType.one_param);
+      cond.setStart("=");
+      cond.setPlaceholder("?");
     }
     columns.add(cond);
     return this;
@@ -166,13 +154,8 @@ public class ASqlUpdater extends AbstractSqlExecuter implements ISqlUpdater{
     return this;
   }
 
-  public ISqlUpdater setIf(String column,Object value,boolean condition){
-    if(condition) set(column,value);
-    return this;
-  }
-
-  public ISqlUpdater setIf(String sql,Bean param,boolean condition){
-    if(condition) set(sql,param);
+  public ISqlUpdater setIf(String columnOrSql,Object valueOrBean,boolean condition){
+    if(condition) set(columnOrSql,valueOrBean);
     return this;
   }
 
@@ -186,13 +169,8 @@ public class ASqlUpdater extends AbstractSqlExecuter implements ISqlUpdater{
     return this;
   }
 
-  public ISqlUpdater where(String column,Object value){
-    super.where(column,value);
-    return this;
-  }
-
-  public ISqlUpdater where(String sql,Bean param){
-    super.where(sql,param);
+  public ISqlUpdater where(String columnOrSql,Object valueOrBean){
+    super.where(columnOrSql,valueOrBean);
     return this;
   }
 
@@ -201,13 +179,8 @@ public class ASqlUpdater extends AbstractSqlExecuter implements ISqlUpdater{
     return this;
   }
 
-  public ISqlUpdater whereIf(String column,Object value,boolean condition){
-    if(condition) where(column,value);
-    return this;
-  }
-
-  public ISqlUpdater whereIf(String sql,Bean param,boolean condition){
-    if(condition) where(sql,param);
+  public ISqlUpdater whereIf(String columnOrSql,Object valueOrBean,boolean condition){
+    if(condition) where(columnOrSql,valueOrBean);
     return this;
   }
 
