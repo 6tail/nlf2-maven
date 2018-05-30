@@ -15,7 +15,7 @@ public interface ISqlInserter extends ISqlExecuter{
    * 指定表
    * 
    * @param tables 表名
-   * @return SQL查询器
+   * @return SQL插入器
    */
   ISqlInserter table(String tables);
 
@@ -24,18 +24,29 @@ public interface ISqlInserter extends ISqlExecuter{
    * 
    * @param tables 表名
    * @param condition 条件是否满足
-   * @return SQL查询器
+   * @return SQL插入器
    */
   ISqlInserter tableIf(String tables,boolean condition);
 
   ISqlInserter set(Bean bean);
-  ISqlInserter set(String sql);
-  ISqlInserter set(String sql,Bean param);
+
+  /**
+   * 赋值
+   * @param column 列名
+   * @param value 参数值
+   * @return SQL插入器
+   */
   ISqlInserter set(String column,Object value);
 
   ISqlInserter setIf(Bean bean,boolean condition);
-  ISqlInserter setIf(String sql,boolean condition);
-  ISqlInserter setIf(String sql,Bean param,boolean condition);
+
+  /**
+   * 当满足条件时赋值
+   * @param column 列名
+   * @param value 参数值
+   * @param condition 条件是否满足
+   * @return SQL插入器
+   */
   ISqlInserter setIf(String column,Object value,boolean condition);
 
   /**

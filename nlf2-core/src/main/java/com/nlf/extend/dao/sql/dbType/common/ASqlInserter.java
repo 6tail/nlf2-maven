@@ -8,7 +8,6 @@ import com.nlf.Bean;
 import com.nlf.dao.exception.DaoException;
 import com.nlf.extend.dao.sql.AbstractSqlExecuter;
 import com.nlf.extend.dao.sql.Condition;
-import com.nlf.extend.dao.sql.ConditionType;
 import com.nlf.extend.dao.sql.ISqlInserter;
 import com.nlf.extend.dao.sql.SqlConnection;
 import com.nlf.log.Logger;
@@ -47,21 +46,10 @@ public class ASqlInserter extends AbstractSqlExecuter implements ISqlInserter{
     for(int i = 0,j = columns.size();i<j;i++){
       s.append(i<1?"":",");
       Condition r = columns.get(i);
-      switch(r.getType()){
-        case one_param:
-          params.add(r.getValue());
-        case pure_sql:
-          s.append(r.getStart());
-          s.append(r.getPlaceholder());
-          s.append(r.getEnd());
-          break;
-        case multi_params:
-          Bean o = (Bean)r.getValue();
-          s.append(buildParams(r.getStart(),o));
-          s.append(buildParams(r.getPlaceholder(),o));
-          s.append(buildParams(r.getEnd(),o));
-          break;
-      }
+      params.add(r.getValue());
+      s.append(r.getStart());
+      s.append(r.getPlaceholder());
+      s.append(r.getEnd());
     }
     s.append(")");
     return s.toString();
@@ -99,34 +87,11 @@ public class ASqlInserter extends AbstractSqlExecuter implements ISqlInserter{
     }
   }
 
-  public ISqlInserter set(String sql){
-    Condition cond = new Condition();
-    cond.setColumn(sql);
-    cond.setStart("");
-    cond.setPlaceholder("");
-    cond.setType(ConditionType.pure_sql);
-    columns.add(cond);
-    return this;
-  }
-
   public ISqlInserter set(String column,Object value){
     Condition cond = new Condition();
     cond.setColumn(column);
-    cond.setStart("");
     cond.setValue(value);
-    columns.add(cond);
-    return this;
-  }
-
-  public ISqlInserter set(String sql,Bean param){
-    Condition cond = new Condition();
-    cond.setColumn(sql);
     cond.setStart("");
-    cond.setValue(param);
-    if(null!=param){
-      cond.setType(ConditionType.multi_params);
-      cond.setPlaceholder("");
-    }
     columns.add(cond);
     return this;
   }
@@ -138,18 +103,8 @@ public class ASqlInserter extends AbstractSqlExecuter implements ISqlInserter{
     return this;
   }
 
-  public ISqlInserter setIf(String sql,boolean condition){
-    if(condition) set(sql);
-    return this;
-  }
-
   public ISqlInserter setIf(String column,Object value,boolean condition){
     if(condition) set(column,value);
-    return this;
-  }
-
-  public ISqlInserter setIf(String sql,Bean param,boolean condition){
-    if(condition) set(sql,param);
     return this;
   }
 

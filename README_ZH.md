@@ -6,7 +6,7 @@ NLF2框架是一款原创的、低调的轻量级java框架，它无侵入、无
 
 ## 使用
 
-[Maven仓库](http://search.maven.org/#search%7Cga%7C1%7Cnlf2)中的nlf2-core v1.8.6存在一些问题，建议使用v1.8.7或快照版本：
+[Maven仓库](http://search.maven.org/#search%7Cga%7C1%7Cnlf2)中的nlf2-core v1.8.6和v1.8.7存在一些问题，建议使用快照版本：
 
 ### 稳定版本
 
@@ -39,6 +39,12 @@ NLF2框架是一款原创的、低调的轻量级java框架，它无侵入、无
   <version>1.8.8-SNAPSHOT</version>
 </dependency>
 ```
+
+### 下载jar
+
+如果使用jar，建议下载最新的SNAPSHOT版本，bug将得到及时的修复。
+
+[下载地址](https://oss.sonatype.org/content/groups/public/cn/6tail/)
 
 ## 示例
 

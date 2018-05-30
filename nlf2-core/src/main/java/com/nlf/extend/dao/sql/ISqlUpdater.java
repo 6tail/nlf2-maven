@@ -38,7 +38,7 @@ public interface ISqlUpdater extends ISqlExecuter{
   /**
    * 带参数的where
    *
-   * @param columnOrSql 列名或SQL语句，SQL语句使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到values中key为age的值，:name将绑定到values中key为name的值
+   * @param columnOrSql 列名或SQL语句，SQL语句使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到bean中key为age的值，:name将绑定到bean中key为name的值
    * @param valueOrBean 参数值或Bean，Bean用于给多个参数赋值
    * @return SQL查询器
    */
@@ -56,7 +56,7 @@ public interface ISqlUpdater extends ISqlExecuter{
   /**
    * 当满足条件时执行where
    *
-   * @param columnOrSql 列名或SQL语句，SQL语句使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到values中key为age的值，:name将绑定到values中key为name的值
+   * @param columnOrSql 列名或SQL语句，SQL语句使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到bean中key为age的值，:name将绑定到bean中key为name的值
    * @param valueOrBean 参数值或Bean，Bean用于给多个参数赋值
    * @param condition 条件是否满足
    * @return SQL更新器
@@ -71,7 +71,7 @@ public interface ISqlUpdater extends ISqlExecuter{
   ISqlUpdater set(String sql);
   /**
    * 赋值
-   * @param columnOrSql 列名或SQL语句，SQL语句使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到values中key为age的值，:name将绑定到values中key为name的值
+   * @param columnOrSql 列名或SQL语句，SQL语句使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到bean中key为age的值，:name将绑定到bean中key为name的值
    * @param valueOrBean 参数值或Bean，Bean用于给多个参数赋值
    * @return SQL更新器
    */
@@ -81,7 +81,7 @@ public interface ISqlUpdater extends ISqlExecuter{
 
   /**
    * 当满足条件时赋值
-   * @param columnOrSql 列名或SQL语句，SQL语句使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到values中key为age的值，:name将绑定到values中key为name的值
+   * @param columnOrSql 列名或SQL语句，SQL语句使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到bean中key为age的值，:name将绑定到bean中key为name的值
    * @param valueOrBean 参数值或Bean，Bean用于给多个参数赋值
    * @param condition 条件是否满足
    * @return SQL更新器
