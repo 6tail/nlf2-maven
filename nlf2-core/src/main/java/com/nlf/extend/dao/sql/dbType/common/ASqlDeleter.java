@@ -31,7 +31,7 @@ public class ASqlDeleter extends AbstractSqlExecuter implements ISqlDeleter{
   }
 
   public ISqlDeleter where(String columnOrSql,Object valueOrBean){
-    super.where(columnOrSql,columnOrSql);
+    super.where(columnOrSql,valueOrBean);
     return this;
   }
 
