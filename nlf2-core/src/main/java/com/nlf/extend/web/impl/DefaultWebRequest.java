@@ -44,7 +44,7 @@ public class DefaultWebRequest extends AbstractWebRequest{
       }
     }
     if(null!=r){
-      if(r.indexOf(",")>-1){
+      if(r.contains(",")){
         String[] rs = r.split(",");
         for(String s:rs){
           if(s.length()>0&&!"unknown".equalsIgnoreCase(s)){

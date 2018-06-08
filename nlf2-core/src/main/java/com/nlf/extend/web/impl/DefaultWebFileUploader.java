@@ -58,7 +58,7 @@ public class DefaultWebFileUploader implements IWebFileUploader{
     public void setFile(UploadFile file){
       this.file = file;
     }
-  };
+  }
   /** 编码 */
   public static final String CHARSET = "utf-8";
   /** 参数名标识 */
