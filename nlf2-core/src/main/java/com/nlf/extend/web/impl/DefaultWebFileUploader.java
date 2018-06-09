@@ -109,6 +109,10 @@ public class DefaultWebFileUploader implements IWebFileUploader{
       if(fileName.contains(".")){
         fileName = fileName.substring(0,fileName.lastIndexOf("."));
       }
+      //凑够字符数
+      while(fileName.length()<2){
+        fileName += "_";
+      }
       fileName += "_";
       if(suffix.length()>0){
         suffix = "."+suffix;
