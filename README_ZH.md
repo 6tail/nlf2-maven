@@ -1,3 +1,7 @@
+<div align="center">
+<img width="200" src="http://6tail.cn/nlf2-logo.png" alt="NLF2">
+</div>
+
 # NLF2 [![License](https://img.shields.io/badge/license-MIT-4EB1BA.svg?style=flat-square)](https://github.com/6tail/nlf2/blob/master/LICENSE)
 
 NLF2框架是一款原创的、低调的轻量级java框架，它无侵入、无依赖、零配置、无注解，看一点例子，你很快就能上手。
