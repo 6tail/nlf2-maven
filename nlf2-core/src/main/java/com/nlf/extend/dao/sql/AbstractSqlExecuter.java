@@ -5,15 +5,14 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.nlf.App;
 import com.nlf.Bean;
+import com.nlf.dao.exception.DaoException;
 import com.nlf.dao.executer.AbstractDaoExecuter;
+import com.nlf.log.Logger;
 import com.nlf.util.IOUtil;
 
 public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements ISqlExecuter{
@@ -61,8 +60,6 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
   protected void finalize(Statement stmt,ResultSet rs){
     IOUtil.closeQuietly(rs);
     IOUtil.closeQuietly(stmt);
-    rs = null;
-    stmt = null;
   }
 
   protected void finalize(Statement stmt){
@@ -91,7 +88,7 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
     if(!sql.contains(":")) return sql;
     List<String> keys = new ArrayList<String>();
     //匹配以冒号开头的字母或下划线组合，识别为变量名
-    Matcher m = Pattern.compile(":{1}\\w+").matcher(sql);
+    Matcher m = Pattern.compile(":\\w+").matcher(sql);
     while(m.find()){
       String key = m.group();
       if(!keys.contains(key)){
@@ -140,14 +137,18 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
     return params;
   }
 
-  protected ISqlExecuter where(String sql){
+  protected Condition buildPureSqlCondition(String sql){
     Condition cond = new Condition();
     cond.setColumn(sql);
     cond.setStart("");
     cond.setPlaceholder("");
     cond.setEnd("");
     cond.setType(ConditionType.pure_sql);
-    wheres.add(cond);
+    return cond;
+  }
+
+  protected ISqlExecuter where(String sql){
+    wheres.add(buildPureSqlCondition(sql));
     return this;
   }
 
@@ -159,11 +160,63 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
       cond.setPlaceholder(" NULL");
       cond.setType(ConditionType.pure_sql);
     }else{
-      if(columnOrSql.contains(":")&&valueOrBean instanceof Bean){
+      //有:占位符的SQL语句
+      if(columnOrSql.contains(":")){
+        Bean value;
+        if(valueOrBean instanceof Bean) {
+          value = (Bean)valueOrBean;
+        }else if(valueOrBean instanceof Map) {
+          Map<?,?> map = (Map<?,?>)valueOrBean;
+          value = new Bean();
+          for(Map.Entry entry:map.entrySet()){
+            value.set(entry.getKey()+"",entry.getValue());
+          }
+        }else{
+          //值不是Bean的，自动生成Bean，并按占位符赋值
+          value = new Bean();
+          Matcher m = Pattern.compile(":\\w+").matcher(columnOrSql);
+          while(m.find()){
+            String key = m.group().substring(1);
+            value.set(key,valueOrBean);
+          }
+        }
         cond.setStart("");
         cond.setPlaceholder("");
         cond.setEnd("");
-        cond.setValue(valueOrBean);
+        cond.setValue(value);
+        cond.setType(ConditionType.multi_params);
+      }else if(columnOrSql.contains("?")){//有?占位符的SQL语句，参数值为数组，集合或单个值
+        boolean singleValue = false;
+        Bean value = new Bean();
+        if(valueOrBean.getClass().isArray()) {
+          Object[] l = (Object[])valueOrBean;
+          for(int i=0,j=l.length;i<j;i++){
+            value.set("_"+i,l[i]);
+          }
+        }else if(valueOrBean instanceof Collection) {
+          Collection<?> l = (Collection<?>)valueOrBean;
+          int count=0;
+          for(Object o:l){
+            value.set("_"+count++,o);
+          }
+        }else{
+          singleValue = true;
+        }
+        //?占位符修改为:占位符
+        String newSql = columnOrSql;
+        int count = 0;
+        while(newSql.contains("?")) {
+          String key = "_"+count++;
+          newSql = newSql.replaceFirst("\\?", ":" + key);
+          if(singleValue){
+            value.set(key,valueOrBean);
+          }
+        }
+        cond.setColumn(newSql);
+        cond.setStart("");
+        cond.setPlaceholder("");
+        cond.setEnd("");
+        cond.setValue(value);
         cond.setType(ConditionType.multi_params);
       }else{
         cond.setValue(valueOrBean);
@@ -211,18 +264,7 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
     cond.setColumn(column);
     cond.setStart(" IN(");
     Bean param = new Bean();
-    StringBuilder placeholder = new StringBuilder();
-    int i=0;
-    for(Object v:values){
-      if(i>0){
-        placeholder.append(",");
-      }
-      String key = column.replaceAll("\\W","")+"_"+i;
-      placeholder.append(":"+key);
-      param.set(key,v);
-      i++;
-    }
-    cond.setPlaceholder(placeholder.toString());
+    cond.setPlaceholder(buildSqlIn(column,param,values));
     cond.setEnd(")");
     cond.setValue(param);
     cond.setType(ConditionType.multi_params);
@@ -243,22 +285,94 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
     cond.setColumn(column);
     cond.setStart(" NOT IN(");
     Bean param = new Bean();
-    StringBuilder placeholder = new StringBuilder();
-    int i=0;
-    for(Object v:values){
-      if(i>0){
-        placeholder.append(",");
-      }
-      String key = column.replaceAll("\\W","")+"_"+i;
-      placeholder.append(":"+key);
-      param.set(key,v);
-      i++;
-    }
-    cond.setPlaceholder(placeholder.toString());
+    cond.setPlaceholder(buildSqlIn(column,param,values));
     cond.setEnd(")");
     cond.setValue(param);
     cond.setType(ConditionType.multi_params);
     wheres.add(cond);
     return this;
+  }
+
+  protected abstract String buildSql();
+
+  protected String buildSqlIn(String column,Bean param,Object... values){
+    StringBuilder s = new StringBuilder();
+    int i=0;
+    for(Object v:values){
+      if(i>0){
+        s.append(",");
+      }
+      String key = column.replaceAll("\\W","")+"_"+i;
+      s.append(":");
+      s.append(key);
+      param.set(key,v);
+      i++;
+    }
+    return s.toString();
+  }
+
+  protected String buildSqlParams(Condition r){
+    StringBuilder s = new StringBuilder();
+    switch(r.getType()){
+      case one_param:
+        params.add(r.getValue());
+      case pure_sql:
+        s.append(r.getColumn());
+        s.append(r.getStart());
+        s.append(r.getPlaceholder());
+        s.append(r.getEnd());
+        break;
+      case multi_params:
+        Bean o = (Bean)r.getValue();
+        s.append(buildParams(r.getColumn(),o));
+        s.append(buildParams(r.getStart(),o));
+        s.append(buildParams(r.getPlaceholder(),o));
+        s.append(buildParams(r.getEnd(),o));
+        break;
+    }
+    return s.toString();
+  }
+
+  protected String buildSqlWhere(){
+    StringBuilder s = new StringBuilder();
+    for(int i = 0,l = wheres.size();i<l;i++){
+      s.append(" ");
+      s.append(i<1?"WHERE":"AND");
+      s.append(" ");
+      s.append(buildSqlParams(wheres.get(i)));
+    }
+    return s.toString();
+  }
+
+  protected int executeUpdate(){
+    params.clear();
+    sql = buildSql();
+    Logger.getLog().debug(buildLog());
+    PreparedStatement stmt = null;
+    SqlConnection conn = null;
+    try{
+      conn = ((SqlConnection)connection);
+      if(conn.isInBatch()){
+        stmt = conn.getStatement();
+        if(null==stmt){
+          stmt = conn.getConnection().prepareStatement(sql);
+          conn.setStatement(stmt);
+        }
+      }else{
+        stmt = conn.getConnection().prepareStatement(sql);
+      }
+      bindParams(stmt);
+      if(conn.isInBatch()){
+        stmt.addBatch();
+        return -1;
+      }
+      return stmt.executeUpdate();
+    }catch(SQLException e){
+      throw new DaoException(e);
+    }finally{
+      if(!conn.isInBatch()){
+        finalize(stmt);
+      }
+    }
   }
 }

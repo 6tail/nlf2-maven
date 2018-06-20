@@ -1,13 +1,9 @@
 package com.nlf.extend.dao.sql.dbType.common;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import com.nlf.Bean;
-import com.nlf.dao.exception.DaoException;
 import com.nlf.extend.dao.sql.*;
-import com.nlf.log.Logger;
 import com.nlf.util.StringUtil;
 
 /**
@@ -36,81 +32,14 @@ public class ASqlUpdater extends AbstractSqlExecuter implements ISqlUpdater{
     s.append(" SET ");
     for(int i=0,j=columns.size();i<j;i++){
       s.append(i<1?"":",");
-      Condition r = columns.get(i);
-      switch(r.getType()){
-        case one_param:
-          params.add(r.getValue());
-        case pure_sql:
-          s.append(r.getColumn());
-          s.append(r.getStart());
-          s.append(r.getPlaceholder());
-          s.append(r.getEnd());
-          break;
-        case multi_params:
-          Bean o = (Bean)r.getValue();
-          s.append(buildParams(r.getColumn(),o));
-          s.append(buildParams(r.getStart(),o));
-          s.append(buildParams(r.getPlaceholder(),o));
-          s.append(buildParams(r.getEnd(),o));
-          break;
-      }
+      s.append(buildSqlParams(columns.get(i)));
     }
-    for(int i = 0,l = wheres.size();i<l;i++){
-      s.append(" ");
-      s.append(i<1?"WHERE":"AND");
-      s.append(" ");
-      Condition r = wheres.get(i);
-      switch(r.getType()){
-        case one_param:
-          params.add(r.getValue());
-        case pure_sql:
-          s.append(r.getColumn());
-          s.append(r.getStart());
-          s.append(r.getPlaceholder());
-          s.append(r.getEnd());
-          break;
-        case multi_params:
-          Bean o = (Bean)r.getValue();
-          s.append(buildParams(r.getColumn(),o));
-          s.append(buildParams(r.getStart(),o));
-          s.append(buildParams(r.getPlaceholder(),o));
-          s.append(buildParams(r.getEnd(),o));
-          break;
-      }
-    }
+    s.append(buildSqlWhere());
     return s.toString();
   }
 
   public int update(){
-    params.clear();
-    sql = buildSql();
-    Logger.getLog().debug(buildLog());
-    PreparedStatement stmt = null;
-    SqlConnection conn = null;
-    try{
-      conn = ((SqlConnection)connection);
-      if(conn.isInBatch()){
-        stmt = conn.getStatement();
-        if(null==stmt){
-          stmt = conn.getConnection().prepareStatement(sql);
-          conn.setStatement(stmt);
-        }
-      }else{
-        stmt = conn.getConnection().prepareStatement(sql);
-      }
-      bindParams(stmt);
-      if(conn.isInBatch()){
-        stmt.addBatch();
-        return -1;
-      }
-      return stmt.executeUpdate();
-    }catch(SQLException e){
-      throw new DaoException(e);
-    }finally{
-      if(!conn.isInBatch()){
-        finalize(stmt);
-      }
-    }
+    return executeUpdate();
   }
 
   public ISqlUpdater set(String sql){

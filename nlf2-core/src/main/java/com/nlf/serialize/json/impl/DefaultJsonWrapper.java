@@ -14,6 +14,7 @@ import java.util.Map;
 import com.nlf.Bean;
 import com.nlf.dao.paging.PageData;
 import com.nlf.serialize.AbstractWrapper;
+import com.nlf.util.Base64Util;
 import com.nlf.util.DateUtil;
 
 /**
@@ -50,7 +51,15 @@ public class DefaultJsonWrapper extends AbstractWrapper{
     return wrapString(DateUtil.ymdhms((Date)o));
   }
 
+  protected String wrapByteArray(Object o){
+    byte[] d = (byte[])o;
+    return wrapString(Base64Util.encode(d));
+  }
+
   protected String wrapArray(Object o){
+    if(o instanceof byte[]){
+      return wrapByteArray(o);
+    }
     Object[] l = (Object[])o;
     return wrapCollection(Arrays.asList(l));
   }

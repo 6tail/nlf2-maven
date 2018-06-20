@@ -1,16 +1,11 @@
 package com.nlf.extend.dao.sql.dbType.common;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import com.nlf.Bean;
-import com.nlf.dao.exception.DaoException;
 import com.nlf.extend.dao.sql.AbstractSqlExecuter;
 import com.nlf.extend.dao.sql.Condition;
 import com.nlf.extend.dao.sql.ISqlInserter;
-import com.nlf.extend.dao.sql.SqlConnection;
-import com.nlf.log.Logger;
 import com.nlf.util.StringUtil;
 
 /**
@@ -33,7 +28,7 @@ public class ASqlInserter extends AbstractSqlExecuter implements ISqlInserter{
   }
 
   public String buildSql(){
-    StringBuffer s = new StringBuffer();
+    StringBuilder s = new StringBuilder();
     s.append("INSERT INTO ");
     s.append(StringUtil.join(tables,","));
     s.append("(");
@@ -56,35 +51,7 @@ public class ASqlInserter extends AbstractSqlExecuter implements ISqlInserter{
   }
 
   public int insert(){
-    params.clear();
-    sql = buildSql();
-    Logger.getLog().debug(buildLog());
-    PreparedStatement stmt = null;
-    SqlConnection conn = null;
-    try{
-      conn = ((SqlConnection)connection);
-      if(conn.isInBatch()){
-        stmt = conn.getStatement();
-        if(null==stmt){
-          stmt = conn.getConnection().prepareStatement(sql);
-          conn.setStatement(stmt);
-        }
-      }else{
-        stmt = conn.getConnection().prepareStatement(sql);
-      }
-      bindParams(stmt);
-      if(conn.isInBatch()){
-        stmt.addBatch();
-        return -1;
-      }
-      return stmt.executeUpdate();
-    }catch(SQLException e){
-      throw new DaoException(e);
-    }finally{
-      if(!conn.isInBatch()){
-        finalize(stmt);
-      }
-    }
+    return executeUpdate();
   }
 
   public ISqlInserter set(String column,Object value){

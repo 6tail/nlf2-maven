@@ -1,5 +1,7 @@
 package com.nlf.util;
 
+import java.util.regex.Pattern;
+
 /**
  * Base64编解码器
  * 
@@ -32,6 +34,10 @@ public class Base64Util{
     for(int i = 0;i<64;i++){
       map2[map1[i]] = (byte)i;
     }
+  }
+
+  public static boolean isBase64(String s){
+    return Pattern.matches("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$", s);
   }
 
   public static String encode(byte[] in){

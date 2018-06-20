@@ -82,13 +82,7 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
   }
 
   public ISqlSelecter having(String sql){
-    Condition cond = new Condition();
-    cond.setColumn(sql);
-    cond.setStart("");
-    cond.setPlaceholder("");
-    cond.setEnd("");
-    cond.setType(ConditionType.pure_sql);
-    havings.add(cond);
+    havings.add(buildPureSqlCondition(sql));
     return this;
   }
 
@@ -165,34 +159,12 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
   }
 
   public String buildSql(){
-    StringBuffer s = new StringBuffer();
+    StringBuilder s = new StringBuilder();
     s.append("SELECT ");
     s.append(columns.size()<1?"*":StringUtil.join(columns,","));
     s.append(" FROM ");
     s.append(StringUtil.join(tables,","));
-    for(int i = 0,l = wheres.size();i<l;i++){
-      s.append(" ");
-      s.append(i<1?"WHERE":"AND");
-      s.append(" ");
-      Condition r = wheres.get(i);
-      switch(r.getType()){
-        case one_param:
-          params.add(r.getValue());
-        case pure_sql:
-          s.append(r.getColumn());
-          s.append(r.getStart());
-          s.append(r.getPlaceholder());
-          s.append(r.getEnd());
-          break;
-        case multi_params:
-          Bean o = (Bean)r.getValue();
-          s.append(buildParams(r.getColumn(),o));
-          s.append(buildParams(r.getStart(),o));
-          s.append(buildParams(r.getPlaceholder(),o));
-          s.append(buildParams(r.getEnd(),o));
-          break;
-      }
-    }
+    s.append(buildSqlWhere());
     for(int i = 0,j = groupBys.size();i<j;i++){
       s.append(" ");
       s.append(i<1?"GROUP BY ":",");
@@ -202,24 +174,7 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
       s.append(" ");
       s.append(i<1?"HAVING":"AND");
       s.append(" ");
-      Condition r = havings.get(i);
-      switch(r.getType()){
-        case one_param:
-          params.add(r.getValue());
-        case pure_sql:
-          s.append(r.getColumn());
-          s.append(r.getStart());
-          s.append(r.getPlaceholder());
-          s.append(r.getEnd());
-          break;
-        case multi_params:
-          Bean o = (Bean)r.getValue();
-          s.append(buildParams(r.getColumn(),o));
-          s.append(buildParams(r.getStart(),o));
-          s.append(buildParams(r.getPlaceholder(),o));
-          s.append(buildParams(r.getEnd(),o));
-          break;
-      }
+      s.append(buildSqlParams(havings.get(i)));
     }
     for(int i = 0,j = sorts.size();i<j;i++){
       s.append(" ");
