@@ -6,6 +6,8 @@
 
 NLF2 is a lightweight java framework.
 
+> Support since java 1.5
+
 [简体中文](https://github.com/6tail/nlf2-maven/blob/master/README_ZH.md)
 
 ## Usage

@@ -6,6 +6,8 @@
 
 NLF2框架是一款原创的、低调的轻量级java框架，它无侵入、无依赖、零配置、无注解，看一点例子，你很快就能上手。
 
+> 支持java 1.5及以上版本。
+
 [English](https://github.com/6tail/nlf2-maven/blob/master/README.md)
 
 ## 使用
