@@ -18,7 +18,7 @@ NLF2框架是一款原创的、低调的轻量级java框架，它无侵入、无
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-core</artifactId>
-  <version>1.8.7</version>
+  <version>1.8.8</version>
 </dependency>
 ```
 

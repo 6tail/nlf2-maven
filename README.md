@@ -18,7 +18,7 @@ nlf2-core v1.8.6 and v1.8.7 on [Maven Central](http://search.maven.org/#search%7
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-core</artifactId>
-  <version>1.8.7</version>
+  <version>1.8.8</version>
 </dependency>
 ```
  
