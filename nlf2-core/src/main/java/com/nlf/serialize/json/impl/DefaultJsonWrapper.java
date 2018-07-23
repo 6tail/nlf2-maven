@@ -121,20 +121,18 @@ public class DefaultJsonWrapper extends AbstractWrapper{
       s.append("{");
       BeanInfo info = Introspector.getBeanInfo(o.getClass(),Object.class);
       PropertyDescriptor[] props = info.getPropertyDescriptors();
-      if(props.length>0){
-        for(int i = 0;i<props.length;i++){
-          PropertyDescriptor desc = props[i];
-          s.append(wrapString(desc.getName()));
-          s.append(":");
-          Method method = desc.getReadMethod();
-          if(null==method){
-            s.append(wrap(null));
-          }else{
-            s.append(wrap(method.invoke(o)));
-          }
-          if(i<props.length-1){
-            s.append(",");
-          }
+      for(int i = 0,j=props.length;i<j;i++){
+        if(i>0){
+          s.append(",");
+        }
+        PropertyDescriptor desc = props[i];
+        s.append(wrapString(desc.getName()));
+        s.append(":");
+        Method method = desc.getReadMethod();
+        if(null==method){
+          s.append(wrap(null));
+        }else{
+          s.append(wrap(method.invoke(o)));
         }
       }
       s.append("}");

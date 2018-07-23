@@ -1,11 +1,11 @@
 package com.nlf;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * 通用对象封装，支持链式调用
@@ -69,6 +69,114 @@ public class Bean implements Map<String,Object>,java.io.Serializable{
   public <E>E get(String key,Class<E> klass,E defaultValue){
     Object o = values.get(key);
     return null==o?defaultValue:(E)o;
+  }
+
+  /**
+   * 转换为指定类的实例
+   * @param klass 指定类
+   * @return 实例
+   */
+  @SuppressWarnings("unchecked")
+  public <E>E toObject(Class<E> klass) throws IntrospectionException,IllegalAccessException,InvocationTargetException {
+    if(Bean.class.equals(klass)||Map.class.equals(klass)){
+      return (E)this;
+    }
+    Object ret = null;
+    int lastMatchedKeyCount = 0;
+    List<String> impls = App.getImplements(klass);
+    for (String c : impls) {
+      int matchedKeyCount = 0;
+      Object o = App.getProxy().newInstance(c);
+      BeanInfo info = Introspector.getBeanInfo(o.getClass(), Object.class);
+      PropertyDescriptor[] props = info.getPropertyDescriptors();
+      for (PropertyDescriptor desc : props) {
+        Method writeMethod = desc.getWriteMethod();
+        Type type = writeMethod.getGenericParameterTypes()[0];
+        String typeString = type+"";
+        String key = desc.getName();
+        for (String bKey : keySet()) {
+          if (!bKey.equalsIgnoreCase(key)) {
+            continue;
+          }
+          Object value = get(bKey);
+          if(null!=value) {
+            if (value instanceof Integer) {
+              int v = (Integer) value;
+              if ("byte".equals(typeString)) {
+                value = (byte) v;
+              } else if ("short".equals(typeString)) {
+                value = (short) v;
+              }
+            } else if (value instanceof Double) {
+              double v = (Double) value;
+              if ("byte".equals(typeString)) {
+                value = (byte) v;
+              } else if ("short".equals(typeString)) {
+                value = (short) v;
+              } else if ("int".equals(typeString)) {
+                value = (int) v;
+              } else if ("long".equals(typeString)) {
+                value = (long) v;
+              } else if ("float".equals(typeString)) {
+                value = (float) v;
+              }
+            } else if (value instanceof String) {
+              String v = value + "";
+              if ("byte".equals(typeString)) {
+                value = Byte.parseByte(v);
+              } else if ("short".equals(typeString)) {
+                value = Short.parseShort(v);
+              } else if ("int".equals(typeString)) {
+                value = Integer.parseInt(v);
+              } else if ("long".equals(typeString)) {
+                value = Long.parseLong(v);
+              } else if ("float".equals(typeString)) {
+                value = Float.parseFloat(v);
+              } else if ("double".equals(typeString)) {
+                value = Double.parseDouble(v);
+              }
+            } else if (value instanceof Bean) {
+              value = ((Bean) value).toObject(desc.getPropertyType());
+            } else if (value instanceof List) {
+              Type elType = desc.getPropertyType().getComponentType();
+              if(null==elType){
+                elType = ((ParameterizedType) type).getActualTypeArguments()[0];
+              }
+              Map<Integer, Object> cache = new HashMap<Integer, Object>();
+              List l = (List) value;
+              for (int i = 0, j = l.size(); i < j; i++) {
+                Object el = l.get(i);
+                if (el instanceof Bean) {
+                  cache.put(i, ((Bean) el).toObject((Class) elType));
+                }
+              }
+              for (Entry<Integer, Object> entry : cache.entrySet()) {
+                l.set(entry.getKey(), entry.getValue());
+              }
+              if (typeString.startsWith(Set.class.getName())) {
+                value = new HashSet(l);
+              } else if (typeString.startsWith(Queue.class.getName())) {
+                value = new LinkedList(l);
+              } else if (typeString.startsWith("class [")) {
+                int size = l.size();
+                value = Array.newInstance((Class) elType, size);
+                for (int i = 0; i < size; i++) {
+                  Array.set(value, i, l.get(i));
+                }
+              }
+            }
+          }
+          writeMethod.invoke(o, value);
+          matchedKeyCount++;
+          break;
+        }
+      }
+      if (matchedKeyCount > lastMatchedKeyCount) {
+        lastMatchedKeyCount = matchedKeyCount;
+        ret = o;
+      }
+    }
+    return (E)ret;
   }
 
   /**
