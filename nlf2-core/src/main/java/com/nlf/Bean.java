@@ -5,6 +5,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.*;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -103,9 +104,24 @@ public class Bean implements Map<String,Object>,java.io.Serializable{
             if (value instanceof Integer) {
               int v = (Integer) value;
               if ("byte".equals(typeString)) {
-                value = (byte) v;
+                value = (byte)v;
               } else if ("short".equals(typeString)) {
-                value = (short) v;
+                value = (short)v;
+              }
+            } else if (value instanceof BigDecimal) {
+              BigDecimal v = (BigDecimal) value;
+              if ("byte".equals(typeString)) {
+                value = v.byteValue();
+              } else if ("short".equals(typeString)) {
+                value = v.shortValue();
+              }else if ("int".equals(typeString)) {
+                value = v.intValue();
+              }else if ("long".equals(typeString)) {
+                value = v.longValue();
+              }else if ("float".equals(typeString)) {
+                value = v.floatValue();
+              }else if ("double".equals(typeString)) {
+                value = v.doubleValue();
               }
             } else if (value instanceof Double) {
               double v = (Double) value;
