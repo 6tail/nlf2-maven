@@ -17,6 +17,7 @@ import com.nlf.extend.web.AbstractWebRequest;
 import com.nlf.extend.web.AbstractWebSession;
 import com.nlf.extend.web.IWebFileUploader;
 import com.nlf.extend.web.WebStatics;
+import com.nlf.log.Logger;
 
 /**
  * 默认WEB请求
@@ -100,9 +101,13 @@ public class DefaultWebRequest extends AbstractWebRequest{
           }
         }
       }else{
-        value = URLDecoder.decode(value,Statics.ENCODE);
-        for(int i=0,j=values.length;i<j;i++){
-          values[i] = URLDecoder.decode(values[i],Statics.ENCODE);
+        try {
+          value = URLDecoder.decode(value, Statics.ENCODE);
+          for (int i = 0, j = values.length; i < j; i++) {
+            values[i] = URLDecoder.decode(values[i], Statics.ENCODE);
+          }
+        }catch (UnsupportedEncodingException e){
+          Logger.getLog().warn(App.getProperty("nlf.web.request.parameter.decode_failed",key));
         }
       }
       param.set(key,value);

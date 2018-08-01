@@ -214,4 +214,119 @@ public class App{
     }
     return null==value?null:params.length>0?java.text.MessageFormat.format(value,params):value;
   }
+
+  /**
+   * 获取properties的short值，如果获取不到或出错，返回默认值，不抛出异常
+   * @param key 键
+   * @param defaultValue 默认值
+   * @return 值
+   */
+  public static short getPropertyShort(String key,short defaultValue){
+    try{
+      return Short.parseShort(getProperty(key));
+    }catch(Exception e){
+      return defaultValue;
+    }
+  }
+
+  /**
+   * 获取properties的int值，如果获取不到或出错，返回默认值，不抛出异常
+   * @param key 键
+   * @param defaultValue 默认值
+   * @return 值
+   */
+  public static int getPropertyInt(String key,int defaultValue){
+    try{
+      return Integer.parseInt(getProperty(key));
+    }catch(Exception e){
+      return defaultValue;
+    }
+  }
+
+  /**
+   * 获取properties的long值，如果获取不到或出错，返回默认值，不抛出异常
+   * @param key 键
+   * @param defaultValue 默认值
+   * @return 值
+   */
+  public static long getPropertyLong(String key,long defaultValue){
+    try{
+      return Long.parseLong(getProperty(key));
+    }catch(Exception e){
+      return defaultValue;
+    }
+  }
+
+  /**
+   * 获取properties的float值，如果获取不到或出错，返回默认值，不抛出异常
+   * @param key 键
+   * @param defaultValue 默认值
+   * @return 值
+   */
+  public static float getPropertyFloat(String key,float defaultValue){
+    try{
+      return Float.parseFloat(getProperty(key));
+    }catch(Exception e){
+      return defaultValue;
+    }
+  }
+
+  /**
+   * 获取properties的double值，如果获取不到或出错，返回默认值，不抛出异常
+   * @param key 键
+   * @param defaultValue 默认值
+   * @return 值
+   */
+  public static double getPropertyDouble(String key,double defaultValue){
+    try{
+      return Double.parseDouble(getProperty(key));
+    }catch(Exception e){
+      return defaultValue;
+    }
+  }
+
+  /**
+   * 获取properties的boolean值，如果获取不到或出错，返回默认值，不抛出异常
+   * @param key 键
+   * @param defaultValue 默认值
+   * @return 值
+   */
+  public static boolean getPropertyBoolean(String key,boolean defaultValue){
+    try{
+      return Boolean.parseBoolean(getProperty(key));
+    }catch(Exception e){
+      return defaultValue;
+    }
+  }
+
+  /**
+   * 获取properties的字符串值，如果获取不到或出错，返回默认值，不抛出异常
+   * @param key 键
+   * @param defaultValue 默认值
+   * @return 值
+   */
+  public static String getPropertyString(String key,String defaultValue){
+    try{
+      String ret = getProperty(key);
+      return null==ret?defaultValue:ret;
+    }catch(Exception e){
+      return defaultValue;
+    }
+  }
+
+  /**
+   * 获取properties的字符串值，如果获取不到或出错，返回默认值，不抛出异常
+   * @param locale locale
+   * @param key 键
+   * @param defaultValue 默认值
+   * @return 值
+   */
+  public static String getPropertyString(Locale locale,String key,String defaultValue){
+    try{
+      String ret = getProperty(locale,key);
+      return null==ret?defaultValue:ret;
+    }catch(Exception e){
+      return defaultValue;
+    }
+  }
 }

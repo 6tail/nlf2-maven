@@ -277,7 +277,7 @@ public class Bean implements Map<String,Object>,java.io.Serializable{
    * @param defaultValue 默认值
    * @return 值
    */
-  public short getInt(String key,short defaultValue){
+  public short getShort(String key,short defaultValue){
     try{
       return Short.parseShort(String.valueOf(values.get(key)));
     }catch(Exception e){
