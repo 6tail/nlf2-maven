@@ -25,7 +25,7 @@ public class MessageHelper{
    * @param message
    * @return 消息ID
    * @see com.nlf.extend.wechat.base.BaseHelper
-   * @see com.nlf.extend.wechat.base.AccessToken
+   * @see com.nlf.extend.wechat.base.bean.AccessToken
    * @throws WeixinException
    */
   public static String send(String accessToken,Message message) throws WeixinException{
