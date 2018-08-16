@@ -1,6 +1,7 @@
 package com.nlf.extend.dao.noSql;
 
 import com.nlf.dao.DaoFactory;
+import com.nlf.dao.DaoType;
 
 /**
  * 通用的NoSqlDao工厂
@@ -25,6 +26,6 @@ public class NoSqlDaoFactory extends DaoFactory{
    * @return NoSqlDao
    */
   public static INoSqlDao getDao(){
-    return (INoSqlDao)DaoFactory.getDao();
+    return (INoSqlDao)DaoFactory.getDao(DaoType.nosql);
   }
 }

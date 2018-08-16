@@ -27,6 +27,10 @@ public abstract class AbstractDao implements IDao{
     this.alias = alias;
   }
 
+  public DaoType getType() {
+    return DaoType.sql;
+  }
+
   /**
    * 供子类获取DB连接接口
    * @return DB连接接口

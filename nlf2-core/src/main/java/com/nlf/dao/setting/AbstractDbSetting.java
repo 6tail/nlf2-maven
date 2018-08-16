@@ -1,6 +1,8 @@
 package com.nlf.dao.setting;
 
 
+import com.nlf.dao.DaoType;
+
 /**
  * 连接配置抽象
  * 
@@ -34,6 +36,10 @@ public abstract class AbstractDbSetting implements IDbSetting{
   
   /** 数据库实例名 */
   protected String dbName;
+
+  public DaoType getDaoType(){
+    return DaoType.sql;
+  }
 
   /**
    * 获取连接类型

@@ -1,6 +1,7 @@
 package com.nlf.extend.dao.sql;
 
 import com.nlf.dao.DaoFactory;
+import com.nlf.dao.DaoType;
 
 /**
  * 通用的SqlDao工厂
@@ -25,6 +26,6 @@ public class SqlDaoFactory extends DaoFactory{
    * @return SqlDao
    */
   public static ISqlDao getDao(){
-    return (ISqlDao)DaoFactory.getDao();
+    return (ISqlDao)DaoFactory.getDao(DaoType.sql);
   }
 }

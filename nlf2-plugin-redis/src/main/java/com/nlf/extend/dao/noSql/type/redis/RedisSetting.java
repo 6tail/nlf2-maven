@@ -1,5 +1,6 @@
 package com.nlf.extend.dao.noSql.type.redis;
 
+import com.nlf.dao.DaoType;
 import com.nlf.dao.setting.AbstractDbSetting;
 
 /**
@@ -27,6 +28,10 @@ public class RedisSetting extends AbstractDbSetting{
   private boolean blockWhenExhausted;
   private String host;
   private int port;
+
+  public DaoType getDaoType() {
+    return DaoType.nosql;
+  }
 
   public RedisSetting(){
     type = DEFAULT_TYPE;

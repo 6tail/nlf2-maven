@@ -2,6 +2,8 @@ package com.nlf.dao;
 
 import com.nlf.App;
 import com.nlf.dao.setting.DbSettingFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 通用的Dao工厂
@@ -10,7 +12,8 @@ import com.nlf.dao.setting.DbSettingFactory;
  *
  */
 public class DaoFactory{
-  protected static final java.util.Map<String,String> daos = new java.util.HashMap<String,String>();
+  /** alias与Dao实现类的映射 */
+  protected static final Map<String,String> daos = new HashMap<String,String>();
   /**
    * 根据别名获取Dao
    * 
@@ -48,5 +51,14 @@ public class DaoFactory{
    */
   public static IDao getDao(){
     return getDao(DbSettingFactory.getDefaultSetting().getAlias());
+  }
+
+  /**
+   * 获取指定Dao类型的默认DB配置的Dao
+   *
+   * @return Dao
+   */
+  public static IDao getDao(DaoType daoType){
+    return getDao(DbSettingFactory.getDefaultSetting(daoType).getAlias());
   }
 }

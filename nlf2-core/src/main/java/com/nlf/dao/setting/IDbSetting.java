@@ -1,5 +1,7 @@
 package com.nlf.dao.setting;
 
+import com.nlf.dao.DaoType;
+
 /**
  * DB配置接口
  *
@@ -42,4 +44,10 @@ public interface IDbSetting extends java.io.Serializable{
    * @return DB类型
    */
   String getDbType();
+
+  /**
+   * 获取DAO类型
+   * @return DAO类型
+   */
+  DaoType getDaoType();
 }

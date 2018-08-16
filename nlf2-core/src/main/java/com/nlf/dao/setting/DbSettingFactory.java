@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.nlf.App;
+import com.nlf.dao.DaoType;
 import com.nlf.dao.exception.DaoException;
 
 /**
@@ -138,5 +139,20 @@ public class DbSettingFactory{
       throw new DaoException(App.getProperty("nlf.exception.dao.setting.default_not_found"));
     }
     return SETTING_LIST.get(0);
+  }
+
+  /**
+   * 获取指定Dao类型的默认DB配置，如果有多个配置文件，返回别名alias最大的配置
+   *
+   * @return 指定Dao类型的默认DB配置，如果有多个配置文件，返回别名alias最大的配置
+   * @throws DaoException 数据访问异常
+   */
+  public static IDbSetting getDefaultSetting(DaoType daoType){
+    for(IDbSetting setting:SETTING_LIST){
+      if(setting.getDaoType().equals(daoType)){
+        return setting;
+      }
+    }
+    throw new DaoException(App.getProperty("nlf.exception.dao.setting.default_not_found"));
   }
 }

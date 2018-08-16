@@ -15,6 +15,12 @@ public interface IDao{
   String getAlias();
 
   /**
+   * 获取Dao类型
+   * @return Dao类型
+   */
+  DaoType getType();
+
+  /**
    * 是否支持指定DB类型
    * 
    * @param dbType DB类型，如mysql、oracle、sqlserver等
