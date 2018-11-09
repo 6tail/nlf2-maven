@@ -25,6 +25,7 @@
         <module>nlf2-plugin-hikari</module>
         <module>nlf2-plugin-oracle11g</module>
         <module>nlf2-plugin-hotswap</module>
+        <module>nlf2-plugin-rpc</module>
     </modules>
     <licenses>
         <license>
