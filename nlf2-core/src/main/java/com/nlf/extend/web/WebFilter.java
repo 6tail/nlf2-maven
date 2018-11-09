@@ -4,7 +4,6 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +21,7 @@ import com.nlf.core.Statics;
 public class WebFilter implements Filter{
   public void destroy(){}
 
-  public void doFilter(ServletRequest servletRequest,ServletResponse servletResponse,FilterChain filterChain) throws IOException,ServletException{
+  public void doFilter(ServletRequest servletRequest,ServletResponse servletResponse,FilterChain filterChain) throws IOException{
     servletRequest.setCharacterEncoding(Statics.ENCODE);
     IWebRequest request = App.getProxy().newInstance(IWebRequest.class.getName());
     IWebResponse response = App.getProxy().newInstance(IWebResponse.class.getName());
@@ -37,7 +36,7 @@ public class WebFilter implements Filter{
     dispatcher.service(request,response,chain);
   }
 
-  public void init(FilterConfig config) throws ServletException{
+  public void init(FilterConfig config){
     //web应用初始化
     WebApp.init(config.getServletContext());
     WebApp.context.setAttribute(WebStatics.CONTEXT_PATH_TAG,WebApp.contextPath);

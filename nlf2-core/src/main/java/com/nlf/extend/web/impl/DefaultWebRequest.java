@@ -27,7 +27,17 @@ import com.nlf.log.Logger;
  */
 public class DefaultWebRequest extends AbstractWebRequest{
   /** 代理标识 */
-  public static final String[] PROXY_HEADER = {"X-Real-IP","X-Forwarded-For","Proxy-Client-IP","WL-Proxy-Client-IP","HTTP_CLIENT_IP","HTTP_X_FORWARDED_FOR"};
+  public static final String[] PROXY_HEADER = {
+      "X-REAL-IP",
+      "X-FORWARDED-FOR",
+      "PROXY-CLIENT-IP",
+      "WL-PROXY-CLIENT-IP",
+      "HTTP_CLIENT_IP",
+      "HTTP_X_FORWARDED_FOR",
+      "HTTP_X_FORWARDED",
+      "HTTP_FORWARDED_FOR",
+      "HTTP_FORWARDED"
+  };
 
   protected String getIP(){
     String r = servletRequest.getRemoteAddr();
@@ -106,7 +116,7 @@ public class DefaultWebRequest extends AbstractWebRequest{
           for (int i = 0, j = values.length; i < j; i++) {
             values[i] = URLDecoder.decode(values[i], Statics.ENCODE);
           }
-        }catch (UnsupportedEncodingException e){
+        }catch (Exception e){
           Logger.getLog().warn(App.getProperty("nlf.web.request.parameter.decode_failed",key));
         }
       }
