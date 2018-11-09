@@ -4,9 +4,12 @@ import com.nlf.App;
 import com.nlf.Bean;
 import com.nlf.extend.wechat.exception.WeixinException;
 import com.nlf.extend.wechat.user.bean.UserInfo;
+import com.nlf.extend.wechat.user.bean.UserList;
 import com.nlf.extend.wechat.util.HttpsClient;
 import com.nlf.log.Logger;
 import com.nlf.serialize.json.JSON;
+
+import java.util.List;
 
 /**
  * 公众号用户工具类，获取关注用户信息
@@ -56,6 +59,31 @@ public class UserHelper{
       u.setSubscribeTime(o.getLong("subscribe_time",0));
       u.setUnionid(o.getString("unionid"));
       return u;
+    }catch(WeixinException e){
+      throw e;
+    }catch(Exception e){
+      throw new WeixinException(e);
+    }
+  }
+
+  public static UserList list(String accessToken, String nextOpenid) throws WeixinException{
+    try{
+      String url = App.getProperty("nlf.weixin.url.sns.user_list",accessToken,null==nextOpenid?"":nextOpenid);
+      String result = HttpsClient.get(url);
+      Logger.getLog().debug(App.getProperty("nlf.weixin.recv",result));
+      Bean o = JSON.toBean(result);
+      int errorCode = o.getInt("errcode",0);
+      if(0!=errorCode){
+        throw new WeixinException(errorCode,o.getString("errmsg"));
+      }
+      UserList l = new UserList();
+      l.setTotal(o.getInt("total",0));
+      l.setCount(o.getInt("count",0));
+      l.setNextOpenid(o.getString("next_openid",""));
+      Bean data = o.getBean("data");
+      List<String> openids = data.getList("openid");
+      l.setOpenids(openids);
+      return l;
     }catch(WeixinException e){
       throw e;
     }catch(Exception e){
