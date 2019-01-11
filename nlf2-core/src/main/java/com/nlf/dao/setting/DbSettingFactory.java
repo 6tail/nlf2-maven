@@ -26,6 +26,8 @@ public class DbSettingFactory{
   protected static final List<IDbSetting> SETTING_LIST = new ArrayList<IDbSetting>();
   /** DB配置排序比较器 */
   protected static Comparator<IDbSetting> comparator = DEFAULT_COMPARATOR;
+  /** DB配置管理器 */
+  protected static IDbSettingManager dbSettingManager;
 
   protected DbSettingFactory(){}
   static{
@@ -36,8 +38,8 @@ public class DbSettingFactory{
    * 初始化
    */
   private synchronized static void init(){
-    IDbSettingManager dsm = App.getProxy().newInstance(IDbSettingManager.class.getName());
-    List<IDbSetting> l = dsm.listDbSettings();
+    dbSettingManager = App.getProxy().newInstance(IDbSettingManager.class.getName());
+    List<IDbSetting> l = dbSettingManager.listDbSettings();
     for(IDbSetting o:l){
       SETTING_POOL.put(o.getAlias(),o);
       SETTING_LIST.add(o);

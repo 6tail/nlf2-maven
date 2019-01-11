@@ -14,12 +14,18 @@ public class RedisSettingProvider implements IDbSettingProvider{
     String password = o.getString("password","");
     String server = o.getString("server","");
     int port = o.getInt("port",6379);
+    //驱动，如果这里配置了则优先使用
+    String driver = o.getString("driver","");
     type = type.toUpperCase();
     dbType = dbType.toLowerCase();
     RedisSetting rs = new RedisSetting();
     rs.setAlias(alias);
     rs.setDbType(dbType);
-    rs.setDriver(App.getProperty("nlf.dao.setting."+dbType+".driver"));
+    if(driver.length()>0){
+      rs.setDriver(driver);
+    }else {
+      rs.setDriver(App.getProperty("nlf.dao.setting." + dbType + ".driver"));
+    }
     rs.setPassword(password);
     int maxTotal = o.getInt("maxTotal",-1);
     if(-1==maxTotal){

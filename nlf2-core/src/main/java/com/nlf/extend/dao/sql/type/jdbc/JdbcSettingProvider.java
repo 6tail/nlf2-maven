@@ -15,15 +15,32 @@ public class JdbcSettingProvider implements IDbSettingProvider{
     String server = o.getString("server","");
     String port = o.getString("port","");
     String dbname = o.getString("dbname","");
+    //驱动，如果这里配置了则优先使用
+    String driver = o.getString("driver","");
+    //URL，如果这里配置了则优先使用，server、port、dbname和extra都无效
+    String url = o.getString("url","");
+    //附加参数
+    String extra = o.getString("extra","");
+    if(extra.length()>0&&!extra.startsWith("?")){
+      extra = "?"+extra;
+    }
     dbType = dbType.toLowerCase();
     JdbcSetting js = new JdbcSetting();
     js.setAlias(alias);
-    js.setDriver(App.getProperty("nlf.dao.setting."+dbType+".driver"));
     js.setPassword(password);
-    js.setUrl(App.getProperty("nlf.dao.setting."+dbType+".url",server,port,dbname));
     js.setUser(user);
     js.setDbType(dbType);
     js.setDbName(dbname);
+    if(driver.length()>0){
+      js.setDriver(driver);
+    }else {
+      js.setDriver(App.getProperty("nlf.dao.setting." + dbType + ".driver"));
+    }
+    if(url.length()>0){
+      js.setUrl(url);
+    }else {
+      js.setUrl(App.getProperty("nlf.dao.setting." + dbType + ".url", server, port, dbname) + extra);
+    }
     return js;
   }
 
