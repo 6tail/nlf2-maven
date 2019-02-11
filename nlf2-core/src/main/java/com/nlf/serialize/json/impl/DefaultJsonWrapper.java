@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
-import com.nlf.Bean;
 import com.nlf.dao.paging.PageData;
 import com.nlf.serialize.AbstractWrapper;
 import com.nlf.util.Base64Util;
@@ -97,24 +96,6 @@ public class DefaultJsonWrapper extends AbstractWrapper{
     return s.toString();
   }
 
-  protected String wrapBean(Object o){
-    Bean bean = (Bean)o;
-    StringBuilder s = new StringBuilder();
-    s.append("{");
-    Iterator<String> it = bean.keySet().iterator();
-    while(it.hasNext()){
-      String key = it.next();
-      s.append(wrapString(key));
-      s.append(":");
-      s.append(wrap(bean.get(key)));
-      if(it.hasNext()){
-        s.append(",");
-      }
-    }
-    s.append("}");
-    return s.toString();
-  }
-
   protected String wrapObject(Object o){
     try{
       StringBuilder s = new StringBuilder();
@@ -170,8 +151,6 @@ public class DefaultJsonWrapper extends AbstractWrapper{
       s.append(wrapMap(o));
     }else if(o instanceof Enum){
       s.append(wrapString(o));
-    }else if(o instanceof Bean){
-      s.append(wrapBean(o));
     }else{
       s.append(wrapObject(o));
     }

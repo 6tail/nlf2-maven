@@ -18,9 +18,16 @@ import java.util.zip.ZipFile;
  *
  */
 public class IOUtil{
-  
+
+  /** IO缓冲区大小 */
   public static int BUFFER_SIZE = 20480;
-  
+
+  /**
+   * 输入流转字节数组
+   * @param in 输入流
+   * @return 字节数组
+   * @throws IOException IOException
+   */
   public static byte[] toBytes(InputStream in) throws IOException{
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     try{
@@ -38,7 +45,7 @@ public class IOUtil{
   }
   
   /**
-   * 关闭
+   * 安静的关闭
    * 
    * @param closeable Closeable
    */

@@ -24,7 +24,6 @@ import com.nlf.util.IOUtil;
  *
  */
 public class DefaultWebResponse extends AbstractWebResponse{
-  public static int BUFFER_SIZE = 4096;
   public void send(Object o) throws IOException{
     if(null==o) return;
     if(o instanceof RedirectView){
@@ -98,7 +97,7 @@ public class DefaultWebResponse extends AbstractWebResponse{
     try{
       os = servletResponse.getOutputStream();
       int n = 0;
-      byte b[] = new byte[BUFFER_SIZE];
+      byte b[] = new byte[IOUtil.BUFFER_SIZE];
       while((n = inputStream.read(b))!=-1){
         os.write(b,0,n);
       }

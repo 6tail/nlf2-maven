@@ -124,8 +124,10 @@ public class DefaultScanner extends AbstractScanner{
           }
           callerClassName = className;
         }
-        String callerPath = callerClass.getProtectionDomain().getCodeSource().getLocation().getPath();
-        App.caller = new File(URLDecoder.decode(callerPath,CHARSET)).getAbsolutePath();
+        if(null!=callerClass) {
+          String callerPath = callerClass.getProtectionDomain().getCodeSource().getLocation().getPath();
+          App.caller = new File(URLDecoder.decode(callerPath, CHARSET)).getAbsolutePath();
+        }
       }else{
         App.caller = caller;
       }

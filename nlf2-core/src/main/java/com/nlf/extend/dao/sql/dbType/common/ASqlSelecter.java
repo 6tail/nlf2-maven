@@ -1,8 +1,5 @@
 package com.nlf.extend.dao.sql.dbType.common;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import com.nlf.App;
@@ -14,8 +11,6 @@ import com.nlf.extend.dao.sql.AbstractSqlExecuter;
 import com.nlf.extend.dao.sql.Condition;
 import com.nlf.extend.dao.sql.ConditionType;
 import com.nlf.extend.dao.sql.ISqlSelecter;
-import com.nlf.extend.dao.sql.ResultSetIterator;
-import com.nlf.extend.dao.sql.SqlConnection;
 import com.nlf.log.Logger;
 import com.nlf.util.StringUtil;
 
@@ -188,18 +183,7 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
     params.clear();
     sql = buildSql();
     Logger.getLog().debug(buildLog());
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
-    try{
-      stmt = ((SqlConnection)connection).getConnection().prepareStatement(sql);
-      bindParams(stmt);
-      rs = stmt.executeQuery();
-      return toBeans(rs);
-    }catch(SQLException e){
-      throw new DaoException(e);
-    }finally{
-      finalize(stmt,rs);
-    }
+    return queryList();
   }
 
   public List<Bean> top(int count){
@@ -227,19 +211,7 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
     sql = buildSql();
     sql = "SELECT COUNT(*) NLFCOUNT_ FROM ("+sql+") NLFTABLE_";
     Logger.getLog().debug(buildLog());
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
-    List<Bean> l = null;
-    try{
-      stmt = ((SqlConnection)connection).getConnection().prepareStatement(sql);
-      bindParams(stmt);
-      rs = stmt.executeQuery();
-      l = toBeans(rs);
-    }catch(SQLException e){
-      throw new DaoException(e);
-    }finally{
-      finalize(stmt,rs);
-    }
+    List<Bean> l = queryList();
     if(l.size()<1){
       throw new DaoException(App.getProperty("nlf.exception.dao.select.one.not_found"));
     }
@@ -260,18 +232,6 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
     params.clear();
     sql = buildSql();
     Logger.getLog().debug(buildLog());
-    Iterator<Bean> iterator = null;
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
-    try{
-      stmt = ((SqlConnection)connection).getConnection().prepareStatement(sql);
-      bindParams(stmt);
-      rs = stmt.executeQuery();
-      iterator = new ResultSetIterator(rs);
-    }catch(SQLException e){
-      finalize(stmt,rs);
-      throw new DaoException(e);
-    }
-    return iterator;
+    return queryIterator();
   }
 }

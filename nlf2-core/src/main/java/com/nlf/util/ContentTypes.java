@@ -31,7 +31,6 @@ public class ContentTypes{
   private static final Map<String,String> mapping = new HashMap<String,String>(){
     private static final long serialVersionUID = 1;
     {
-      put("tif","image/tiff");
       put("001","application/x-001");
       put("301","application/x-301");
       put("323","text/h323");
@@ -88,7 +87,6 @@ public class ContentTypes{
       put("dot","application/msword");
       put("drw","application/x-drw");
       put("dtd","text/xml");
-      put("dwf","Model/vnd.dwf");
       put("dwf","application/x-dwf");
       put("dwg","application/x-dwg");
       put("dxb","application/x-dxb");
@@ -99,7 +97,6 @@ public class ContentTypes{
       put("ent","text/xml");
       put("epi","application/x-epi");
       put("eps","application/x-ps");
-      put("eps","application/postscript");
       put("etd","application/x-ebx");
       put("exe","application/x-msdownload");
       put("fax","image/fax");
@@ -127,7 +124,6 @@ public class ContentTypes{
       put("htx","text/html");
       put("icb","application/x-icb");
       put("ico","image/x-icon");
-      put("ico","application/x-ico");
       put("iff","application/x-iff");
       put("ig4","application/x-g4");
       put("igs","application/x-igs");
@@ -139,10 +135,8 @@ public class ContentTypes{
       put("java","java/*");
       put("jfif","image/jpeg");
       put("jpe","image/jpeg");
-      put("jpe","application/x-jpe");
       put("jpeg","image/jpeg");
       put("jpg","image/jpeg");
-      put("jpg","application/x-jpg");
       put("js","application/x-javascript");
       put("jsp","text/html");
       put("la1","audio/x-liquid-file");
@@ -161,7 +155,6 @@ public class ContentTypes{
       put("man","application/x-troff-man");
       put("math","text/xml");
       put("mdb","application/msaccess");
-      put("mdb","application/x-mdb");
       put("mfp","application/x-shockwave-flash");
       put("mht","message/rfc822");
       put("mhtml","message/rfc822");
@@ -211,7 +204,6 @@ public class ContentTypes{
       put("pcl","application/x-pcl");
       put("pcx","application/x-pcx");
       put("pdf","application/pdf");
-      put("pdf","application/pdf");
       put("pdx","application/vnd.adobe.pdx");
       put("pfx","application/x-pkcs12");
       put("pgl","application/x-pgl");
@@ -222,19 +214,16 @@ public class ContentTypes{
       put("pls","audio/scpls");
       put("plt","application/x-plt");
       put("png","image/png");
-      put("png","application/x-png");
       put("pot","application/vnd.ms-powerpoint");
       put("ppa","application/vnd.ms-powerpoint");
       put("ppm","application/x-ppm");
       put("pps","application/vnd.ms-powerpoint");
       put("ppt","application/vnd.ms-powerpoint");
-      put("ppt","application/x-ppt");
       put("pr","application/x-pr");
       put("prf","application/pics-rules");
       put("prn","application/x-prn");
       put("prt","application/x-prt");
       put("ps","application/x-ps");
-      put("ps","application/postscript");
       put("ptn","application/x-ptn");
       put("pwz","application/vnd.ms-powerpoint");
       put("r3t","text/vnd.rn-realtext3d");
@@ -265,7 +254,6 @@ public class ContentTypes{
       put("rsml","application/vnd.rn-rsml");
       put("rt","text/vnd.rn-realtext");
       put("rtf","application/msword");
-      put("rtf","application/x-rtf");
       put("rv","video/vnd.rn-realvideo");
       put("sam","application/x-sam");
       put("sat","application/x-sat");
@@ -295,7 +283,6 @@ public class ContentTypes{
       put("tg4","application/x-tg4");
       put("tga","application/x-tga");
       put("tif","image/tiff");
-      put("tif","application/x-tif");
       put("tiff","image/tiff");
       put("tld","text/xml");
       put("top","drawing/x-top");
@@ -310,10 +297,8 @@ public class ContentTypes{
       put("vml","text/xml");
       put("vpg","application/x-vpeg005");
       put("vsd","application/vnd.visio");
-      put("vsd","application/x-vsd");
       put("vss","application/vnd.visio");
       put("vst","application/vnd.visio");
-      put("vst","application/x-vst");
       put("vsw","application/vnd.visio");
       put("vsx","application/vnd.visio");
       put("vtx","application/vnd.visio");
@@ -356,7 +341,6 @@ public class ContentTypes{
       put("xfdf","application/vnd.adobe.xfdf");
       put("xhtml","text/html");
       put("xls","application/vnd.ms-excel");
-      put("xls","application/x-xls");
       put("xlw","application/x-xlw");
       put("xml","text/xml");
       put("xpl","audio/scpls");

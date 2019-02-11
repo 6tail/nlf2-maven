@@ -17,7 +17,6 @@ import com.nlf.util.IOUtil;
  *
  */
 public class DefaultObjParser implements IParser{
-  public static int BUFFER_SIZE = 4096;
   public boolean support(String format){
     return "obj".equalsIgnoreCase(format);
   }
@@ -34,7 +33,7 @@ public class DefaultObjParser implements IParser{
       bZip = new ByteArrayInputStream(Base64Util.decode(s));
       iZip = new ZipInputStream(bZip);
       iZip.getNextEntry();
-      byte[] buffer = new byte[BUFFER_SIZE];
+      byte[] buffer = new byte[IOUtil.BUFFER_SIZE];
       int offset = -1;
       while((offset = iZip.read(buffer))!=-1){
         bObj.write(buffer,0,offset);

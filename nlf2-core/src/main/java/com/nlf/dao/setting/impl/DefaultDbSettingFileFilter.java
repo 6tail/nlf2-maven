@@ -8,7 +8,6 @@ package com.nlf.dao.setting.impl;
  */
 public class DefaultDbSettingFileFilter implements com.nlf.dao.setting.IDbSettingFileFilter{
   public boolean accept(java.io.File f){
-    if(f.isDirectory()) return false;
-    return !f.getName().startsWith(".");
+    return !f.isDirectory()&&!f.getName().startsWith(".");
   }
 }

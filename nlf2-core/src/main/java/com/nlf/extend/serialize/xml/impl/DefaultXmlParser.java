@@ -123,6 +123,7 @@ public class DefaultXmlParser extends AbstractParser{
       case '!':
         String s = readUntil('>').trim();
         String us = s.toUpperCase();
+        StringBuilder value = new StringBuilder();
         if(us.startsWith(CDATA_PREFIX)){// 处理CDATA
           while(!us.endsWith(CDATA_SUFFIX)){
             next();
@@ -130,26 +131,24 @@ public class DefaultXmlParser extends AbstractParser{
               throw new XmlFormatException(os);
             }
             us = readUntil('>');
-            s += ">"+us;
+            value.append(">");
+            value.append(us);
             us = us.toUpperCase();
           }
-          s = s.substring(CDATA_PREFIX.length());
+          s = value.toString().substring(CDATA_PREFIX.length());
           s = s.substring(0,s.length()-CDATA_SUFFIX.length());
           int stackSize = stack.size();
           if(stackSize>0){
             INode p = stack.get(stackSize-1);
             ((NodeString)p).setValue(s);
           }
-        }else if(us.startsWith(ANNO_PREFIX)){// 处理注释
-          StringBuffer n = new StringBuffer();// 注释
-          n.append(s);
+        }else if(us.startsWith(ANNO_PREFIX)){// 忽略注释
           while(!us.endsWith(ANNO_SUFFIX)){
             next();
             if(-1==c){
               throw new XmlFormatException(os);
             }
             us = readUntil('>');
-            n.append(us);
             us = us.toUpperCase();
           }
         }

@@ -279,58 +279,59 @@ public class Klass{
           if(!"Code".equals(attrName)) continue;
           length = MathUtil.toInt(MathUtil.sub(b,4,7)); //code_length
           b = MathUtil.sub(b,8,8+length-1);
-          for(int k=length-1;k>-1;k--){
+          labelK:for(int k=length-1;k>-1;k--){
             int op = b[k]&0xff;
-            if(0xac==op){//ireturn
-              f.setRetMaybe("I");
-              break;
-            }else if(0xad==op){//lreturn
-              f.setRetMaybe("J");
-              break;
-            }else if(0xae==op){//freturn
-              f.setRetMaybe("F");
-              break;
-            }else if(0xaf==op){//dreturn
-              f.setRetMaybe("D");
-              break;
-            }else if(0xb0==op){//areturn
-              for(int x=k-1;x>-1;x--){
-                int p = b[x]&0xff;
-                try{
-                  IConstant c = getConstant(p);
-                  String retType;
-                  switch(c.getType()){
-                    case IConstant.TYPE_CLASS:
-                      retType = "L"+getConstant(c.toClassConstant().getNameIndex()).toUTFConstant().getContent();
-                      f.setRetMaybe(retType);
-                      break;
-                    case IConstant.TYPE_FIELD:
-                      retType = getConstant(getConstant(c.toFieldConstant().getNameAndTypeIndex()).toNameAndTypeConstant().getDescriptorIndex()).toUTFConstant().getContent();
-                      if(retType.contains(";")){
-                        retType = retType.substring(0,retType.indexOf(";"));
-                      }
-                      f.setRetMaybe(retType);
-                      break;
-                    case IConstant.TYPE_METHOD:
-                      retType = getConstant(getConstant(c.toMethodConstant().getNameAndTypeIndex()).toNameAndTypeConstant().getDescriptorIndex()).toUTFConstant().getContent();
-                      if(retType.contains(")")){
-                        retType = retType.substring(retType.lastIndexOf(")")+1);
-                      }
-                      if(retType.contains(";")){
-                        retType = retType.substring(0,retType.indexOf(";"));
-                      }
-                      f.setRetMaybe(retType);
-                      break;
-                    default:
-                      continue;
-                  }
-                  break;
-                }catch(Exception e){}
-              }
-              break;
-            }else if(0xb1==op){//return
-              f.setRetMaybe(Method.VOID);
-              break;
+            switch (op){
+              case 0xac://ireturn
+                f.setRetMaybe("I");
+                break labelK;
+              case 0xad://lreturn
+                f.setRetMaybe("J");
+                break labelK;
+              case 0xae://freturn
+                f.setRetMaybe("F");
+                break labelK;
+              case 0xaf://dreturn
+                f.setRetMaybe("D");
+                break labelK;
+              case 0xb1://return
+                f.setRetMaybe(Method.VOID);
+                break labelK;
+              case 0xb0://areturn
+                for(int x=k-1;x>-1;x--){
+                  int p = b[x]&0xff;
+                  try{
+                    IConstant c = getConstant(p);
+                    String retType;
+                    switch(c.getType()){
+                      case IConstant.TYPE_CLASS:
+                        retType = "L"+getConstant(c.toClassConstant().getNameIndex()).toUTFConstant().getContent();
+                        f.setRetMaybe(retType);
+                        break;
+                      case IConstant.TYPE_FIELD:
+                        retType = getConstant(getConstant(c.toFieldConstant().getNameAndTypeIndex()).toNameAndTypeConstant().getDescriptorIndex()).toUTFConstant().getContent();
+                        if(retType.contains(";")){
+                          retType = retType.substring(0,retType.indexOf(";"));
+                        }
+                        f.setRetMaybe(retType);
+                        break;
+                      case IConstant.TYPE_METHOD:
+                        retType = getConstant(getConstant(c.toMethodConstant().getNameAndTypeIndex()).toNameAndTypeConstant().getDescriptorIndex()).toUTFConstant().getContent();
+                        if(retType.contains(")")){
+                          retType = retType.substring(retType.lastIndexOf(")")+1);
+                        }
+                        if(retType.contains(";")){
+                          retType = retType.substring(0,retType.indexOf(";"));
+                        }
+                        f.setRetMaybe(retType);
+                        break;
+                      default:
+                        continue;
+                    }
+                    break;
+                  }catch(Exception e){}
+                }
+                break labelK;
             }
           }
         }

@@ -57,6 +57,44 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
     return l;
   }
 
+  protected List<Bean> queryList(){
+    return queryList(0);
+  }
+
+  protected List<Bean> queryList(int row){
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
+    try{
+      stmt = ((SqlConnection)connection).getConnection().prepareStatement(sql);
+      bindParams(stmt);
+      rs = stmt.executeQuery();
+      if(row>0){
+        rs.absolute(row);
+      }
+      return toBeans(rs);
+    }catch(SQLException e){
+      throw new DaoException(e);
+    }finally{
+      finalize(stmt,rs);
+    }
+  }
+
+  public Iterator<Bean> queryIterator(){
+    Iterator<Bean> iterator = null;
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
+    try{
+      stmt = ((SqlConnection)connection).getConnection().prepareStatement(sql);
+      bindParams(stmt);
+      rs = stmt.executeQuery();
+      iterator = new ResultSetIterator(rs);
+    }catch(SQLException e){
+      finalize(stmt);
+      throw new DaoException(e);
+    }
+    return iterator;
+  }
+
   protected void finalize(Statement stmt,ResultSet rs){
     IOUtil.closeQuietly(rs);
     IOUtil.closeQuietly(stmt);

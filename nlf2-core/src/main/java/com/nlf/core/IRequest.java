@@ -23,10 +23,17 @@ public interface IRequest extends IFileUploader{
   Client getClient();
 
   /**
-   * 获取会话
+   * 获取会话，将根据properties中nlf.session.auto_create值决定是否自动创建，默认为true
    * @return 会话
    */
   ISession getSession();
+
+  /**
+   * 获取会话
+   * @param autoCreate 是否自动创建
+   * @return 会话
+   */
+  ISession getSession(boolean autoCreate);
 
   /**
    * 获取请求参数

@@ -1,14 +1,10 @@
 package com.nlf.extend.dao.sql.dbType.sqlserver;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import com.nlf.App;
 import com.nlf.Bean;
 import com.nlf.dao.exception.DaoException;
 import com.nlf.dao.paging.PageData;
-import com.nlf.extend.dao.sql.SqlConnection;
 import com.nlf.extend.dao.sql.dbType.common.ASqlSelecter;
 import com.nlf.log.Logger;
 
@@ -27,18 +23,7 @@ public class SqlserverSelecter extends ASqlSelecter{
     sql = buildSql();
     sql = "SELECT TOP "+count+sql.replaceFirst("SELECT","");
     Logger.getLog().debug(buildLog());
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
-    try{
-      stmt = ((SqlConnection)connection).getConnection().prepareStatement(sql);
-      bindParams(stmt);
-      rs = stmt.executeQuery();
-      return toBeans(rs);
-    }catch(SQLException e){
-      throw new DaoException(e);
-    }finally{
-      finalize(stmt,rs);
-    }
+    return queryList();
   }
 
   public int count(){
@@ -52,19 +37,7 @@ public class SqlserverSelecter extends ASqlSelecter{
     }
     sql = "SELECT COUNT(*) NLFCOUNT_ FROM ("+sql+") NLFTABLE_";
     Logger.getLog().debug(buildLog());
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
-    List<Bean> l = null;
-    try{
-      stmt = ((SqlConnection)connection).getConnection().prepareStatement(sql);
-      bindParams(stmt);
-      rs = stmt.executeQuery();
-      l = toBeans(rs);
-    }catch(SQLException e){
-      throw new DaoException(e);
-    }finally{
-      finalize(stmt,rs);
-    }
+    List<Bean> l = queryList();
     if(l.size()<1){
       throw new DaoException(App.getProperty("nlf.exception.dao.select.one.not_found"));
     }
@@ -84,20 +57,7 @@ public class SqlserverSelecter extends ASqlSelecter{
     sql = buildSql();
     sql = "SELECT TOP "+(d.getPageNumber()*d.getPageSize())+sql.replaceFirst("SELECT","");
     Logger.getLog().debug(buildLog());
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
-    List<Bean> l = null;
-    try{
-      stmt = ((SqlConnection)connection).getConnection().prepareStatement(sql);
-      bindParams(stmt);
-      rs = stmt.executeQuery();
-      rs.absolute((d.getPageNumber()-1)*d.getPageSize());
-      l = toBeans(rs);
-    }catch(SQLException e){
-      throw new DaoException(e);
-    }finally{
-      finalize(stmt,rs);
-    }
+    List<Bean> l = queryList((d.getPageNumber()-1)*d.getPageSize());
     d.setData(l);
     return d;
   }

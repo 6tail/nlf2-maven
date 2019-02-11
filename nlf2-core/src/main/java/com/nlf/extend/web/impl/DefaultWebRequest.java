@@ -13,10 +13,7 @@ import com.nlf.core.ISession;
 import com.nlf.core.Statics;
 import com.nlf.core.UploadFile;
 import com.nlf.extend.serialize.obj.OBJ;
-import com.nlf.extend.web.AbstractWebRequest;
-import com.nlf.extend.web.AbstractWebSession;
-import com.nlf.extend.web.IWebFileUploader;
-import com.nlf.extend.web.WebStatics;
+import com.nlf.extend.web.*;
 import com.nlf.log.Logger;
 
 /**
@@ -160,8 +157,11 @@ public class DefaultWebRequest extends AbstractWebRequest{
   }
 
   public ISession getSession(){
+    return null==session?getSession(App.getPropertyBoolean("nlf.session.auto_create",true)):session;
+  }
+
+  public ISession getSession(boolean autoCreate){
     if(null==session){
-      boolean autoCreate = Boolean.parseBoolean(App.getProperty("nlf.session.auto_create"));
       AbstractWebSession webSession = new DefaultWebSession();
       webSession.setSession(servletRequest.getSession(autoCreate));
       session = webSession;

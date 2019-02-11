@@ -124,10 +124,6 @@ public class DefaultJsonParser extends AbstractParser{
     return s.toString().replace("\\\\","\\");
   }
 
-  private String readUntil(int endTag){
-    return readUntil(new int[]{endTag});
-  }
-
   private String readUntil(int[] endTags){
     StringBuilder s = new StringBuilder();
     outer:while(-1!=c){
@@ -145,31 +141,33 @@ public class DefaultJsonParser extends AbstractParser{
   private void parseMapItem(NodeMap o){
     String key = "";
     skip();// 先跳过无意义的字符
-    if('}'==c){// 如果遇到对象截止符，对象解析完成返回
-      return;
-    }
-    if('\''==c){ // 如果是以单引号开始
-      next(); // 跳过起始的单引号
-      key = readIgnoreSlash('\''); // 一直读，直到遇到独立的单引号才结束
-      next(); // 跳过单引号
-      skip(); // 跳过无意义字符
-      if(':'!=c){ // 接着应该有个冒号
-        throw new JsonFormatException(os);
-      }
-      next(); // 跳过冒号
-    }else if('"'==c){ // 如果是以双引号开始
-      next(); // 跳过起始的双引号
-      key = readIgnoreSlash('"'); // 一直读，直到遇到独立的双引号才结束
-      next(); // 跳过双引号
-      skip(); // 跳过无意义的字符
-      if(':'!=c){ // 接着应该有个冒号
-        throw new JsonFormatException(os);
-      }
-      next(); // 跳过冒号
-    }else{ // 如果直接开始
-      key = readUntil(':'); // 一直读，直到遇到冒号才结束
-      key = key.trim();
-      next();// 跳过冒号
+    switch (c){
+      case '}':// 如果遇到对象截止符，对象解析完成返回
+        return;
+      case '\'': // 如果是以单引号开始
+        next(); // 跳过起始的单引号
+        key = readIgnoreSlash('\''); // 一直读，直到遇到独立的单引号才结束
+        next(); // 跳过单引号
+        skip(); // 跳过无意义字符
+        if(':'!=c){ // 接着应该有个冒号
+          throw new JsonFormatException(os);
+        }
+        next(); // 跳过冒号
+        break;
+      case '"': // 如果是以双引号开始
+        next(); // 跳过起始的双引号
+        key = readIgnoreSlash('"'); // 一直读，直到遇到独立的双引号才结束
+        next(); // 跳过双引号
+        skip(); // 跳过无意义的字符
+        if(':'!=c){ // 接着应该有个冒号
+          throw new JsonFormatException(os);
+        }
+        next(); // 跳过冒号
+        break;
+      default:
+        key = readUntil(new int[]{':'}); // 一直读，直到遇到冒号才结束
+        key = key.trim();
+        next();// 跳过冒号
     }
     INode el = parseNode();
     o.set(key,el);

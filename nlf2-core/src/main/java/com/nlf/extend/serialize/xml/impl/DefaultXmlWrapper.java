@@ -8,9 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
-import com.nlf.Bean;
 import com.nlf.serialize.AbstractWrapper;
 import com.nlf.util.DateUtil;
 
@@ -24,27 +22,11 @@ public class DefaultXmlWrapper extends AbstractWrapper{
   protected String rootTag = "data";
 
   protected String wrapNumber(Object o,String tag){
-    StringBuilder s = new StringBuilder();
-    s.append("<");
-    s.append(tag);
-    s.append(">");
-    s.append(o);
-    s.append("</");
-    s.append(tag);
-    s.append(">");
-    return s.toString();
+    return "<"+tag+">"+o+"</"+tag+">";
   }
 
   protected String wrapBool(Object o,String tag){
-    StringBuilder s = new StringBuilder();
-    s.append("<");
-    s.append(tag);
-    s.append(">");
-    s.append(o);
-    s.append("</");
-    s.append(tag);
-    s.append(">");
-    return s.toString();
+    return "<"+tag+">"+o+"</"+tag+">";
   }
 
   protected String wrapString(Object o,String tag){
@@ -67,15 +49,7 @@ public class DefaultXmlWrapper extends AbstractWrapper{
   }
 
   protected String wrapDate(Object o,String tag){
-    StringBuilder s = new StringBuilder();
-    s.append("<");
-    s.append(tag);
-    s.append(">");
-    s.append(DateUtil.ymdhms((Date)o));
-    s.append("</");
-    s.append(tag);
-    s.append(">");
-    return s.toString();
+    return "<"+tag+">"+DateUtil.ymdhms((Date)o)+"</"+tag+">";
   }
 
   protected String wrapArray(Object o,String tag){
@@ -84,8 +58,8 @@ public class DefaultXmlWrapper extends AbstractWrapper{
     s.append("<");
     s.append(tag);
     s.append(">");
-    for(int i = 0;i<arr.length;i++){
-      s.append(wrap(arr[i],tag.endsWith("s")||tag.endsWith("S")?tag.substring(0,tag.length()-1):tag));
+    for(Object obj:arr){
+      s.append(wrap(obj,tag.toLowerCase().endsWith("s")?tag.substring(0,tag.length()-1):tag));
     }
     s.append("</");
     s.append(tag);
@@ -99,9 +73,8 @@ public class DefaultXmlWrapper extends AbstractWrapper{
     s.append(tag);
     s.append(">");
     Collection<?> c = (Collection<?>)o;
-    Iterator<?> it = c.iterator();
-    while(it.hasNext()){
-      s.append(wrap(it.next(),tag.endsWith("s")||tag.endsWith("S")?tag.substring(0,tag.length()-1):tag));
+    for(Object obj:c){
+      s.append(wrap(obj,tag.toLowerCase().endsWith("s")?tag.substring(0,tag.length()-1):tag));
     }
     s.append("</");
     s.append(tag);
@@ -115,25 +88,12 @@ public class DefaultXmlWrapper extends AbstractWrapper{
     s.append(tag);
     s.append(">");
     Map<?,?> m = (Map<?,?>)o;
-    Iterator<?> it = m.keySet().iterator();
-    while(it.hasNext()){
-      Object key = it.next();
-      s.append(wrap(m.get(key),key+""));
+    for(Map.Entry entry:m.entrySet()){
+      s.append(wrap(entry.getValue(),entry.getKey()+""));
     }
     s.append("</");
     s.append(tag);
     s.append(">");
-    return s.toString();
-  }
-
-  protected String wrapBean(Object o){
-    Bean bean = (Bean)o;
-    StringBuilder s = new StringBuilder();
-    Iterator<String> it = bean.keySet().iterator();
-    while(it.hasNext()){
-      String k = it.next();
-      s.append(wrap(bean.get(k),k));
-    }
     return s.toString();
   }
 
@@ -142,8 +102,7 @@ public class DefaultXmlWrapper extends AbstractWrapper{
       StringBuilder s = new StringBuilder();
       BeanInfo info = Introspector.getBeanInfo(o.getClass(),Object.class);
       PropertyDescriptor[] props = info.getPropertyDescriptors();
-      for(int i = 0;i<props.length;i++){
-        PropertyDescriptor desc = props[i];
+      for(PropertyDescriptor desc:props){
         Method method = desc.getReadMethod();
         if(null==method){
           s.append("<");
@@ -153,7 +112,7 @@ public class DefaultXmlWrapper extends AbstractWrapper{
           s.append(desc.getName());
           s.append(">");
         }else{
-          s.append(wrap(method.invoke(o,new Object[0]),desc.getName()));
+          s.append(wrap(method.invoke(o),desc.getName()));
         }
       }
       return s.toString();
@@ -188,8 +147,6 @@ public class DefaultXmlWrapper extends AbstractWrapper{
       s.append(wrapMap(o,tag));
     }else if(o instanceof Enum){
       s.append(wrapString(o,tag));
-    }else if(o instanceof Bean){
-      s.append(wrapBean(o));
     }else{
       s.append(wrapObject(o));
     }
@@ -197,10 +154,7 @@ public class DefaultXmlWrapper extends AbstractWrapper{
   }
 
   public String wrap(Object o){
-    StringBuilder s = new StringBuilder();
-    s.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    s.append(wrap(o,rootTag));
-    return s.toString();
+    return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+wrap(o,rootTag);
   }
 
   public boolean support(String format){

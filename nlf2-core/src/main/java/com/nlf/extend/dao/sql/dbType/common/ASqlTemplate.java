@@ -1,7 +1,6 @@
 package com.nlf.extend.dao.sql.dbType.common;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,7 +13,6 @@ import com.nlf.dao.exception.DaoException;
 import com.nlf.dao.paging.PageData;
 import com.nlf.extend.dao.sql.AbstractSqlExecuter;
 import com.nlf.extend.dao.sql.ISqlTemplate;
-import com.nlf.extend.dao.sql.ResultSetIterator;
 import com.nlf.extend.dao.sql.SqlConnection;
 import com.nlf.log.Logger;
 
@@ -63,18 +61,7 @@ public class ASqlTemplate extends AbstractSqlExecuter implements ISqlTemplate{
     sql = buildParams(sql,param);
     this.sql = sql;
     Logger.getLog().debug(buildLog());
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
-    try{
-      stmt = ((SqlConnection)connection).getConnection().prepareStatement(sql);
-      bindParams(stmt);
-      rs = stmt.executeQuery();
-      return toBeans(rs);
-    }catch(SQLException e){
-      throw new DaoException(e);
-    }finally{
-      finalize(stmt,rs);
-    }
+    return queryList();
   }
 
   public List<Bean> query(){
@@ -145,18 +132,6 @@ public class ASqlTemplate extends AbstractSqlExecuter implements ISqlTemplate{
     params.clear();
     sql = buildParams(buildSql(),param);
     Logger.getLog().debug(buildLog());
-    Iterator<Bean> iterator = null;
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
-    try{
-      stmt = ((SqlConnection)connection).getConnection().prepareStatement(sql);
-      bindParams(stmt);
-      rs = stmt.executeQuery();
-      iterator = new ResultSetIterator(rs);
-    }catch(SQLException e){
-      finalize(stmt,rs);
-      throw new DaoException(e);
-    }
-    return iterator;
+    return queryIterator();
   }
 }

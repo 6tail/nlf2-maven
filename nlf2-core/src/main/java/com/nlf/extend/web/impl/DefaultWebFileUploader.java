@@ -109,15 +109,17 @@ public class DefaultWebFileUploader implements IWebFileUploader{
       if(fileName.contains(".")){
         fileName = fileName.substring(0,fileName.lastIndexOf("."));
       }
+      StringBuilder prefix = new StringBuilder();
+      prefix.append(fileName);
       //凑够字符数
-      while(fileName.length()<2){
-        fileName += "_";
+      while(prefix.length()<2){
+        prefix.append("_");
       }
-      fileName += "_";
+      prefix.append("_");
       if(suffix.length()>0){
         suffix = "."+suffix;
       }
-      tempFile = File.createTempFile(fileName,suffix);
+      tempFile = File.createTempFile(prefix.toString(),suffix);
       formItem.setTempFile(tempFile);
     }
     BufferedOutputStream out = null;

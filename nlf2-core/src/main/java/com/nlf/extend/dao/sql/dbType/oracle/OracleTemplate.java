@@ -1,13 +1,8 @@
 package com.nlf.extend.dao.sql.dbType.oracle;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import com.nlf.Bean;
-import com.nlf.dao.exception.DaoException;
 import com.nlf.dao.paging.PageData;
-import com.nlf.extend.dao.sql.SqlConnection;
 import com.nlf.extend.dao.sql.dbType.common.ASqlTemplate;
 import com.nlf.log.Logger;
 
@@ -28,18 +23,7 @@ public class OracleTemplate extends ASqlTemplate{
     sql = buildParams(sql,param);
     this.sql = sql;
     Logger.getLog().debug(buildLog());
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
-    try{
-      stmt = ((SqlConnection)connection).getConnection().prepareStatement(sql);
-      bindParams(stmt);
-      rs = stmt.executeQuery();
-      return toBeans(rs);
-    }catch(SQLException e){
-      throw new DaoException(e);
-    }finally{
-      finalize(stmt,rs);
-    }
+    return queryList();
   }
 
   public PageData page(int pageNumber,int pageSize){
@@ -56,19 +40,7 @@ public class OracleTemplate extends ASqlTemplate{
     sql = buildParams(sql,param);
     this.sql = sql;
     Logger.getLog().debug(buildLog());
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
-    List<Bean> l = null;
-    try{
-      stmt = ((SqlConnection)connection).getConnection().prepareStatement(sql);
-      bindParams(stmt);
-      rs = stmt.executeQuery();
-      l = toBeans(rs);
-    }catch(SQLException e){
-      throw new DaoException(e);
-    }finally{
-      finalize(stmt,rs);
-    }
+    List<Bean> l = queryList();
     d.setData(l);
     return d;
   }
