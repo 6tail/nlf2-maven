@@ -1,5 +1,6 @@
 package com.nlf.core;
 
+import com.nlf.App;
 import com.nlf.Bean;
 import com.nlf.util.StringUtil;
 
@@ -39,7 +40,7 @@ public abstract class AbstractRequest implements IRequest{
   }
 
   public ISession getSession(){
-    return session;
+    return null==session?getSession(App.getPropertyBoolean("nlf.session.auto_create",true)):session;
   }
 
   public void setSession(ISession session){

@@ -176,7 +176,7 @@ public class DefaultHttpRpcRequest extends AbstractHttpRpcRequest {
     return client;
   }
 
-  public ISession getSession(){
+  public ISession getSession(boolean autoCreate) {
     return null;
   }
 

@@ -158,10 +158,6 @@ public class DefaultWebRequest extends AbstractWebRequest{
     return client;
   }
 
-  public ISession getSession(){
-    return null==session?getSession(App.getPropertyBoolean("nlf.session.auto_create",true)):session;
-  }
-
   public ISession getSession(boolean autoCreate){
     if(null==session){
       HttpSession httpSession = servletRequest.getSession(autoCreate);
