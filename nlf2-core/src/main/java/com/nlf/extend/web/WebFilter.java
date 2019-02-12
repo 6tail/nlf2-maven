@@ -27,10 +27,10 @@ public class WebFilter implements Filter{
     IWebResponse response = App.getProxy().newInstance(IWebResponse.class.getName());
     IWebFilterChain chain = App.getProxy().newInstance(IWebFilterChain.class.getName());
     request.setServletRequest((HttpServletRequest)servletRequest);
-    response.setServletResponse((HttpServletResponse)servletResponse);
     App.set(Statics.REQUEST,request);
-    App.set(Statics.RESPONSE,response);
     request.init();
+    response.setServletResponse((HttpServletResponse)servletResponse);
+    App.set(Statics.RESPONSE,response);
     chain.setFilterChain(filterChain);
     IDispatcher dispatcher = App.getProxy().newInstance(IWebDispatcher.class.getName());
     dispatcher.service(request,response,chain);

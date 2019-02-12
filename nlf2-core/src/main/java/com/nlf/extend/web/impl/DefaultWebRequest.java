@@ -16,6 +16,8 @@ import com.nlf.extend.serialize.obj.OBJ;
 import com.nlf.extend.web.*;
 import com.nlf.log.Logger;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * 默认WEB请求
  * 
@@ -162,9 +164,12 @@ public class DefaultWebRequest extends AbstractWebRequest{
 
   public ISession getSession(boolean autoCreate){
     if(null==session){
-      AbstractWebSession webSession = new DefaultWebSession();
-      webSession.setSession(servletRequest.getSession(autoCreate));
-      session = webSession;
+      HttpSession httpSession = servletRequest.getSession(autoCreate);
+      if(null!=httpSession){
+        AbstractWebSession webSession = new DefaultWebSession();
+        webSession.setSession(httpSession);
+        session = webSession;
+      }
     }
     return session;
   }
