@@ -8,8 +8,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Map;
 import com.nlf.serialize.AbstractWrapper;
+import com.nlf.util.Base64Util;
 import com.nlf.util.DateUtil;
 
 /**
@@ -52,7 +54,15 @@ public class DefaultXmlWrapper extends AbstractWrapper{
     return "<"+tag+">"+DateUtil.ymdhms((Date)o)+"</"+tag+">";
   }
 
+  protected String wrapByteArray(Object o,String tag){
+    byte[] d = (byte[])o;
+    return wrapString(Base64Util.encode(d),tag);
+  }
+
   protected String wrapArray(Object o,String tag){
+    if(o instanceof byte[]){
+      return wrapByteArray(o,tag);
+    }
     StringBuilder s = new StringBuilder();
     Object[] arr = (Object[])o;
     s.append("<");
@@ -75,6 +85,21 @@ public class DefaultXmlWrapper extends AbstractWrapper{
     Collection<?> c = (Collection<?>)o;
     for(Object obj:c){
       s.append(wrap(obj,tag.toLowerCase().endsWith("s")?tag.substring(0,tag.length()-1):tag));
+    }
+    s.append("</");
+    s.append(tag);
+    s.append(">");
+    return s.toString();
+  }
+
+  protected String wrapEnumeration(Object o,String tag){
+    StringBuilder s = new StringBuilder();
+    s.append("<");
+    s.append(tag);
+    s.append(">");
+    Enumeration<?> e = (Enumeration<?>)o;
+    while(e.hasMoreElements()){
+      s.append(wrap(e.nextElement(),tag.toLowerCase().endsWith("s")?tag.substring(0,tag.length()-1):tag));
     }
     s.append("</");
     s.append(tag);
@@ -145,6 +170,8 @@ public class DefaultXmlWrapper extends AbstractWrapper{
       s.append(wrapCollection(o,tag));
     }else if(o instanceof Map){
       s.append(wrapMap(o,tag));
+    }else if(o instanceof Enumeration){
+      s.append(wrapEnumeration(o,tag));
     }else if(o instanceof Enum){
       s.append(wrapString(o,tag));
     }else{

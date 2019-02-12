@@ -6,11 +6,8 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
+
 import com.nlf.dao.paging.PageData;
 import com.nlf.serialize.AbstractWrapper;
 import com.nlf.util.Base64Util;
@@ -71,6 +68,20 @@ public class DefaultJsonWrapper extends AbstractWrapper{
     while(it.hasNext()){
       s.append(wrap(it.next()));
       if(it.hasNext()){
+        s.append(",");
+      }
+    }
+    s.append("]");
+    return s.toString();
+  }
+
+  protected String wrapEnumeration(Object o){
+    Enumeration<?> l = (Enumeration<?>)o;
+    StringBuilder s = new StringBuilder();
+    s.append("[");
+    while(l.hasMoreElements()){
+      s.append(wrap(l.nextElement()));
+      if(l.hasMoreElements()){
         s.append(",");
       }
     }
@@ -149,6 +160,8 @@ public class DefaultJsonWrapper extends AbstractWrapper{
       s.append(wrapCollection(o));
     }else if(o instanceof Map){
       s.append(wrapMap(o));
+    }else if(o instanceof Enumeration){
+      s.append(wrapEnumeration(o));
     }else if(o instanceof Enum){
       s.append(wrapString(o));
     }else{
