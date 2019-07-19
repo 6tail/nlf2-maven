@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * 默认WEB文件上传器
- * 
+ *
  * @author 6tail
  *
  */
@@ -69,7 +69,7 @@ public class DefaultHttpRpcFileUploader implements IHttpRpcFileUploader {
 
   /**
    * 获取boundary
-   * 
+   *
    * @return boundary
    */
   protected byte[] getBoundary(String contentType){
@@ -86,7 +86,9 @@ public class DefaultHttpRpcFileUploader implements IHttpRpcFileUploader {
   }
 
   protected void append(byte[] boundary,ByteArray cache) throws IOException{
-    if(null==formItem) return;
+    if(null==formItem){
+      return;
+    }
     int size = cache.size();
     int lb = boundary.length;
     if(size>lb){
@@ -97,7 +99,9 @@ public class DefaultHttpRpcFileUploader implements IHttpRpcFileUploader {
   }
 
   protected void appendFile(byte[] data) throws IOException{
-    if(null==formItem) return;
+    if(null==formItem){
+      return;
+    }
     File tempFile = formItem.getTempFile();
     if(null==tempFile){
       UploadFile file = formItem.getFile();

@@ -9,8 +9,14 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 
+/**
+ * 默认HttpRpc过滤器
+ *
+ * @author 6tail
+ */
 public class DefaultHttpRpcFilter extends Filter implements IHttpRpcFilter {
 
+  @Override
   public String description() {
     return null;
   }
@@ -19,6 +25,7 @@ public class DefaultHttpRpcFilter extends Filter implements IHttpRpcFilter {
 
   }
 
+  @Override
   public void doFilter(HttpExchange exchange, Chain filterChain) throws IOException {
     IHttpRpcRequest request = App.getProxy().newInstance(IHttpRpcRequest.class.getName());
     IHttpRpcResponse response = App.getProxy().newInstance(IHttpRpcResponse.class.getName());

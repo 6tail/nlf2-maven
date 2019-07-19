@@ -16,7 +16,7 @@ import java.util.*;
 
 /**
  * 默认HTTP RPC请求
- * 
+ *
  * @author 6tail
  *
  */
@@ -61,8 +61,7 @@ public class DefaultHttpRpcRequest extends AbstractHttpRpcRequest {
         r = "127.0.0.1";
       }
     }
-    if(null==r) r = "";
-    return r;
+    return null==r?"":r;
   }
 
   public void init(){
@@ -80,7 +79,7 @@ public class DefaultHttpRpcRequest extends AbstractHttpRpcRequest {
   }
 
   protected Map<String,Object> parseQuery(String s){
-    Map<String,Object> params = new HashMap<String, Object>();
+    Map<String,Object> params = new HashMap<String, Object>(16);
     if(null!=s){
       List<String> l = StringUtil.list(s,"&");
       for(String kv:l){
@@ -156,6 +155,7 @@ public class DefaultHttpRpcRequest extends AbstractHttpRpcRequest {
     }
   }
 
+  @Override
   public Client getClient(){
     if(null==client){
       client = new Client();

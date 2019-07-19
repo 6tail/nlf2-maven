@@ -1,8 +1,10 @@
 package com.nlf.extend.rpc.server.impl.http.impl;
 
+import com.nlf.App;
 import com.nlf.core.Statics;
 import com.nlf.extend.rpc.server.impl.http.AbstractHttpRpcResponse;
 import com.nlf.extend.web.view.StreamView;
+import com.nlf.util.ContentTypes;
 import com.nlf.util.IOUtil;
 
 import java.io.IOException;
@@ -12,13 +14,16 @@ import java.net.URLEncoder;
 
 /**
  * 默认HTTP RPC响应
- * 
+ *
  * @author 6tail
  *
  */
 public class DefaultHttpRpcResponse extends AbstractHttpRpcResponse {
+  @Override
   public void send(Object o) throws IOException{
-    if(null==o) return;
+    if(null==o){
+      return;
+    }
     if(o instanceof StreamView){
       sendStream((StreamView)o);
     }else{
@@ -27,10 +32,17 @@ public class DefaultHttpRpcResponse extends AbstractHttpRpcResponse {
   }
 
   public void sendString(String s) throws IOException{
-    sendString(s,"text/plain");
+    sendString(s,ContentTypes.PLAIN_TEXT);
   }
 
   public void sendString(String s,String contentType) throws IOException{
+    if(App.getPropertyBoolean(KEY_CORS_ENABLE,true)) {
+      exchange.getResponseHeaders().add("Access-Control-Allow-Credentials", App.getPropertyBoolean(KEY_CORS_ALLOW_CREDENTIALS,true) + "");
+      exchange.getResponseHeaders().add("Access-Control-Allow-Origin", App.getPropertyString(KEY_CORS_ALLOW_ORIGIN,"*"));
+      exchange.getResponseHeaders().add("Access-Control-Allow-Methods", App.getPropertyString(KEY_CORS_ALLOW_METHODS,"*"));
+      exchange.getResponseHeaders().add("Access-Control-Allow-Headers", App.getPropertyString(KEY_CORS_ALLOW_HEADERS,"*"));
+      exchange.getResponseHeaders().add("Access-Control-Max-Age", App.getPropertyInt(KEY_CORS_MAX_AGE,18000) + "");
+    }
     exchange.getResponseHeaders().add("Content-Type",contentType+";charset="+Statics.ENCODE);
     byte[] bytes = s.getBytes(Statics.ENCODE);
     int len = bytes.length;
@@ -53,7 +65,7 @@ public class DefaultHttpRpcResponse extends AbstractHttpRpcResponse {
     }
     String contentType = streamView.getContentType();
     if(null==contentType||contentType.length()<1){
-      contentType = "application/octet-stream";
+      contentType = ContentTypes.DEFAULT;
     }
     if(streamView.getSize()>-1){
       exchange.getResponseHeaders().add("Content-Length",streamView.getSize()+"");
@@ -67,7 +79,7 @@ public class DefaultHttpRpcResponse extends AbstractHttpRpcResponse {
     try{
       os = exchange.getResponseBody();
       int n = 0;
-      byte b[] = new byte[IOUtil.BUFFER_SIZE];
+      byte[] b = new byte[IOUtil.BUFFER_SIZE];
       while((n = inputStream.read(b))!=-1){
         os.write(b,0,n);
       }
@@ -79,6 +91,6 @@ public class DefaultHttpRpcResponse extends AbstractHttpRpcResponse {
   }
 
   public void sendStream(InputStream inputStream) throws IOException{
-    sendStream(inputStream,"application/octet-stream");
+    sendStream(inputStream, ContentTypes.DEFAULT);
   }
 }

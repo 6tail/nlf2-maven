@@ -5,6 +5,11 @@ import com.nlf.extend.rpc.server.IRpcServer;
 
 import java.util.List;
 
+/**
+ * RPC工厂
+ *
+ * @author 6tail
+ */
 public class RpcFactory {
 
   public static IRpcServer getServer(String type){

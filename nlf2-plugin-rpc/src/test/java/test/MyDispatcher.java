@@ -9,6 +9,7 @@ import com.nlf.extend.rpc.server.impl.http.impl.DefaultHttpRpcDispatcher;
  *
  */
 public class MyDispatcher extends DefaultHttpRpcDispatcher {
+  @Override
   public void init(){
     super.init();
     //屏蔽指定包
