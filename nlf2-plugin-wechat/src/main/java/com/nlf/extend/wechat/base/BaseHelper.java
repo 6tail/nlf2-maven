@@ -27,7 +27,7 @@ public class BaseHelper{
    * @param appid 第三方用户唯一凭证
    * @param secret 第三方用户唯一凭证密钥，即appsecret
    * @return 令牌
-   * @throws WeixinException
+   * @throws WeixinException WeixinException
    */
   public synchronized static AccessToken getAccessToken(String appid,String secret) throws WeixinException{
     try{
@@ -56,7 +56,7 @@ public class BaseHelper{
    * 
    * @param accessToken 令牌
    * @return 服务器IP列表
-   * @throws WeixinException
+   * @throws WeixinException WeixinException
    */
   public static List<String> getServerIps(String accessToken) throws WeixinException{
     try{
@@ -68,8 +68,7 @@ public class BaseHelper{
       if(0!=errorCode){
         throw new WeixinException(errorCode,o.getString("errmsg"));
       }
-      List<String> l = o.get("ip_list");
-      return l;
+      return o.getList("ip_list");
     }catch(WeixinException e){
       throw e;
     }catch(Exception e){

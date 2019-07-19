@@ -36,6 +36,7 @@ public class JsonView extends com.nlf.View{
     return this;
   }
 
+  @Override
   public String toString(){
     return com.nlf.serialize.json.JSON.fromObject(this);
   }

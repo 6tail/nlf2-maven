@@ -21,10 +21,13 @@ public class ASqlUpdater extends AbstractSqlExecuter implements ISqlUpdater{
   }
 
   public ISqlUpdater tableIf(String tables,boolean condition){
-    if(condition) table(tables);
+    if(condition){
+      table(tables);
+    }
     return this;
   }
 
+  @Override
   public String buildSql(){
     StringBuilder s = new StringBuilder();
     s.append("UPDATE ");
@@ -58,14 +61,14 @@ public class ASqlUpdater extends AbstractSqlExecuter implements ISqlUpdater{
     cond.setColumn(columnOrSql);
     cond.setValue(valueOrBean);
     cond.setEnd("");
-    if (null!=valueOrBean && columnOrSql.contains(":") && valueOrBean instanceof Bean) {
+    if (null!=valueOrBean && columnOrSql.contains(NAMED_PLACEHOLDER_PREFIX) && valueOrBean instanceof Bean) {
       cond.setType(ConditionType.multi_params);
       cond.setStart("");
       cond.setPlaceholder("");
     } else {
       cond.setType(ConditionType.one_param);
       cond.setStart("=");
-      cond.setPlaceholder("?");
+      cond.setPlaceholder(PLACEHOLDER);
     }
     columns.add(cond);
     return this;
@@ -79,50 +82,67 @@ public class ASqlUpdater extends AbstractSqlExecuter implements ISqlUpdater{
   }
 
   public ISqlUpdater setIf(String sql,boolean condition){
-    if(condition) set(sql);
+    if(condition){
+      set(sql);
+    }
     return this;
   }
 
   public ISqlUpdater setIf(String columnOrSql,Object valueOrBean,boolean condition){
-    if(condition) set(columnOrSql,valueOrBean);
+    if(condition){
+      set(columnOrSql,valueOrBean);
+    }
     return this;
   }
 
   public ISqlUpdater setIf(Bean bean,boolean condition){
-    if(condition) set(bean);
+    if(condition){
+      set(bean);
+    }
     return this;
   }
 
+  @Override
   public ISqlUpdater where(String sql){
     super.where(sql);
     return this;
   }
 
-  public ISqlUpdater where(String columnOrSql,Object valueOrBean){
+  @Override
+  public ISqlUpdater where(String columnOrSql, Object valueOrBean){
     super.where(columnOrSql,valueOrBean);
     return this;
   }
 
-  public ISqlUpdater whereIf(String sql,boolean condition){
-    if(condition) where(sql);
+  @Override
+  public ISqlUpdater whereIf(String sql, boolean condition){
+    if(condition){
+      where(sql);
+    }
     return this;
   }
 
-  public ISqlUpdater whereIf(String columnOrSql,Object valueOrBean,boolean condition){
-    if(condition) where(columnOrSql,valueOrBean);
+  @Override
+  public ISqlUpdater whereIf(String columnOrSql, Object valueOrBean, boolean condition){
+    if(condition){
+      where(columnOrSql,valueOrBean);
+    }
     return this;
   }
 
-  public ISqlUpdater whereIn(String column,Object... values){
+  @Override
+  public ISqlUpdater whereIn(String column, Object... values){
     super.whereIn(column,values);
     return this;
   }
 
-  public ISqlUpdater whereNotIn(String column,Object... values){
+  @Override
+  public ISqlUpdater whereNotIn(String column, Object... values){
     super.whereNotIn(column,values);
     return this;
   }
 
+  @Override
   public ISqlUpdater whereNotEqual(String column, Object value){
     super.whereNotEqual(column,value);
     return this;

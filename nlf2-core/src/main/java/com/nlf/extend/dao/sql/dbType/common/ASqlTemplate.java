@@ -32,7 +32,9 @@ public class ASqlTemplate extends AbstractSqlExecuter implements ISqlTemplate{
   }
 
   public ISqlTemplate sqlIf(String sql,boolean condition){
-    if(condition) sql(sql);
+    if(condition){
+      sql(sql);
+    }
     return this;
   }
 
@@ -48,6 +50,7 @@ public class ASqlTemplate extends AbstractSqlExecuter implements ISqlTemplate{
     return this;
   }
 
+  @Override
   protected String buildSql(){
     StringBuilder s = new StringBuilder();
     for(String sql:sqls){

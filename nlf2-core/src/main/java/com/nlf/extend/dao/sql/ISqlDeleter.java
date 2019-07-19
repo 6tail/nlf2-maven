@@ -61,8 +61,31 @@ public interface ISqlDeleter extends ISqlExecuter{
    */
   ISqlDeleter whereIf(String columnOrSql,Object valueOrBean,boolean condition);
 
+  /**
+   * where in
+   *
+   * @param column 列名
+   * @param values 参数值
+   * @return SQL删除器
+   */
   ISqlDeleter whereIn(String column,Object... values);
+
+  /**
+   * where not in
+   *
+   * @param column 列名
+   * @param values 参数值
+   * @return SQL删除器
+   */
   ISqlDeleter whereNotIn(String column,Object... values);
+
+  /**
+   * where !=
+   *
+   * @param column 列名
+   * @param value 参数值
+   * @return SQL删除器
+   */
   ISqlDeleter whereNotEqual(String column,Object value);
 
   /**

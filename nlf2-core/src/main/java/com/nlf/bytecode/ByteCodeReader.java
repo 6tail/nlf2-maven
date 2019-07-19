@@ -16,6 +16,9 @@ import com.nlf.util.IOUtil;
  *
  */
 public class ByteCodeReader{
+
+  public static final String OBJECT_CLASS_NAME = Object.class.getName();
+
   /**
    * 读取类字节码
    * 
@@ -68,7 +71,7 @@ public class ByteCodeReader{
         }
       }
       String superClass = klass.getSuperClass();
-      if(!"java.lang.Object".equals(superClass)){
+      if(!OBJECT_CLASS_NAME.equals(superClass)){
         ClassResource c = App.CLASS.get(superClass);
         if(null!=c){
           interfaces.addAll(readInterfaces(c));

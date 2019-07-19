@@ -21,6 +21,7 @@ public class NodeNumber extends AbstractNode{
     return NodeType.NUMBER;
   }
 
+  @Override
   public String toString(){
     return n+"";
   }

@@ -16,7 +16,7 @@ public interface ISqlSelecter extends ISqlExecuter{
 
   /**
    * 指定表
-   * 
+   *
    * @param tables 表名
    * @return SQL查询器
    */
@@ -24,7 +24,7 @@ public interface ISqlSelecter extends ISqlExecuter{
 
   /**
    * 当满足条件时指定表
-   * 
+   *
    * @param tables 表名
    * @param condition 条件是否满足
    * @return SQL查询器
@@ -33,8 +33,8 @@ public interface ISqlSelecter extends ISqlExecuter{
 
   /**
    * 指定列
-   * 
-   * @param columns 列名
+   *
+   * @param columns 列名，多列以逗号间隔
    * @return SQL查询器
    */
   ISqlSelecter column(String columns);
@@ -42,7 +42,7 @@ public interface ISqlSelecter extends ISqlExecuter{
   /**
    * 当满足条件时指定列
    * 
-   * @param columns 列名
+   * @param columns 列名，多列以逗号间隔
    * @param condition 条件是否满足
    * @return SQL查询器
    */
@@ -84,17 +84,53 @@ public interface ISqlSelecter extends ISqlExecuter{
    */
   ISqlSelecter whereIf(String columnOrSql,Object valueOrBean,boolean condition);
 
+  /**
+   * where in
+   *
+   * @param column 列名
+   * @param values 参数值
+   * @return SQL查询器
+   */
   ISqlSelecter whereIn(String column,Object... values);
+
+  /**
+   * where not in
+   *
+   * @param column 列名
+   * @param values 参数值
+   * @return SQL查询器
+   */
   ISqlSelecter whereNotIn(String column,Object... values);
+
+  /**
+   * where !=
+   *
+   * @param column 列名
+   * @param value 参数值
+   * @return SQL查询器
+   */
   ISqlSelecter whereNotEqual(String column,Object value);
 
+  /**
+   * group by
+   *
+   * @param columns 列名，多列以逗号间隔
+   * @return SQL查询器
+   */
   ISqlSelecter groupBy(String columns);
 
+  /**
+   * 当满足条件时执行group by
+   *
+   * @param columns 列名，多列以逗号间隔
+   * @param condition 条件是否满足
+   * @return SQL查询器
+   */
   ISqlSelecter groupByIf(String columns,boolean condition);
 
   /**
    * 纯SQL语句的having
-   * 
+   *
    * @param sql SQL语句
    * @return SQL查询器
    */
@@ -111,7 +147,7 @@ public interface ISqlSelecter extends ISqlExecuter{
 
   /**
    * 当满足条件时执行having
-   * 
+   *
    * @param sql SQL语句
    * @param condition 条件是否满足
    * @return SQL查询器
@@ -128,12 +164,38 @@ public interface ISqlSelecter extends ISqlExecuter{
    */
   ISqlSelecter havingIf(String columnOrSql,Object valueOrBean,boolean condition);
 
+  /**
+   * 升序排序
+   *
+   * @param columns 列名，多列以逗号间隔
+   * @return SQL查询器
+   */
   ISqlSelecter asc(String columns);
 
+  /**
+   * 当满足条件时执行升序排序
+   *
+   * @param columns 列名，多列以逗号间隔
+   * @param condition 条件是否满足
+   * @return SQL查询器
+   */
   ISqlSelecter ascIf(String columns,boolean condition);
 
+  /**
+   * 降序排序
+   *
+   * @param columns 列名，多列以逗号间隔
+   * @return SQL查询器
+   */
   ISqlSelecter desc(String columns);
 
+  /**
+   * 当满足条件时执行降序排序
+   *
+   * @param columns 列名，多列以逗号间隔
+   * @param condition 条件是否满足
+   * @return SQL查询器
+   */
   ISqlSelecter descIf(String columns,boolean condition);
 
   /**
@@ -143,8 +205,19 @@ public interface ISqlSelecter extends ISqlExecuter{
    */
   List<Bean> query();
 
+  /**
+   * 获取前几条记录
+   *
+   * @param count 记录数量
+   * @return Bean列表
+   */
   List<Bean> top(int count);
 
+  /**
+   * 获取第一条记录，如果没有匹配记录，抛出异常
+   *
+   * @return Bean
+   */
   Bean topOne();
 
   /**
@@ -155,18 +228,32 @@ public interface ISqlSelecter extends ISqlExecuter{
    */
   Bean one();
 
+  /**
+   * 获取记录数
+   *
+   * @return 记录数量
+   */
   int count();
 
+  /**
+   * 获取分页数据
+   *
+   * @param pageNumber 页码，从1开始
+   * @param pageSize 每页记录数
+   * @return 分页
+   */
   PageData page(int pageNumber,int pageSize);
   
   /**
    * 全自动分页
+   *
    * @return 分页
    */
   PageData paging();
 
   /**
    * 迭代结果集
+   *
    * @return 结果集迭代器
    */
   Iterator<Bean> iterator();

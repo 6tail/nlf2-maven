@@ -24,6 +24,7 @@ public class I18nResource extends Resource{
   public void setName(String name){
     this.name = name;
   }
+  @Override
   public String toString(){
     return super.toString()+" name="+name;
   }

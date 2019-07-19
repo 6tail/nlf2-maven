@@ -1,13 +1,18 @@
 package com.nlf.bytecode.constant;
 
 /**
- * 常量-MethodType
- * 
- * @author 6tail
+ * 常量 - MethodType
  *
+ * @author 6tail
  */
 public class MethodTypeConstant extends AbstractConstant{
   private int descriptorIndex;
+
+  public MethodTypeConstant() {}
+
+  public MethodTypeConstant(int descriptorIndex) {
+    this.descriptorIndex = descriptorIndex;
+  }
 
   public int getDescriptorIndex() {
     return descriptorIndex;
@@ -17,6 +22,7 @@ public class MethodTypeConstant extends AbstractConstant{
     this.descriptorIndex = descriptorIndex;
   }
 
+  @Override
   public MethodTypeConstant toMethodTypeConstant(){
     return this;
   }

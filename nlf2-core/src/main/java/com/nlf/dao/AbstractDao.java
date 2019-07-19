@@ -9,13 +9,12 @@ import com.nlf.dao.executer.IDaoExecuter;
 
 /**
  * 抽象Dao，所有Dao实现都应该继承俺
- * 
- * @author 6tail
  *
+ * @author 6tail
  */
 public abstract class AbstractDao implements IDao{
   /** 执行器缓存，{dbType:{executerInterface:executerImpl} */
-  protected static final Map<String,Map<String,String>> executers = new HashMap<String,Map<String,String>>();
+  protected static final Map<String,Map<String,String>> EXECUTERS = new HashMap<String,Map<String,String>>();
   /** DB别名 */
   protected String alias;
 
@@ -40,10 +39,10 @@ public abstract class AbstractDao implements IDao{
   }
 
   protected IDaoExecuter getImpl(String dbType,String executerInterface){
-    Map<String,String> impls = executers.get(dbType);
+    Map<String,String> impls = EXECUTERS.get(dbType);
     if(null==impls){
-      impls = new HashMap<String,String>();
-      executers.put(dbType,impls);
+      impls = new HashMap<String,String>(2);
+      EXECUTERS.put(dbType,impls);
     }
     if(!impls.containsKey(executerInterface)){
       java.util.List<String> l = App.getImplements(executerInterface);

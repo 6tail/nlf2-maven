@@ -27,7 +27,7 @@ public class WebApp{
   public static String libPath = "";
   public static ServletContext context;
   /** servlet后缀 */
-  public static final Set<String> servletSuffixs = new HashSet<String>();
+  public static final Set<String> SERVLET_SUFFIXS = new HashSet<String>();
 
   public static void init(ServletContext servletContext){
     context = servletContext;
@@ -50,7 +50,7 @@ public class WebApp{
         for(String mapping:servlet.getMappings()){
           if(mapping.startsWith("*.")){
             String suffix = mapping.substring(1);
-            servletSuffixs.add(suffix);
+            SERVLET_SUFFIXS.add(suffix);
           }
         }
       }

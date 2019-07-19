@@ -14,7 +14,9 @@ public class DefaultProxy extends AbstractProxy{
   @SuppressWarnings("unchecked")
   public <T>T newInstance(String interfaceOrClassName){
     String implClass = App.getImplement(interfaceOrClassName);
-    if(null==implClass) return null;
+    if(null==implClass){
+      return null;
+    }
     try{
       return (T)Class.forName(implClass).newInstance();
     }catch(InstantiationException e){

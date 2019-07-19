@@ -5,13 +5,16 @@ import java.util.Map;
 
 /**
  * Content-Type(Mime-Type)
- * 
- * @author 6tail
  *
+ * @author 6tail
  */
 public class ContentTypes{
   /** 默认类型 */
   public static final String DEFAULT = "application/octet-stream";
+  /** json */
+  public static final String JSON = "application/json";
+  /** 纯文本 */
+  public static final String PLAIN_TEXT = "text/plain";
 
   /**
    * 根据扩展名获取Content-Type
@@ -20,15 +23,15 @@ public class ContentTypes{
    * @return Content-Type
    */
   public static String getContentType(String ext){
-    if(ext.startsWith(".")){
+    if(ext.startsWith(Strings.DOT)){
       ext = ext.substring(1);
     }
-    String contentType = mapping.get(ext);
+    String contentType = MAPPING.get(ext);
     return null==contentType?DEFAULT:contentType;
   }
 
   /** 映射表 */
-  private static final Map<String,String> mapping = new HashMap<String,String>(){
+  private static final Map<String,String> MAPPING = new HashMap<String,String>(){
     private static final long serialVersionUID = 1;
     {
       put("001","application/x-001");
@@ -267,8 +270,8 @@ public class ContentTypes{
       put("smil","application/smil");
       put("smk","application/x-smk");
       put("snd","audio/basic");
-      put("sol","text/plain");
-      put("sor","text/plain");
+      put("sol",PLAIN_TEXT);
+      put("sor",PLAIN_TEXT);
       put("spc","application/x-pkcs7-certificates");
       put("spl","application/futuresplash");
       put("spp","text/xml");
@@ -288,7 +291,7 @@ public class ContentTypes{
       put("top","drawing/x-top");
       put("torrent","application/x-bittorrent");
       put("tsd","text/xml");
-      put("txt","text/plain");
+      put("txt",PLAIN_TEXT);
       put("uin","application/x-icq");
       put("uls","text/iuls");
       put("vcf","text/x-vcard");

@@ -14,7 +14,7 @@ import com.nlf.resource.klass.ClassResource;
 
 /**
  * 应用信息
- * 
+ *
  * @author 6tail
  *
  */
@@ -42,7 +42,8 @@ public class App{
   /** 代理 */
   private static volatile IProxy proxy;
   /** 上下文变量 */
-  private static final ThreadLocal<Var> var = new ThreadLocal<Var>(){
+  private static final ThreadLocal<Var> VAR = new ThreadLocal<Var>(){
+    @Override
     public Var initialValue(){
       return new Var();
     }
@@ -56,7 +57,7 @@ public class App{
 
   /**
    * 在任何地方获取输入请求
-   * 
+   *
    * @return 输入请求
    */
   public static IRequest getRequest(){
@@ -65,7 +66,7 @@ public class App{
 
   /**
    * 在任何地方获取输出接口
-   * 
+   *
    * @return 输出接口
    */
   public static IResponse getResponse(){
@@ -78,7 +79,7 @@ public class App{
    * @param value 变量值
    */
   public static void set(String key,Object value){
-    var.get().set(key,value);
+    VAR.get().set(key,value);
   }
 
   /**
@@ -88,12 +89,12 @@ public class App{
    */
   @SuppressWarnings("unchecked")
   public static <T>T get(String key){
-    return (T)var.get().get(key);
+    return (T)VAR.get().get(key);
   }
 
   /**
    * 获取类或接口的实现类列表的交集（如果是接口，则它的所有实现类参与交集；如果不是接口，它自身参与交集）。
-   * 
+   *
    * @param interfaceOrClassNames 完整类或接口名
    * @return 实现类列表
    */
@@ -101,7 +102,9 @@ public class App{
     List<String> l = null;
     for(String name:interfaceOrClassNames){
       ClassResource r = CLASS.get(name);
-      if(null==r) return new ArrayList<String>();
+      if(null==r){
+        return new ArrayList<String>();
+      }
       List<String> sub = new ArrayList<String>();
       if(r.isInterfaceClass()){
         List<String> impls = INTERFACE_IMPLEMENTS.get(name);
@@ -122,7 +125,7 @@ public class App{
 
   /**
    * 获取类或接口的实现类列表的交集（如果是接口，则它的所有实现类参与交集；如果不是接口，它自身参与交集）。
-   * 
+   *
    * @param interfaceOrClasses 类或接口们
    * @return 实现类列表
    */
@@ -138,7 +141,7 @@ public class App{
 
   /**
    * 从类或接口的实现类列表的交集（如果是接口，则它的所有实现类参与交集；如果不是接口，它自身参与交集）中取得一个默认实现类，默认实现类的挑选规则由扫描器指定。
-   * 
+   *
    * @param interfaceOrClassNames 完整类或接口名
    * @return 默认实现类
    */
@@ -149,7 +152,7 @@ public class App{
 
   /**
    * 从类或接口的实现类列表的交集（如果是接口，则它的所有实现类参与交集；如果不是接口，它自身参与交集）中取得一个默认实现类，默认实现类的挑选规则由扫描器指定。
-   * 
+   *
    * @param interfaceOrClasses 类或接口们
    * @return 默认实现类
    */
@@ -160,7 +163,7 @@ public class App{
 
   /**
    * 获取代理接口，建议所有调用入口都通过代理，便于扩展AOP等功能。
-   * 
+   *
    * @return 代理接口
    */
   public static IProxy getProxy(){
@@ -197,7 +200,7 @@ public class App{
     String value = null;
     Map<Locale,String> values = I18N_CACHE.get(key);
     if(null==values){
-      values = new HashMap<Locale,String>();
+      values = new HashMap<Locale,String>(2);
       I18N_CACHE.put(key,values);
     }
     if(!values.containsKey(locale)){
@@ -293,7 +296,8 @@ public class App{
    */
   public static boolean getPropertyBoolean(String key,boolean defaultValue){
     try{
-      return Boolean.parseBoolean(getProperty(key));
+      String value = getProperty(key);
+      return null == value ? defaultValue : Boolean.parseBoolean(value);
     }catch(Exception e){
       return defaultValue;
     }

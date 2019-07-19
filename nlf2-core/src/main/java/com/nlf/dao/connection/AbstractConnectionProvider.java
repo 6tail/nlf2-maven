@@ -19,7 +19,9 @@ public abstract class AbstractConnectionProvider implements IConnectionProvider{
   public void setDbSetting(IDbSetting setting){
     this.setting = setting;
     String driver = setting.getDriver();
-    if(null==driver) return;
+    if(null==driver){
+      return;
+    }
     synchronized(this){
       if(REGISTED_DRIVERS.contains(driver)){
         return;

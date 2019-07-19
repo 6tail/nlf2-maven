@@ -1,14 +1,21 @@
 package com.nlf.bytecode.constant;
 
 /**
- * 常量-方法
- * 
- * @author 6tail
+ * 常量 - 方法
  *
+ * @author 6tail
  */
 public class MethodConstant extends AbstractConstant{
   private int classIndex;
   private int nameAndTypeIndex;
+
+  public MethodConstant() {}
+
+  public MethodConstant(byte[] data, int classIndex, int nameAndTypeIndex) {
+    this.data = data;
+    this.classIndex = classIndex;
+    this.nameAndTypeIndex = nameAndTypeIndex;
+  }
 
   public int getClassIndex(){
     return classIndex;
@@ -26,6 +33,7 @@ public class MethodConstant extends AbstractConstant{
     this.nameAndTypeIndex = nameAndTypeIndex;
   }
 
+  @Override
   public MethodConstant toMethodConstant(){
     return this;
   }

@@ -15,11 +15,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class IDUtil implements java.io.Serializable{
   private static final long serialVersionUID = 1;
-  private final int _time;
-  private final int _machine;
-  private final int _inc;
-  private static AtomicInteger _nextInc = new AtomicInteger((new Random()).nextInt());
-  private static final int _genmachine;
+  private final int time;
+  private static final int MACHINE;
+  private final int inc;
+  private static AtomicInteger nextInc = new AtomicInteger((new Random()).nextInt());
 
   /**
    * 获取唯一ID
@@ -31,9 +30,8 @@ public class IDUtil implements java.io.Serializable{
   }
 
   private IDUtil(){
-    _time = (int)(System.currentTimeMillis()/1000);
-    _machine = _genmachine;
-    _inc = _nextInc.getAndIncrement();
+    time = (int)(System.currentTimeMillis()/1000);
+    inc = nextInc.getAndIncrement();
   }
 
   private String toHexString(){
@@ -45,11 +43,11 @@ public class IDUtil implements java.io.Serializable{
   }
 
   private byte[] toByteArray(){
-    byte b[] = new byte[12];
+    byte[] b = new byte[12];
     ByteBuffer bb = ByteBuffer.wrap(b);
-    bb.putInt(_time);
-    bb.putInt(_machine);
-    bb.putInt(_inc);
+    bb.putInt(time);
+    bb.putInt(MACHINE);
+    bb.putInt(inc);
     return b;
   }
 
@@ -75,6 +73,6 @@ public class IDUtil implements java.io.Serializable{
     String s = Integer.toHexString(processId);
     s += Integer.toHexString(loaderId);
     processPiece = s.hashCode()&0xFFFF;
-    _genmachine = machinePiece|processPiece;
+    MACHINE = machinePiece|processPiece;
   }
 }

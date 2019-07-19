@@ -1,14 +1,20 @@
 package com.nlf.bytecode.constant;
 
 /**
- * 常量-InvokeDynamic
- * 
- * @author 6tail
+ * 常量 - InvokeDynamic
  *
+ * @author 6tail
  */
 public class InvokeDynamicConstant extends AbstractConstant{
   private int bootstrapMethodAttributeIndex;
   private int nameAndTypeIndex;
+
+  public InvokeDynamicConstant() {}
+
+  public InvokeDynamicConstant(int bootstrapMethodAttributeIndex, int nameAndTypeIndex) {
+    this.bootstrapMethodAttributeIndex = bootstrapMethodAttributeIndex;
+    this.nameAndTypeIndex = nameAndTypeIndex;
+  }
 
   public int getBootstrapMethodAttributeIndex() {
     return bootstrapMethodAttributeIndex;
@@ -26,6 +32,7 @@ public class InvokeDynamicConstant extends AbstractConstant{
     this.nameAndTypeIndex = nameAndTypeIndex;
   }
 
+  @Override
   public InvokeDynamicConstant toInvokeDynamicConstant(){
     return this;
   }

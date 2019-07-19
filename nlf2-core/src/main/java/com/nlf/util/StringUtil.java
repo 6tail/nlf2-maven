@@ -66,9 +66,13 @@ public class StringUtil{
    * @return 字符串
    */
   public static String join(String[] array,String separator){
-    if(null==array) return "";
+    if(null==array){
+      return "";
+    }
     int len = array.length;
-    if(len<1) return "";
+    if(len<1){
+      return "";
+    }
     StringBuilder sb = new StringBuilder();
     for(int i=0;i<len;i++){
       if(i>0){
@@ -87,8 +91,9 @@ public class StringUtil{
    * @return 字符串
    */
   public static String join(Collection<String> l,String separator){
-    if(null==l) return "";
-    if(l.isEmpty()) return "";
+    if(null==l||l.isEmpty()){
+      return "";
+    }
     StringBuilder sb = new StringBuilder();
     int i = 0;
     for(String s:l){
@@ -150,7 +155,9 @@ public class StringUtil{
    * @return true/false
    */
   public static boolean matches(String s,String expression){
-    if(null==s||null==expression) return false;
+    if(null==s||null==expression){
+      return false;
+    }
     int len = expression.length();
     StringBuilder sb = new StringBuilder();
     for(int i = 0;i<len;i++){

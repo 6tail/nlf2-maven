@@ -50,42 +50,54 @@ public class IOUtil{
    * @param closeable Closeable
    */
   public static void closeQuietly(Closeable closeable){
-    if(null==closeable) return;
+    if(null==closeable){
+      return;
+    }
     try{
       closeable.close();
     }catch(IOException e){}
   }
 
   public static void closeQuietly(ZipFile zip){
-    if(null==zip) return;
+    if(null==zip){
+      return;
+    }
     try{
       zip.close();
     }catch(IOException e){}
   }
 
   public static void closeQuietly(Socket socket){
-    if(null==socket) return;
+    if(null==socket){
+      return;
+    }
     try{
       socket.close();
     }catch(IOException e){}
   }
   
   public static void closeQuietly(Connection connection){
-    if(null==connection) return;
+    if(null==connection){
+      return;
+    }
     try{
       connection.close();
     }catch(SQLException e){}
   }
   
   public static void closeQuietly(ResultSet rs){
-    if(null==rs) return;
+    if(null==rs){
+      return;
+    }
     try{
       rs.close();
     }catch(SQLException e){}
   }
   
   public static void closeQuietly(Statement stmt){
-    if(null==stmt) return;
+    if(null==stmt){
+      return;
+    }
     try{
       stmt.close();
     }catch(SQLException e){}

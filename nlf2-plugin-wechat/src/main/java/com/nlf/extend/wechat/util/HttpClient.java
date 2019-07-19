@@ -33,11 +33,10 @@ public class HttpClient{
    * @param url URL
    * @param encode 编码
    * @return 返回结果
-   * @throws IOException
+   * @throws IOException IOException
    */
   public static String get(String url,String encode) throws IOException{
     HttpURLConnection conn = null;
-    OutputStream out = null;
     BufferedReader in = null;
     try{
       conn = (HttpURLConnection)new URL(url).openConnection();
@@ -53,7 +52,6 @@ public class HttpClient{
       }
       return sb.toString();
     }finally{
-      IOUtil.closeQuietly(out);
       IOUtil.closeQuietly(in);
       if(null!=conn){
         conn.disconnect();
@@ -67,7 +65,7 @@ public class HttpClient{
    * @param url URL
    * @param data 数据内容
    * @return 返回结果
-   * @throws IOException
+   * @throws IOException IOException
    */
   public static String post(String url,String data) throws IOException{
     HttpURLConnection conn = null;
@@ -104,7 +102,7 @@ public class HttpClient{
    * @param url URL
    * @param file 文件
    * @return 返回结果
-   * @throws IOException
+   * @throws IOException IOException
    */
   public static String upload(String url,File file) throws IOException{
     HttpURLConnection conn = null;
@@ -155,7 +153,7 @@ public class HttpClient{
    * 文件下载
    * @param url URL
    * @param file 保存文件
-   * @throws IOException
+   * @throws IOException IOException
    */
   public static void download(String url,File file) throws IOException{
     URLConnection conn = null;

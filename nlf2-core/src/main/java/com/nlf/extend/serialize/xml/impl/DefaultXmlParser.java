@@ -14,7 +14,9 @@ import com.nlf.serialize.node.INode;
 import com.nlf.serialize.node.impl.NodeList;
 import com.nlf.serialize.node.impl.NodeMap;
 import com.nlf.serialize.node.impl.NodeString;
+import com.nlf.util.Chars;
 import com.nlf.util.StringUtil;
+import com.nlf.util.Strings;
 
 /**
  * 默认xml解析器
@@ -23,15 +25,16 @@ import com.nlf.util.StringUtil;
  *
  */
 public class DefaultXmlParser extends AbstractParser{
-  
+  private static final int MIN_STACK_SIZE = 2;
   /** CDATA起始符 */
   public static final String CDATA_PREFIX = "![CDATA[";
   /** CDATA结束符 */
   public static final String CDATA_SUFFIX = "]]";
-  /** 注释起始符 */
-  public static final String ANNO_PREFIX = "!--";
   /** 注释结束符 */
   public static final String ANNO_SUFFIX = "--";
+  /** 注释起始符 */
+  public static final String ANNO_PREFIX = "!-";
+  private static final String EQ_QUOTE_DOUBLE = "=\"";
   
   /** 当前字符 */
   private int c;
@@ -43,16 +46,19 @@ public class DefaultXmlParser extends AbstractParser{
   private List<INode> stack = new ArrayList<INode>();
   
   public boolean support(String format){
-    return "xml".equalsIgnoreCase(format);
+    return Strings.XML.equalsIgnoreCase(format);
   }
 
+  @Override
   public INode parseAll(String s){
     os = s;
-    if(null==s) return null;
+    if(null==s){
+      return null;
+    }
     s = s.trim();
-    s = s.substring(s.indexOf("<"));
+    s = s.substring(s.indexOf(Strings.LT));
     reader = new StringReader(s);
-    while(-1!=c){
+    while(Chars.END!=c){
       parseNode();
     }
     return stack.get(0);
@@ -61,14 +67,14 @@ public class DefaultXmlParser extends AbstractParser{
   protected void parseNode(){
     skip();
     switch(c){
-      case '<':// 对象开始
+      case Chars.LT:
         parseXmlNode();
         break;
       default:
-        String s = readUntil('<');
+        String s = readUntil(Chars.LT);
         INode p = stack.get(stack.size()-1);
         try{
-          ((NodeString)p).setValue(s.replace("&lt;","<").replace("&gt;",">"));
+          ((NodeString)p).setValue(s.replace(Strings.LT_ENTITY_NAME,Strings.LT).replace(Strings.GT_ENTITY_NAME,Strings.GT));
         }catch(Exception e){
           throw new XmlFormatException(s);
         }
@@ -78,7 +84,7 @@ public class DefaultXmlParser extends AbstractParser{
   
   private void parseEndTag(String tag){
     int stackSize = stack.size();
-    if(stackSize<2){
+    if(stackSize<MIN_STACK_SIZE){
       return;
     }
     // 最后一个节点
@@ -116,22 +122,23 @@ public class DefaultXmlParser extends AbstractParser{
   private void parseXmlNode(){
     next();
     switch(c){
-      case '?':
-        readUntil('>');
+      case Chars.QUESTION:
+        readUntil(Chars.GT);
         next();
         break;
-      case '!':
-        String s = readUntil('>').trim();
+      case Chars.EXCLAMATION:
+        String s = readUntil(Chars.GT).trim();
         String us = s.toUpperCase();
         StringBuilder value = new StringBuilder();
-        if(us.startsWith(CDATA_PREFIX)){// 处理CDATA
+        // 处理CDATA
+        if(us.startsWith(CDATA_PREFIX)){
           while(!us.endsWith(CDATA_SUFFIX)){
             next();
-            if(-1==c){
+            if(Chars.END==c){
               throw new XmlFormatException(os);
             }
-            us = readUntil('>');
-            value.append(">");
+            us = readUntil(Chars.GT);
+            value.append(Strings.GT);
             value.append(us);
             us = us.toUpperCase();
           }
@@ -142,43 +149,44 @@ public class DefaultXmlParser extends AbstractParser{
             INode p = stack.get(stackSize-1);
             ((NodeString)p).setValue(s);
           }
-        }else if(us.startsWith(ANNO_PREFIX)){// 忽略注释
+        }else if(us.startsWith(ANNO_PREFIX)){
+          // 忽略注释
           while(!us.endsWith(ANNO_SUFFIX)){
             next();
-            if(-1==c){
+            if(Chars.END==c){
               throw new XmlFormatException(os);
             }
-            us = readUntil('>');
+            us = readUntil(Chars.GT);
             us = us.toUpperCase();
           }
         }
         next();
         break;
-      case '/':
+      case Chars.SLASH_LEFT:
         next();
-        String tag = readUntil('>');
+        String tag = readUntil(Chars.GT);
         next();
         parseEndTag(tag);
         break;
       default:
-        String startTag = readUntil('>');
+        String startTag = readUntil(Chars.GT);
         next();
         boolean isClosed = false;
         startTag = startTag.trim();
-        if(startTag.endsWith("/")){
+        if(startTag.endsWith(Strings.SLASH_LEFT)){
           isClosed = true;
           startTag = startTag.substring(0,startTag.length()-1);
         }
         String nodeName = startTag;
-        Map<String,String> attrs = new HashMap<String,String>();
-        if(startTag.contains(" ")){
-          nodeName = StringUtil.between(startTag,""," ");
-          String attr = StringUtil.right(startTag," ");
-          while(attr.contains("=\"")){
-            String attrName = StringUtil.between(attr,"","=\"").trim();
-            attr = StringUtil.right(attr,"=\"");
-            String attrValue = StringUtil.left(attr,"\"").trim();
-            attr = StringUtil.right(attr,"\"");
+        Map<String,String> attrs = new HashMap<String,String>(16);
+        if(startTag.contains(Strings.SPACE)){
+          nodeName = StringUtil.between(startTag,Strings.EMPTY,Strings.SPACE);
+          String attr = StringUtil.right(startTag,Strings.SPACE);
+          while(attr.contains(EQ_QUOTE_DOUBLE)){
+            String attrName = StringUtil.between(attr,Strings.EMPTY,EQ_QUOTE_DOUBLE).trim();
+            attr = StringUtil.right(attr,EQ_QUOTE_DOUBLE);
+            String attrValue = StringUtil.left(attr,Strings.QUOTE_DOUBLE).trim();
+            attr = StringUtil.right(attr,Strings.QUOTE_DOUBLE);
             attrs.put(attrName,attrValue);
           }
         }
@@ -200,7 +208,7 @@ public class DefaultXmlParser extends AbstractParser{
    */
   private String readUntil(int endTag){
     StringBuilder s = new StringBuilder();
-    while(-1!=c&&endTag!=c){
+    while(Chars.END!=c&&endTag!=c){
       s.append((char)c);
       next();
     }
@@ -222,12 +230,16 @@ public class DefaultXmlParser extends AbstractParser{
    * 跳过无意义字符和注释
    */
   protected void skip(){
-    if(-1==c) return;
-    if(0<=c&&32>=c){ // 忽略0到32之间的
+    if(Chars.END==c){
+      return;
+    }
+    // 忽略0到32之间的
+    if(Chars.NUT<=c&&Chars.SPACE>=c){
       next();
       skip();
     }
-    if(127==c||'\r'==c||'\n'==c){ // 忽略DEL及回车换行
+    // 忽略DEL及回车换行
+    if(Chars.DEL==c||Chars.CR==c||Chars.LF==c){
       next();
       skip();
     }

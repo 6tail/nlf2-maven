@@ -2,6 +2,11 @@ package com.nlf.extend.serialize.obj;
 
 import com.nlf.serialize.ConvertFactory;
 
+/**
+ * 对象序列化工具
+ *
+ * @author 6tail
+ */
 public class OBJ{
   /**
    * 将指定对象转换为字符串

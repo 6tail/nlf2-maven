@@ -1,14 +1,21 @@
 package com.nlf.bytecode.constant;
 
 /**
- * 常量-名称和类型
- * 
- * @author 6tail
+ * 常量 - 名称和类型
  *
+ * @author 6tail
  */
 public class NameAndTypeConstant extends AbstractConstant{
   private int nameIndex;
   private int descriptorIndex;
+
+  public NameAndTypeConstant() {}
+
+  public NameAndTypeConstant(byte[] data, int nameIndex, int descriptorIndex) {
+    this.data = data;
+    this.nameIndex = nameIndex;
+    this.descriptorIndex = descriptorIndex;
+  }
 
   public int getNameIndex(){
     return nameIndex;
@@ -26,6 +33,7 @@ public class NameAndTypeConstant extends AbstractConstant{
     this.descriptorIndex = descriptorIndex;
   }
 
+  @Override
   public NameAndTypeConstant toNameAndTypeConstant(){
     return this;
   }

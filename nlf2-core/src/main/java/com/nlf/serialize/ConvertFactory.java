@@ -16,9 +16,9 @@ public class ConvertFactory{
   protected ConvertFactory(){}
 
   /** 解析器映射 */
-  public static final Map<String,String> parsers = new HashMap<String,String>();
+  public static final Map<String,String> PARSERS = new HashMap<String,String>();
   /** 包装器映射 */
-  public static final Map<String,String> wrappers = new HashMap<String,String>();
+  public static final Map<String,String> WRAPPERS = new HashMap<String,String>();
 
   /**
    * 获取解析器
@@ -27,18 +27,18 @@ public class ConvertFactory{
    * @return 解析器
    */
   public static IParser getParser(String format){
-    if(!parsers.containsKey(format)){
+    if(!PARSERS.containsKey(format)){
       List<String> impls = App.getImplements(IParser.class);
       for(String klass:impls){
         IParser parser = App.getProxy().newInstance(klass);
         if(parser.support(format)){
-          parsers.put(format,klass);
+          PARSERS.put(format,klass);
           return parser;
         }
       }
-      parsers.put(format,null);
+      PARSERS.put(format,null);
     }else{
-      String impl = parsers.get(format);
+      String impl = PARSERS.get(format);
       if(null!=impl){
         return App.getProxy().newInstance(impl);
       }
@@ -53,18 +53,18 @@ public class ConvertFactory{
    * @return 包装器
    */
   public static IWrapper getWrapper(String format){
-    if(!wrappers.containsKey(format)){
+    if(!WRAPPERS.containsKey(format)){
       List<String> impls = App.getImplements(IWrapper.class);
       for(String klass:impls){
         IWrapper wrapper = App.getProxy().newInstance(klass);
         if(wrapper.support(format)){
-          wrappers.put(format,klass);
+          WRAPPERS.put(format,klass);
           return wrapper;
         }
       }
-      wrappers.put(format,null);
+      WRAPPERS.put(format,null);
     }else{
-      String impl = wrappers.get(format);
+      String impl = WRAPPERS.get(format);
       if(null!=impl){
         return App.getProxy().newInstance(impl);
       }

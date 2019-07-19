@@ -15,6 +15,7 @@ import com.nlf.core.UploadFile;
 import com.nlf.extend.serialize.obj.OBJ;
 import com.nlf.extend.web.*;
 import com.nlf.log.Logger;
+import com.nlf.util.Strings;
 
 import javax.servlet.http.HttpSession;
 
@@ -25,6 +26,10 @@ import javax.servlet.http.HttpSession;
  *
  */
 public class DefaultWebRequest extends AbstractWebRequest{
+  private static final String LOCAL_IP_V6 = "0:0:0:0:0:0:0:1";
+  private static final String LOCAL_IP_V4 = "127.0.0.1";
+  /** multipart标识 */
+  public static final String MULTIPART_TAG = "multipart/form-data";
   /** 代理标识 */
   public static final String[] PROXY_HEADER = {
       "X-REAL-IP",
@@ -54,8 +59,8 @@ public class DefaultWebRequest extends AbstractWebRequest{
       }
     }
     if(null!=r){
-      if(r.contains(",")){
-        String[] rs = r.split(",");
+      if(r.contains(Strings.COMMA)){
+        String[] rs = r.split(Strings.COMMA);
         for(String s:rs){
           if(s.length()>0&&!"unknown".equalsIgnoreCase(s)){
             r = s;
@@ -63,11 +68,13 @@ public class DefaultWebRequest extends AbstractWebRequest{
           }
         }
       }
-      if("0:0:0:0:0:0:0:1".equals(r)){
-        r = "127.0.0.1";
+      if(LOCAL_IP_V6.equals(r)){
+        r = LOCAL_IP_V4;
       }
     }
-    if(null==r) r = "";
+    if(null==r){
+      r = "";
+    }
     return r;
   }
 
@@ -78,7 +85,7 @@ public class DefaultWebRequest extends AbstractWebRequest{
       throw new RuntimeException(e);
     }
     String contentType = servletRequest.getContentType();
-    if(null!=contentType&&contentType.contains("multipart/form-data")){
+    if(null!=contentType&&contentType.contains(MULTIPART_TAG)){
       IFileUploader uploader = App.getProxy().newInstance(IWebFileUploader.class.getName());
       List<UploadFile> files = uploader.getFiles();
       param.set(Statics.PARAM_FILES,files);
@@ -135,7 +142,9 @@ public class DefaultWebRequest extends AbstractWebRequest{
       pageParam = new Bean();
     }
     for(String key:param.keySet()){
-      if(Statics.PARAM_PAGE_PARAM.equals(key)||Statics.PARAM_FILES.equals(key)) continue;
+      if(Statics.PARAM_PAGE_PARAM.equals(key)||Statics.PARAM_FILES.equals(key)){
+        continue;
+      }
       pageParam.set(key,param.get(key));
     }
     String uri = servletRequest.getServletPath();
@@ -149,6 +158,7 @@ public class DefaultWebRequest extends AbstractWebRequest{
     param.set(Statics.PARAM_PAGE_PARAM,OBJ.fromObject(pageParam));
   }
 
+  @Override
   public Client getClient(){
     if(null==client){
       client = new Client();

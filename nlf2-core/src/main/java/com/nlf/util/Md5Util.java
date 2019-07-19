@@ -26,7 +26,9 @@ public class Md5Util{
       StringBuilder sb = new StringBuilder();
       for(byte d:b){
         String hex = Integer.toHexString(d&0xFF);
-        if(hex.length()<2) sb.append("0");
+        if(hex.length()<2){
+          sb.append("0");
+        }
         sb.append(hex.toUpperCase());
       }
       return sb+"";

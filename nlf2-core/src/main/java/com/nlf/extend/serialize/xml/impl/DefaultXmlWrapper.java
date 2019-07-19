@@ -21,37 +21,40 @@ import com.nlf.util.DateUtil;
  *
  */
 public class DefaultXmlWrapper extends AbstractWrapper{
+  public static final String LT = "<";
+  public static final String GT = ">";
+  public static final String LT_CLOSE = LT+"/";
   protected String rootTag = "data";
 
   protected String wrapNumber(Object o,String tag){
-    return "<"+tag+">"+o+"</"+tag+">";
+    return LT+tag+GT+o+LT_CLOSE+tag+GT;
   }
 
   protected String wrapBool(Object o,String tag){
-    return "<"+tag+">"+o+"</"+tag+">";
+    return LT+tag+GT+o+LT_CLOSE+tag+GT;
   }
 
   protected String wrapString(Object o,String tag){
     StringBuilder s = new StringBuilder();
-    s.append("<");
+    s.append(LT);
     s.append(tag);
-    s.append(">");
+    s.append(GT);
     String os = o+"";
-    if(os.contains("<")||os.contains(">")){
+    if(os.contains(LT)||os.contains(GT)){
       s.append("<![CDATA[");
       s.append(os);
       s.append("]]>");
     }else{
       s.append(os);
     }
-    s.append("</");
+    s.append(LT_CLOSE);
     s.append(tag);
-    s.append(">");
+    s.append(GT);
     return s.toString();
   }
 
   protected String wrapDate(Object o,String tag){
-    return "<"+tag+">"+DateUtil.ymdhms((Date)o)+"</"+tag+">";
+    return LT+tag+GT+DateUtil.ymdhms((Date)o)+LT_CLOSE+tag+GT;
   }
 
   protected String wrapByteArray(Object o,String tag){
@@ -65,60 +68,60 @@ public class DefaultXmlWrapper extends AbstractWrapper{
     }
     StringBuilder s = new StringBuilder();
     Object[] arr = (Object[])o;
-    s.append("<");
+    s.append(LT);
     s.append(tag);
-    s.append(">");
+    s.append(GT);
     for(Object obj:arr){
       s.append(wrap(obj,tag.toLowerCase().endsWith("s")?tag.substring(0,tag.length()-1):tag));
     }
-    s.append("</");
+    s.append(LT_CLOSE);
     s.append(tag);
-    s.append(">");
+    s.append(GT);
     return s.toString();
   }
 
   protected String wrapCollection(Object o,String tag){
     StringBuilder s = new StringBuilder();
-    s.append("<");
+    s.append(LT);
     s.append(tag);
-    s.append(">");
+    s.append(GT);
     Collection<?> c = (Collection<?>)o;
     for(Object obj:c){
       s.append(wrap(obj,tag.toLowerCase().endsWith("s")?tag.substring(0,tag.length()-1):tag));
     }
-    s.append("</");
+    s.append(LT_CLOSE);
     s.append(tag);
-    s.append(">");
+    s.append(GT);
     return s.toString();
   }
 
   protected String wrapEnumeration(Object o,String tag){
     StringBuilder s = new StringBuilder();
-    s.append("<");
+    s.append(LT);
     s.append(tag);
-    s.append(">");
+    s.append(GT);
     Enumeration<?> e = (Enumeration<?>)o;
     while(e.hasMoreElements()){
       s.append(wrap(e.nextElement(),tag.toLowerCase().endsWith("s")?tag.substring(0,tag.length()-1):tag));
     }
-    s.append("</");
+    s.append(LT_CLOSE);
     s.append(tag);
-    s.append(">");
+    s.append(GT);
     return s.toString();
   }
 
   protected String wrapMap(Object o,String tag){
     StringBuilder s = new StringBuilder();
-    s.append("<");
+    s.append(LT);
     s.append(tag);
-    s.append(">");
+    s.append(GT);
     Map<?,?> m = (Map<?,?>)o;
     for(Map.Entry entry:m.entrySet()){
       s.append(wrap(entry.getValue(),entry.getKey()+""));
     }
-    s.append("</");
+    s.append(LT_CLOSE);
     s.append(tag);
-    s.append(">");
+    s.append(GT);
     return s.toString();
   }
 
@@ -130,12 +133,12 @@ public class DefaultXmlWrapper extends AbstractWrapper{
       for(PropertyDescriptor desc:props){
         Method method = desc.getReadMethod();
         if(null==method){
-          s.append("<");
+          s.append(LT);
           s.append(desc.getName());
-          s.append(">");
-          s.append("</");
+          s.append(GT);
+          s.append(LT_CLOSE);
           s.append(desc.getName());
-          s.append(">");
+          s.append(GT);
         }else{
           s.append(wrap(method.invoke(o),desc.getName()));
         }

@@ -16,45 +16,59 @@ public class ASqlDeleter extends AbstractSqlExecuter implements ISqlDeleter{
   }
 
   public ISqlDeleter tableIf(String tables,boolean condition){
-    if(condition) table(tables);
+    if(condition){
+      table(tables);
+    }
     return this;
   }
 
+  @Override
   public ISqlDeleter where(String sql){
     super.where(sql);
     return this;
   }
 
+  @Override
   public ISqlDeleter where(String columnOrSql,Object valueOrBean){
     super.where(columnOrSql,valueOrBean);
     return this;
   }
 
+  @Override
   public ISqlDeleter whereIf(String sql,boolean condition){
-    if(condition) where(sql);
+    if(condition){
+      where(sql);
+    }
     return this;
   }
 
+  @Override
   public ISqlDeleter whereIf(String columnOrSql,Object valueOrBean,boolean condition){
-    if(condition) where(columnOrSql,valueOrBean);
+    if(condition){
+      where(columnOrSql,valueOrBean);
+    }
     return this;
   }
 
-  public ISqlDeleter whereIn(String column,Object... values){
+  @Override
+  public ISqlDeleter whereIn(String column, Object... values){
     super.whereIn(column,values);
     return this;
   }
 
-  public ISqlDeleter whereNotIn(String column,Object... values){
+  @Override
+  public ISqlDeleter whereNotIn(String column, Object... values){
     super.whereNotIn(column,values);
     return this;
   }
 
+  @Override
   public ISqlDeleter whereNotEqual(String column, Object value){
     super.whereNotEqual(column,value);
     return this;
   }
 
+  @Override
   public String buildSql(){
     return "DELETE FROM "+StringUtil.join(tables,",")+buildSqlWhere();
   }

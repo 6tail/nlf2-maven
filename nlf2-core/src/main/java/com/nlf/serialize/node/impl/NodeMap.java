@@ -9,9 +9,8 @@ import com.nlf.serialize.node.NodeType;
 
 /**
  * Map对象类型节点
- * 
+ *
  * @author 6tail
- * 
  */
 public class NodeMap extends AbstractNode{
   private static final long serialVersionUID = 1;
@@ -33,6 +32,7 @@ public class NodeMap extends AbstractNode{
     return NodeType.MAP;
   }
 
+  @Override
   public String toString(){
     return o.toString();
   }

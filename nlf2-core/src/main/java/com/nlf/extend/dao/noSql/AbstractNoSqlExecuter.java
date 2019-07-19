@@ -5,6 +5,11 @@ import com.nlf.core.IRequest;
 import com.nlf.dao.executer.AbstractDaoExecuter;
 import com.nlf.dao.paging.PageData;
 
+/**
+ * 抽象NoSql Dao执行器
+ *
+ * @author 6tail
+ */
 public abstract class AbstractNoSqlExecuter extends AbstractDaoExecuter implements INoSqlExecuter{
 
   public boolean support(String dbType){

@@ -5,12 +5,13 @@ import com.nlf.dao.DaoType;
 
 /**
  * 抽象NoSqlDao
- * 
+ *
  * @author 6tail
  *
  */
 public abstract class AbstractNoSqlDao extends AbstractDao implements INoSqlDao{
 
+  @Override
   public DaoType getType() {
     return DaoType.nosql;
   }

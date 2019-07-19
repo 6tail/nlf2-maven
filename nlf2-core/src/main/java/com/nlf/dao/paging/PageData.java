@@ -92,7 +92,8 @@ public class PageData implements List<Bean>,java.io.Serializable{
    * @return 前一页页码
    */
   public int getPreviousPageNumber(){
-    return pageNumber-1<1?1:pageNumber-1;
+    int prevNumber = pageNumber-1;
+    return prevNumber<1?1:prevNumber;
   }
 
   /**
@@ -101,7 +102,9 @@ public class PageData implements List<Bean>,java.io.Serializable{
    * @return 页码
    */
   public int getNextPageNumber(){
-    return pageNumber+1>getPageCount()?getPageCount():pageNumber+1;
+    int nextNumber = pageNumber+1;
+    int pageCount = getPageCount();
+    return nextNumber>pageCount?pageCount:nextNumber;
   }
 
   /**
@@ -285,6 +288,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
     return data.toArray(a);
   }
 
+  @Override
   public String toString(){
     IPagingRender render = com.nlf.App.getProxy().newInstance(IPagingRender.class.getName());
     return render.render(this);

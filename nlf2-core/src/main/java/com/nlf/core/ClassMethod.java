@@ -2,7 +2,7 @@ package com.nlf.core;
 
 /**
  * 类和方法
- * 
+ *
  * @author 6tail
  * 
  */
@@ -39,6 +39,7 @@ public class ClassMethod{
     return com.nlf.App.getProxy().execute(klass,method);
   }
 
+  @Override
   public String toString(){
     return klass+" public "+ret+" "+method+"()";
   }

@@ -10,7 +10,7 @@ import com.nlf.serialize.json.JSON;
 
 /**
  * Ticket工具
- * 
+ *
  * @author 6tail
  *
  */
@@ -20,11 +20,11 @@ public class TicketHelper{
 
   /**
    * 获取jsapi的ticket
-   * 
-   * @param accessToken
+   *
+   * @param accessToken accessToken
    * @see com.nlf.extend.wechat.base.BaseHelper
-   * @see com.nlf.extend.wechat.base.AccessToken
-   * @throws WeixinException
+   * @see com.nlf.extend.wechat.base.bean.AccessToken
+   * @throws WeixinException WeixinException
    */
   public static Ticket getTicket4JsApi(String accessToken) throws WeixinException{
     try{

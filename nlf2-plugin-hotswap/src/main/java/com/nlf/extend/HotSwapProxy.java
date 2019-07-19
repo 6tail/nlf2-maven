@@ -19,6 +19,7 @@ public class HotSwapProxy extends DefaultProxy{
   protected static final Map<String,Class<?>> CLASS_POOL = new HashMap<String,Class<?>>();
   /** class文件最后修改时间缓存 */
   protected static final Map<String,Long> CLASS_LAST_MODIFIED = new HashMap<String,Long>();
+  @Override
   @SuppressWarnings("unchecked")
   public <T>T newInstance(String interfaceOrClassName){
     String implClass = App.getImplement(interfaceOrClassName);

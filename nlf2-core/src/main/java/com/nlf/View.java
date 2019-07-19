@@ -4,8 +4,8 @@ import com.nlf.view.JsonView;
 
 /**
  * 抽象视图
- * @author 6tail
  *
+ * @author 6tail
  */
 public abstract class View{
   /** 仅代表操作成功的json */

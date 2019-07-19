@@ -17,6 +17,7 @@ public class NodeBool extends AbstractNode{
     this.o = o;
   }
 
+  @Override
   public String toString(){
     return o?"true":"false";
   }

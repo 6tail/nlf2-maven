@@ -26,7 +26,7 @@ public abstract class AbstractWebRequest extends com.nlf.core.AbstractRequest im
     if(null==includePath){
       return servletRequest.getServletPath();
     }
-    for(String suffix:WebApp.servletSuffixs){
+    for(String suffix:WebApp.SERVLET_SUFFIXS){
       if(includePath.endsWith(suffix)){
         includePath = includePath.substring(0,includePath.lastIndexOf(suffix));
         if(includePath.startsWith(WebApp.contextPath)){

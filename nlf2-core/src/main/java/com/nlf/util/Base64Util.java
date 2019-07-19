@@ -9,30 +9,32 @@ import java.util.regex.Pattern;
  * 
  */
 public class Base64Util{
-
+  private static final int MIN_UNIT_SIZE = 4;
+  private static final int MAP1_SIZE = 64;
+  private static final int MAP2_SIZE = 128;
+  private static final char[] MAP1 = new char[MAP1_SIZE];
+  private static final byte[] MAP2 = new byte[MAP2_SIZE];
   private Base64Util(){}
-  private static final char[] map1 = new char[64];
+
   static{
     int i = 0;
-    for(char c = 'A';c<='Z';c++){
-      map1[i++] = c;
+    for(char c = Chars.A_UPPER;c<=Chars.Z_UPPER;c++){
+      MAP1[i++] = c;
     }
-    for(char c = 'a';c<='z';c++){
-      map1[i++] = c;
+    for(char c = Chars.A_LOWER;c<=Chars.Z_LOWER;c++){
+      MAP1[i++] = c;
     }
-    for(char c = '0';c<='9';c++){
-      map1[i++] = c;
+    for(char c = Chars.ZERO;c<=Chars.NINE;c++){
+      MAP1[i++] = c;
     }
-    map1[i++] = '+';
-    map1[i] = '/';
-  }
-  private static final byte[] map2 = new byte[128];
-  static{
-    for(int i = 0;i<map2.length;i++){
-      map2[i] = -1;
+    MAP1[i++] = Chars.ADD;
+    MAP1[i] = Chars.SLASH_LEFT;
+
+    for(i = 0;i<MAP2_SIZE;i++){
+      MAP2[i] = -1;
     }
-    for(int i = 0;i<64;i++){
-      map2[map1[i]] = (byte)i;
+    for(i = 0;i<MAP1_SIZE;i++){
+      MAP2[MAP1[i]] = (byte)i;
     }
   }
 
@@ -57,11 +59,11 @@ public class Base64Util{
       int o1 = ((i0&3)<<4)|(i1>>>4);
       int o2 = ((i1&0xf)<<2)|(i2>>>6);
       int o3 = i2&0x3F;
-      out[op++] = map1[o0];
-      out[op++] = map1[o1];
-      out[op] = op<oDataLen?map1[o2]:'=';
+      out[op++] = MAP1[o0];
+      out[op++] = MAP1[o1];
+      out[op] = op<oDataLen?MAP1[o2]:Chars.EQ;
       op++;
-      out[op] = op<oDataLen?map1[o3]:'=';
+      out[op] = op<oDataLen?MAP1[o3]:Chars.EQ;
       op++;
     }
     return new String(out);
@@ -71,10 +73,10 @@ public class Base64Util{
     char[] in = s.toCharArray();
     int iOff = 0;
     int iLen = in.length;
-    if(iLen%4!=0){
+    if(iLen%MIN_UNIT_SIZE!=0){
       throw new IllegalArgumentException("Length of Base64 encoded input string is not a multiple of 4.");
     }
-    while(iLen>0&&in[iOff+iLen-1]=='='){
+    while(iLen>0&&in[iOff+iLen-1]==Chars.EQ){
       iLen--;
     }
     int oLen = (iLen*3)/4;
@@ -85,15 +87,15 @@ public class Base64Util{
     while(ip<iEnd){
       int i0 = in[ip++];
       int i1 = in[ip++];
-      int i2 = ip<iEnd?in[ip++]:'A';
-      int i3 = ip<iEnd?in[ip++]:'A';
+      int i2 = ip<iEnd?in[ip++]:Chars.A_UPPER;
+      int i3 = ip<iEnd?in[ip++]:Chars.A_UPPER;
       if(i0>127||i1>127||i2>127||i3>127){
         throw new IllegalArgumentException("Illegal character in Base64 encoded data.");
       }
-      int b0 = map2[i0];
-      int b1 = map2[i1];
-      int b2 = map2[i2];
-      int b3 = map2[i3];
+      int b0 = MAP2[i0];
+      int b1 = MAP2[i1];
+      int b2 = MAP2[i2];
+      int b3 = MAP2[i3];
       if(b0<0||b1<0||b2<0||b3<0){
         throw new IllegalArgumentException("Illegal character in Base64 encoded data.");
       }
@@ -101,10 +103,12 @@ public class Base64Util{
       int o1 = ((b1&0xf)<<4)|(b2>>>2);
       int o2 = ((b2&3)<<6)|b3;
       out[op++] = (byte)o0;
-      if(op<oLen)
-        out[op++] = (byte)o1;
-      if(op<oLen)
-        out[op++] = (byte)o2;
+      if(op<oLen) {
+        out[op++] = (byte) o1;
+      }
+      if(op<oLen) {
+        out[op++] = (byte) o2;
+      }
     }
     return out;
   }

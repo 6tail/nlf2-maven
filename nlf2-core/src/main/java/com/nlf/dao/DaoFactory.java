@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class DaoFactory{
   /** alias与Dao实现类的映射 */
-  protected static final Map<String,String> daos = new HashMap<String,String>();
+  protected static final Map<String,String> DAOS = new HashMap<String,String>();
   /**
    * 根据别名获取Dao
    * 
@@ -21,20 +21,20 @@ public class DaoFactory{
    * @return Dao
    */
   public static IDao getDao(String alias){
-    if(!daos.containsKey(alias)){
+    if(!DAOS.containsKey(alias)){
       com.nlf.dao.setting.IDbSetting setting = DbSettingFactory.getSetting(alias);
       java.util.List<String> impls = App.getImplements(IDao.class);
       for(String klass:impls){
         AbstractDao dao = App.getProxy().newInstance(klass);
         if(dao.support(setting.getDbType())){
-          daos.put(alias,klass);
+          DAOS.put(alias,klass);
           dao.setAlias(alias);
           return dao;
         }
       }
-      daos.put(alias,null);
+      DAOS.put(alias,null);
     }else{
-      String impl = daos.get(alias);
+      String impl = DAOS.get(alias);
       if(null!=impl){
         AbstractDao dao = App.getProxy().newInstance(impl);
         dao.setAlias(alias);

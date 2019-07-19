@@ -12,10 +12,12 @@ import com.nlf.log.Logger;
  *
  */
 public class OracleTemplate extends ASqlTemplate{
+  @Override
   public boolean support(String dbType){
     return "oracle".equalsIgnoreCase(dbType);
   }
 
+  @Override
   public List<Bean> top(int count){
     params.clear();
     String sql = buildSql();
@@ -26,7 +28,8 @@ public class OracleTemplate extends ASqlTemplate{
     return queryList();
   }
 
-  public PageData page(int pageNumber,int pageSize){
+  @Override
+  public PageData page(int pageNumber, int pageSize){
     PageData d = new PageData();
     d.setPageSize(pageSize);
     d.setPageNumber(pageNumber);

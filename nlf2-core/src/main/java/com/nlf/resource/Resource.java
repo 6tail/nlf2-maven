@@ -13,6 +13,7 @@ import com.nlf.resource.klass.ClassResource;
  *
  */
 public class Resource{
+  public static final String PACKAGE_SEPARATOR = ".";
   /** 是否位于jar中 */
   protected boolean inJar;
   /** 所在路径 */
@@ -69,8 +70,8 @@ public class Resource{
         case klass:
           ClassResource res = (ClassResource)this;
           String pkg = res.getClassName();
-          if(pkg.contains(".")){
-            pkg = pkg.substring(0,pkg.lastIndexOf("."));
+          if(pkg.contains(PACKAGE_SEPARATOR)){
+            pkg = pkg.substring(0,pkg.lastIndexOf(PACKAGE_SEPARATOR));
           }
           return new File(res.getRoot()+File.separator+pkg.replace(".",File.separator)+File.separator+res.getFileName()).lastModified();
         default:
@@ -79,6 +80,7 @@ public class Resource{
     }
   }
 
+  @Override
   public String toString(){
     return "type="+type+" inJar="+inJar+" root="+root+" fileName="+fileName;
   }

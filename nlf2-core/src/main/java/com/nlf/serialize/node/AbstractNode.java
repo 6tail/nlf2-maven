@@ -3,6 +3,11 @@ package com.nlf.serialize.node;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 抽象节点
+ *
+ * @author 6tail
+ */
 public abstract class AbstractNode implements INode{
   private static final long serialVersionUID = 1;
   protected String name;

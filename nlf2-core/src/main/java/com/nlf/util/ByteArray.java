@@ -10,6 +10,7 @@ import java.util.List;
  *
  */
 public class ByteArray{
+  private static final int HEX_UNIT_LENGTH = 2;
 
   /** 字节缓存 */
   private List<Byte> l = new ArrayList<Byte>();
@@ -292,7 +293,7 @@ public class ByteArray{
     }else{
       int l = s.length()/2;
       byte[] b = new byte[l];
-      for (int i=0;i<l;i+=2){
+      for (int i=0;i<l;i+=HEX_UNIT_LENGTH){
         b[i/2] = (byte)((Character.digit(s.charAt(i),16)<<4)+Character.digit(s.charAt(i + 1),16));
       }
       append(b);
@@ -303,6 +304,7 @@ public class ByteArray{
   /**
    * 获取16进制字符串，如：0x01 0x23 0x45
    */
+  @Override
   public String toString(){
     return toString("0x"," ");
   }

@@ -10,14 +10,16 @@ import com.nlf.log.Logger;
 
 /**
  * SQL模板的sqlserver实现
- * @author 6tail
  *
+ * @author 6tail
  */
 public class SqlserverTemplate extends ASqlTemplate{
+  @Override
   public boolean support(String dbType){
     return "sqlserver".equalsIgnoreCase(dbType);
   }
 
+  @Override
   public List<Bean> top(int count){
     params.clear();
     String sql = buildSql();
@@ -28,9 +30,10 @@ public class SqlserverTemplate extends ASqlTemplate{
     return queryList();
   }
 
+  @Override
   public int count(){
     params.clear();
-    sql = buildSql();
+    String sql = buildSql();
     sql = sql.replace("\r"," ").replace("\n"," ");
     String upperSql = sql.toUpperCase();
     int orderIndex = upperSql.indexOf(" ORDER ");
@@ -38,6 +41,8 @@ public class SqlserverTemplate extends ASqlTemplate{
       sql = sql.substring(0,orderIndex);
     }
     sql = "SELECT COUNT(*) NLFCOUNT_ FROM ("+sql+") NLFTABLE_";
+    sql = buildParams(sql,param);
+    this.sql = sql;
     Logger.getLog().debug(buildLog());
     List<Bean> l = queryList();
     if(l.size()<1){
@@ -47,7 +52,8 @@ public class SqlserverTemplate extends ASqlTemplate{
     return o.getInt("NLFCOUNT_",0);
   }
 
-  public PageData page(int pageNumber,int pageSize){
+  @Override
+  public PageData page(int pageNumber, int pageSize){
     PageData d = new PageData();
     d.setPageSize(pageSize);
     d.setPageNumber(pageNumber);

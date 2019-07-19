@@ -71,11 +71,17 @@ public class DefaultScanner extends AbstractScanner{
   protected Set<String> filterPath(String... paths){
     Set<String> l = new HashSet<String>();
     for(String p:paths){
-      if(null==p) continue;
+      if(null==p){
+        continue;
+      }
       p = p.trim();
-      if(p.length()<1) continue;
+      if(p.length()<1){
+        continue;
+      }
       File f = new File(p);
-      if(!f.exists()) continue;
+      if(!f.exists()){
+        continue;
+      }
       if(f.isDirectory()){
         String path = f.getAbsolutePath();
         if(path.endsWith(File.separator+".")){
@@ -232,7 +238,9 @@ public class DefaultScanner extends AbstractScanner{
     INTERFACE_IMPLEMENTS.clear();
     for(ClassResource c:CLASS.values()){
       for(String it:c.getInterfaces()){
-        if(!CLASS.containsKey(it)) continue;
+        if(!CLASS.containsKey(it)){
+          continue;
+        }
         List<String> l = INTERFACE_IMPLEMENTS.get(it);
         if(null==l){
           l = new ArrayList<String>();
@@ -302,7 +310,9 @@ public class DefaultScanner extends AbstractScanner{
     for(Entry<String,Set<String>> entry:targets.entrySet()){
       for(String value:entry.getValue()){
         String attrValue = attrs.getValue(entry.getKey());
-        if(null==attrValue) continue;
+        if(null==attrValue){
+          continue;
+        }
         if(StringUtil.matches(attrValue.toLowerCase(),value)){
           return true;
         }

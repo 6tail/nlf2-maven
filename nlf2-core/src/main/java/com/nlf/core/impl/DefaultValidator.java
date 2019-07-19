@@ -20,6 +20,8 @@ import com.nlf.util.StringUtil;
 public class DefaultValidator implements IValidator{
   public static final String MSG_OR = "nlf.exception.validate.or";
   public static final String MSG_PREFIX = "nlf.exception.validate.";
+  public static final String CONTAINS_TAG_PREFIX = "[";
+  public static final String CONTAINS_TAG_SUFFIX = "]";
   public static final Map<String,String> REG = new HashMap<String,String>(){
     private static final long serialVersionUID = 1;
     {
@@ -114,10 +116,10 @@ public class DefaultValidator implements IValidator{
       validateNotEmpty(name,value,rule);
     }else if(REG.containsKey(rule)){
       validateReg(name,value,rule);
-    }else if(rule.contains("[")){
-      int start = rule.indexOf("[");
+    }else if(rule.contains(CONTAINS_TAG_PREFIX)){
+      int start = rule.indexOf(CONTAINS_TAG_PREFIX);
       String op = rule.substring(0,start);
-      String ov = rule.substring(start+1,rule.lastIndexOf("]"));
+      String ov = rule.substring(start+1,rule.lastIndexOf(CONTAINS_TAG_SUFFIX));
       validateExpression(name,value,rule,op,ov);
     }
   }

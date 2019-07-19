@@ -15,6 +15,11 @@ import com.nlf.dao.executer.AbstractDaoExecuter;
 import com.nlf.log.Logger;
 import com.nlf.util.IOUtil;
 
+/**
+ * 抽象Sql Dao执行器
+ *
+ * @author 6tail
+ */
 public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements ISqlExecuter{
   /** 最近一次操作生成的SQL语句 */
   protected String sql;
@@ -26,6 +31,15 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
   protected List<String> sorts = new ArrayList<String>();
   protected List<Condition> wheres = new ArrayList<Condition>();
   protected List<Condition> havings = new ArrayList<Condition>();
+  /** 带名称的变量占位符 */
+  protected Pattern namedPlaceHolderPattern = Pattern.compile(":\\w+");
+
+  /** 变量占位符 */
+  public static final String PLACEHOLDER = "?";
+  /** 变量占位符正则 */
+  public static final String PLACEHOLDER_REG = "\\?";
+  /** 带名称的变量占位符 */
+  public static final String NAMED_PLACEHOLDER_PREFIX = ":";
 
   public boolean support(String dbType){
     return true;
@@ -121,12 +135,18 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
   }
 
   protected String buildParams(String sql,Bean o){
-    if(null==o) return sql;
-    if(sql.length()<1) return sql;
-    if(!sql.contains(":")) return sql;
+    if(null==o){
+      return sql;
+    }
+    if(sql.length()<1){
+      return sql;
+    }
+    if(!sql.contains(NAMED_PLACEHOLDER_PREFIX)){
+      return sql;
+    }
     List<String> keys = new ArrayList<String>();
     //匹配以冒号开头的字母或下划线组合，识别为变量名
-    Matcher m = Pattern.compile(":\\w+").matcher(sql);
+    Matcher m = namedPlaceHolderPattern.matcher(sql);
     while(m.find()){
       String key = m.group();
       if(!keys.contains(key)){
@@ -143,7 +163,7 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
     //将变量替换为占位符
     String newSql = sql;
     for(String key:keys){
-      newSql = newSql.replace(key,"?");
+      newSql = newSql.replace(key,PLACEHOLDER);
     }
     return newSql;
   }
@@ -163,6 +183,7 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
           buildParams(c.getPlaceholder(),o);
           buildParams(c.getEnd(),o);
           break;
+        default:
       }
     }
   }
@@ -199,7 +220,7 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
       cond.setType(ConditionType.pure_sql);
     }else{
       //有:占位符的SQL语句
-      if(columnOrSql.contains(":")){
+      if(columnOrSql.contains(NAMED_PLACEHOLDER_PREFIX)){
         Bean value;
         if(valueOrBean instanceof Bean) {
           value = (Bean)valueOrBean;
@@ -212,7 +233,7 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
         }else{
           //值不是Bean的，自动生成Bean，并按占位符赋值
           value = new Bean();
-          Matcher m = Pattern.compile(":\\w+").matcher(columnOrSql);
+          Matcher m = namedPlaceHolderPattern.matcher(columnOrSql);
           while(m.find()){
             String key = m.group().substring(1);
             value.set(key,valueOrBean);
@@ -223,7 +244,8 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
         cond.setEnd("");
         cond.setValue(value);
         cond.setType(ConditionType.multi_params);
-      }else if(columnOrSql.contains("?")){//有?占位符的SQL语句，参数值为数组，集合或单个值
+      }else if(columnOrSql.contains(PLACEHOLDER)){
+        //有?占位符的SQL语句，参数值为数组，集合或单个值
         boolean singleValue = false;
         Bean value = new Bean();
         if(valueOrBean.getClass().isArray()) {
@@ -243,9 +265,9 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
         //?占位符修改为:占位符
         String newSql = columnOrSql;
         int count = 0;
-        while(newSql.contains("?")) {
+        while(newSql.contains(PLACEHOLDER)) {
           String key = "_"+count++;
-          newSql = newSql.replaceFirst("\\?", ":" + key);
+          newSql = newSql.replaceFirst(PLACEHOLDER_REG, ":" + key);
           if(singleValue){
             value.set(key,valueOrBean);
           }
@@ -280,17 +302,23 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
   }
 
   protected ISqlExecuter whereIf(String sql,boolean condition){
-    if(condition) where(sql);
+    if(condition){
+      where(sql);
+    }
     return this;
   }
 
   protected ISqlExecuter whereIf(String column,Object value,boolean condition){
-    if(condition) where(column,value);
+    if(condition){
+      where(column,value);
+    }
     return this;
   }
 
   protected ISqlExecuter whereIf(String sql,Bean values,boolean condition){
-    if(condition) where(sql,values);
+    if(condition){
+      where(sql,values);
+    }
     return this;
   }
 
@@ -331,6 +359,10 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
     return this;
   }
 
+  /**
+   * 构建SQL语句
+   * @return SQL语句
+   */
   protected abstract String buildSql();
 
   protected String buildSqlIn(String column,Bean param,Object... values){
@@ -341,7 +373,7 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
         s.append(",");
       }
       String key = column.replaceAll("\\W","")+"_"+i;
-      s.append(":");
+      s.append(NAMED_PLACEHOLDER_PREFIX);
       s.append(key);
       param.set(key,v);
       i++;
@@ -367,6 +399,7 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
         s.append(buildParams(r.getPlaceholder(),o));
         s.append(buildParams(r.getEnd(),o));
         break;
+      default:
     }
     return s.toString();
   }

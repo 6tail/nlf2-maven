@@ -74,6 +74,7 @@ public class ClassResource extends Resource{
     methods.add(method);
   }
 
+  @Override
   public String toString(){
     return super.toString()+" className="+className+" interface="+interfaceClass+" abstract="+abstractClass;
   }

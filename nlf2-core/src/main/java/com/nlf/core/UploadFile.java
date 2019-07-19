@@ -48,6 +48,7 @@ public class UploadFile implements Serializable{
         return new ByteArrayInputStream(bytes);
       case TYPE_TEMP_FILE:
         return new java.io.FileInputStream(tempFile);
+      default:
     }
     return null;
   }
@@ -169,6 +170,7 @@ public class UploadFile implements Serializable{
       case UploadFile.TYPE_BYTES:
         FileUtil.write(new ByteArrayInputStream(bytes),file);
         break;
+      default:
     }
   }
 }

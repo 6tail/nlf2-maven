@@ -69,7 +69,9 @@ public abstract class AbstractRequest implements IRequest{
 
   public String get(String key){
     Object value = param.get(key);
-    if(null==value) return "";
+    if(null==value){
+      return "";
+    }
     if(value instanceof String[]){
       return StringUtil.join((String[])value,",");
     }
@@ -78,7 +80,9 @@ public abstract class AbstractRequest implements IRequest{
 
   public String[] getArray(String key){
     Object value = param.get(key);
-    if(null==value) return new String[]{};
+    if(null==value){
+      return new String[]{};
+    }
     if(value instanceof String[]){
       return (String[])value;
     }else{

@@ -94,7 +94,9 @@ public class DbSettingFactory{
    * @param alias 别名
    */
   public synchronized static void removeSetting(String alias){
-    if(!SETTING_POOL.containsKey(alias)) return;
+    if(!SETTING_POOL.containsKey(alias)){
+      return;
+    }
     int index = -1;
     for(int i=0,j=SETTING_LIST.size();i<j;i++){
       if(SETTING_LIST.get(i).getAlias().equals(alias)){

@@ -23,7 +23,7 @@ public abstract class AbstractDispatcher implements IDispatcher{
       }
       for(Method m:r.getMethods()){
         String ret = m.getRet();
-        if(Method.VOID.equals(ret)){
+        if(Method.RET_VOID.equals(ret)){
           continue;
         }
         if(m.getArgs().size()>0){

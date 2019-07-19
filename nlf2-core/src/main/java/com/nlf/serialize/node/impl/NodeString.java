@@ -5,9 +5,8 @@ import com.nlf.serialize.node.NodeType;
 
 /**
  * 字符串类型节点
- * 
+ *
  * @author 6tail
- * 
  */
 public class NodeString extends AbstractNode{
   private static final long serialVersionUID = 1;
@@ -21,6 +20,7 @@ public class NodeString extends AbstractNode{
     this.o = o;
   }
 
+  @Override
   public String toString(){
     return o;
   }

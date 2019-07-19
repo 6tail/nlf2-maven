@@ -14,10 +14,12 @@ import com.nlf.log.Logger;
  *
  */
 public class SqlserverSelecter extends ASqlSelecter{
+  @Override
   public boolean support(String dbType){
     return "sqlserver".equalsIgnoreCase(dbType);
   }
 
+  @Override
   public List<Bean> top(int count){
     params.clear();
     sql = buildSql();
@@ -26,6 +28,7 @@ public class SqlserverSelecter extends ASqlSelecter{
     return queryList();
   }
 
+  @Override
   public int count(){
     params.clear();
     sql = buildSql();
@@ -45,7 +48,8 @@ public class SqlserverSelecter extends ASqlSelecter{
     return o.getInt("NLFCOUNT_",0);
   }
 
-  public PageData page(int pageNumber,int pageSize){
+  @Override
+  public PageData page(int pageNumber, int pageSize){
     PageData d = new PageData();
     d.setPageSize(pageSize);
     d.setPageNumber(pageNumber);

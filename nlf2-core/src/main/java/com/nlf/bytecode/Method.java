@@ -12,7 +12,18 @@ import com.nlf.util.StringUtil;
  */
 public class Method{
   /** 返回类型：void */
-  public static final String VOID = "V";
+  public static final String RET_VOID = "V";
+  /** 返回类型：int */
+  public static final String RET_INT = "I";
+  /** 返回类型：long */
+  public static final String RET_LONG = "J";
+  /** 返回类型：float */
+  public static final String RET_FLOAT = "F";
+  /** 返回类型：double */
+  public static final String RET_DOUBLE = "D";
+  public static final String NAME_INIT = "<init>";
+  public static final String NAME_CLINIT = "<clinit>";
+
   /** 访问修饰符 */
   private int access;
   /** 所在类 */
@@ -37,11 +48,11 @@ public class Method{
   }
 
   public boolean isInit(){
-    return "<init>".equals(getName());
+    return NAME_INIT.equals(getName());
   }
 
   public boolean isClInit(){
-    return "<clinit>".equals(getName());
+    return NAME_CLINIT.equals(getName());
   }
 
   /**
@@ -114,6 +125,7 @@ public class Method{
     this.descriptorIndex = descriptorIndex;
   }
 
+  @Override
   public String toString(){
     List<String> l = new ArrayList<String>();
     l.add(access+"");

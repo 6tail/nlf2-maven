@@ -9,8 +9,11 @@ import java.io.IOException;
 
 /**
  * 自定义WebResponse，以便在请求响应时写session id
+ *
+ * @author 6tail
  */
 public class SessionWebResponse extends DefaultWebResponse {
+  @Override
   public void send(Object o) throws IOException {
     IWebRequest request = (IWebRequest) App.getRequest();
     ISession session = request.getSession(false);

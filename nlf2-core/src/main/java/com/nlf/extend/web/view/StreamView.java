@@ -3,6 +3,7 @@ package com.nlf.extend.web.view;
 import java.io.InputStream;
 import com.nlf.extend.web.WebView;
 import com.nlf.util.ContentTypes;
+import com.nlf.util.Strings;
 
 /**
  * 流
@@ -50,8 +51,8 @@ public class StreamView extends WebView{
 
   public StreamView setName(String name){
     this.name = name;
-    if(name.contains(".")){
-      String ext = name.substring(name.lastIndexOf("."));
+    if(name.contains(Strings.DOT)){
+      String ext = name.substring(name.lastIndexOf(Strings.DOT));
       setContentType(ContentTypes.getContentType(ext));
     }
     return this;

@@ -1,5 +1,7 @@
 package com.nlf;
 
+import com.nlf.util.DataTypes;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -16,6 +18,7 @@ import java.util.*;
  */
 public class Bean implements Map<String,Object>,java.io.Serializable{
   private static final long serialVersionUID = 1;
+  private static final String TYPE_CLASS_PREFIX = "class [";
   /** 键值对 */
   private Map<String,Object> values = new HashMap<String,Object>();
 
@@ -72,6 +75,115 @@ public class Bean implements Map<String,Object>,java.io.Serializable{
     return null==o?defaultValue:(E)o;
   }
 
+  protected Object convertString(String object,String type){
+    Object value = object;
+    if (DataTypes.BYTE.equals(type)) {
+      value = Byte.parseByte(object);
+    } else if (DataTypes.SHORT.equals(type)) {
+      value = Short.parseShort(object);
+    } else if (DataTypes.INT.equals(type)) {
+      value = Integer.parseInt(object);
+    } else if (DataTypes.LONG.equals(type)) {
+      value = Long.parseLong(object);
+    } else if (DataTypes.FLOAT.equals(type)) {
+      value = Float.parseFloat(object);
+    } else if (DataTypes.DOUBLE.equals(type)) {
+      value = Double.parseDouble(object);
+    }
+    return value;
+  }
+
+  protected Object convertInteger(int object,String type){
+    Object value = object;
+    if (DataTypes.BYTE.equals(type)) {
+      value = (byte) object;
+    } else if (DataTypes.SHORT.equals(type)) {
+      value = (short) object;
+    }
+    return value;
+  }
+
+  protected Object convertDouble(double object,String type){
+    Object value = object;
+    if (DataTypes.BYTE.equals(type)) {
+      value = (byte) object;
+    } else if (DataTypes.SHORT.equals(type)) {
+      value = (short) object;
+    } else if (DataTypes.INT.equals(type)) {
+      value = (int) object;
+    } else if (DataTypes.LONG.equals(type)) {
+      value = (long) object;
+    } else if (DataTypes.FLOAT.equals(type)) {
+      value = (float) object;
+    }
+    return value;
+  }
+
+  protected Object convertBigDecimal(BigDecimal object,String type){
+    Object value = object;
+    if (DataTypes.BYTE.equals(type)) {
+      value = object.byteValue();
+    } else if (DataTypes.SHORT.equals(type)) {
+      value = object.shortValue();
+    }else if (DataTypes.INT.equals(type)) {
+      value = object.intValue();
+    }else if (DataTypes.LONG.equals(type)) {
+      value = object.longValue();
+    }else if (DataTypes.FLOAT.equals(type)) {
+      value = object.floatValue();
+    }else if (DataTypes.DOUBLE.equals(type)) {
+      value = object.doubleValue();
+    }
+    return value;
+  }
+
+  @SuppressWarnings("unchecked")
+  protected Object convert(Object object,Class<?> propType,Type paramType) throws IntrospectionException,IllegalAccessException,InvocationTargetException{
+    Object value = object;
+    String paramTypeString = paramType+"";
+    if(null!=object) {
+      if (value instanceof Integer) {
+        value = convertInteger((Integer)value,paramTypeString);
+      } else if (value instanceof BigDecimal) {
+        value = convertBigDecimal((BigDecimal)value,paramTypeString);
+      } else if (value instanceof Double) {
+        value = convertDouble((Double)value,paramTypeString);
+      } else if (value instanceof String) {
+        value = convertString((String)value,paramTypeString);
+      } else if (value instanceof Bean) {
+        value = ((Bean) value).toObject(propType);
+      } else if (value instanceof List) {
+        Type elType = propType.getComponentType();
+        if(null==elType){
+          elType = ((ParameterizedType) paramType).getActualTypeArguments()[0];
+        }
+        List l = (List) value;
+        int size = l.size();
+        Map<Integer, Object> cache = new HashMap<Integer, Object>(size);
+        for (int i = 0, j = l.size(); i < j; i++) {
+          Object el = l.get(i);
+          if (el instanceof Bean) {
+            cache.put(i, ((Bean) el).toObject((Class) elType));
+          }
+        }
+        for (Entry<Integer, Object> entry : cache.entrySet()) {
+          l.set(entry.getKey(), entry.getValue());
+        }
+        if (paramTypeString.startsWith(Set.class.getName())) {
+          value = new HashSet(l);
+        } else if (paramTypeString.startsWith(Queue.class.getName())) {
+          value = new LinkedList(l);
+        } else if (paramTypeString.startsWith(TYPE_CLASS_PREFIX)) {
+          value = Array.newInstance((Class) elType, size);
+          for (int i = 0; i < size; i++) {
+            Array.set(value, i, l.get(i));
+          }
+        }
+      }
+    }
+    return value;
+  }
+
   /**
    * 转换为指定类的实例
    * @param klass 指定类
@@ -90,99 +202,19 @@ public class Bean implements Map<String,Object>,java.io.Serializable{
       Object o = App.getProxy().newInstance(c);
       BeanInfo info = Introspector.getBeanInfo(o.getClass(), Object.class);
       PropertyDescriptor[] props = info.getPropertyDescriptors();
-      for (PropertyDescriptor desc : props) {
-        Method writeMethod = desc.getWriteMethod();
-        Type type = writeMethod.getGenericParameterTypes()[0];
-        String typeString = type+"";
-        String key = desc.getName();
-        for (String bKey : keySet()) {
-          if (!bKey.equalsIgnoreCase(key)) {
+      for (PropertyDescriptor p : props) {
+        Method setterMethod = p.getWriteMethod();
+        if(null==setterMethod){
+          continue;
+        }
+        Class<?> propType = p.getPropertyType();
+        Type paramType = setterMethod.getGenericParameterTypes()[0];
+        String name = p.getName();
+        for (String key : keySet()) {
+          if (!key.equalsIgnoreCase(name)) {
             continue;
           }
-          Object value = get(bKey);
-          if(null!=value) {
-            if (value instanceof Integer) {
-              int v = (Integer) value;
-              if ("byte".equals(typeString)) {
-                value = (byte)v;
-              } else if ("short".equals(typeString)) {
-                value = (short)v;
-              }
-            } else if (value instanceof BigDecimal) {
-              BigDecimal v = (BigDecimal) value;
-              if ("byte".equals(typeString)) {
-                value = v.byteValue();
-              } else if ("short".equals(typeString)) {
-                value = v.shortValue();
-              }else if ("int".equals(typeString)) {
-                value = v.intValue();
-              }else if ("long".equals(typeString)) {
-                value = v.longValue();
-              }else if ("float".equals(typeString)) {
-                value = v.floatValue();
-              }else if ("double".equals(typeString)) {
-                value = v.doubleValue();
-              }
-            } else if (value instanceof Double) {
-              double v = (Double) value;
-              if ("byte".equals(typeString)) {
-                value = (byte) v;
-              } else if ("short".equals(typeString)) {
-                value = (short) v;
-              } else if ("int".equals(typeString)) {
-                value = (int) v;
-              } else if ("long".equals(typeString)) {
-                value = (long) v;
-              } else if ("float".equals(typeString)) {
-                value = (float) v;
-              }
-            } else if (value instanceof String) {
-              String v = value + "";
-              if ("byte".equals(typeString)) {
-                value = Byte.parseByte(v);
-              } else if ("short".equals(typeString)) {
-                value = Short.parseShort(v);
-              } else if ("int".equals(typeString)) {
-                value = Integer.parseInt(v);
-              } else if ("long".equals(typeString)) {
-                value = Long.parseLong(v);
-              } else if ("float".equals(typeString)) {
-                value = Float.parseFloat(v);
-              } else if ("double".equals(typeString)) {
-                value = Double.parseDouble(v);
-              }
-            } else if (value instanceof Bean) {
-              value = ((Bean) value).toObject(desc.getPropertyType());
-            } else if (value instanceof List) {
-              Type elType = desc.getPropertyType().getComponentType();
-              if(null==elType){
-                elType = ((ParameterizedType) type).getActualTypeArguments()[0];
-              }
-              Map<Integer, Object> cache = new HashMap<Integer, Object>();
-              List l = (List) value;
-              for (int i = 0, j = l.size(); i < j; i++) {
-                Object el = l.get(i);
-                if (el instanceof Bean) {
-                  cache.put(i, ((Bean) el).toObject((Class) elType));
-                }
-              }
-              for (Entry<Integer, Object> entry : cache.entrySet()) {
-                l.set(entry.getKey(), entry.getValue());
-              }
-              if (typeString.startsWith(Set.class.getName())) {
-                value = new HashSet(l);
-              } else if (typeString.startsWith(Queue.class.getName())) {
-                value = new LinkedList(l);
-              } else if (typeString.startsWith("class [")) {
-                int size = l.size();
-                value = Array.newInstance((Class) elType, size);
-                for (int i = 0; i < size; i++) {
-                  Array.set(value, i, l.get(i));
-                }
-              }
-            }
-          }
-          writeMethod.invoke(o, value);
+          setterMethod.invoke(o, convert(get(key),propType,paramType));
           matchedKeyCount++;
           break;
         }
@@ -242,6 +274,7 @@ public class Bean implements Map<String,Object>,java.io.Serializable{
     return values.keySet();
   }
 
+  @Override
   public String toString(){
     return values.toString();
   }
@@ -392,7 +425,9 @@ public class Bean implements Map<String,Object>,java.io.Serializable{
   public <T>List<T> getList(String key){
     List<T> l = new ArrayList<T>();
     Object o = values.get(key);
-    if(null==o) return l;
+    if(null==o){
+      return l;
+    }
     if(o instanceof Collection){
       l.addAll((Collection<T>)o);
     }else{
@@ -412,7 +447,9 @@ public class Bean implements Map<String,Object>,java.io.Serializable{
   public <E> List<E> getList(String key,Class<E> klass){
     List<E> l = new ArrayList<E>();
     Object o = values.get(key);
-    if(null==o) return l;
+    if(null==o){
+      return l;
+    }
     if(o instanceof Collection){
       l.addAll((Collection<E>)o);
     }else{

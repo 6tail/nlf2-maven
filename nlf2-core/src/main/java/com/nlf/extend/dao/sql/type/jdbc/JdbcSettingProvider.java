@@ -5,7 +5,14 @@ import com.nlf.Bean;
 import com.nlf.dao.setting.IDbSetting;
 import com.nlf.dao.setting.IDbSettingProvider;
 
+/**
+ * JDBC连接设置提供器
+ *
+ * @author 6tail
+ */
 public class JdbcSettingProvider implements IDbSettingProvider{
+
+  public static final String URL_SEARCH_PREFIX = "?";
 
   public IDbSetting buildDbSetting(Bean o){
     String alias = o.getString("alias","");
@@ -21,8 +28,8 @@ public class JdbcSettingProvider implements IDbSettingProvider{
     String url = o.getString("url","");
     //附加参数
     String extra = o.getString("extra","");
-    if(extra.length()>0&&!extra.startsWith("?")){
-      extra = "?"+extra;
+    if(extra.length()>0&&!extra.startsWith(URL_SEARCH_PREFIX)){
+      extra = URL_SEARCH_PREFIX+extra;
     }
     dbType = dbType.toLowerCase();
     JdbcSetting js = new JdbcSetting();

@@ -10,14 +10,12 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import com.nlf.App;
 import com.nlf.core.IRequest;
+import com.nlf.core.Statics;
 import com.nlf.core.UploadFile;
 import com.nlf.exception.ValidateException;
 import com.nlf.extend.web.IWebFileUploader;
 import com.nlf.extend.web.IWebRequest;
-import com.nlf.util.ByteArray;
-import com.nlf.util.FileUtil;
-import com.nlf.util.IOUtil;
-import com.nlf.util.StringUtil;
+import com.nlf.util.*;
 
 /**
  * 默认WEB文件上传器
@@ -26,6 +24,7 @@ import com.nlf.util.StringUtil;
  *
  */
 public class DefaultWebFileUploader implements IWebFileUploader{
+  private static final int MIN_TEMP_FILE_NAME_LENGTH = 2;
 
   /**
    * 表单项
@@ -59,14 +58,14 @@ public class DefaultWebFileUploader implements IWebFileUploader{
       this.file = file;
     }
   }
-  /** 编码 */
-  public static final String CHARSET = "utf-8";
   /** 参数名标识 */
   public static final String KEY_TAG = " name=\"";
   /** 文件名标识 */
   public static final String FILE_TAG = "filename=\"";
   /** 文件名标识 */
   public static final String BOUNDARY_TAG = "boundary=";
+  /** multipart标识 */
+  public static final String MULTIPART_TAG = "multipart/form-data";
   /** 表单项 */
   protected FormItem formItem;
 
@@ -79,7 +78,7 @@ public class DefaultWebFileUploader implements IWebFileUploader{
     if(null==contentType){
       return null;
     }
-    if(!contentType.contains("multipart/form-data")){
+    if(!contentType.contains(MULTIPART_TAG)){
       return null;
     }
     if(!contentType.contains(BOUNDARY_TAG)){
@@ -89,7 +88,9 @@ public class DefaultWebFileUploader implements IWebFileUploader{
   }
 
   protected void append(byte[] boundary,ByteArray cache) throws IOException{
-    if(null==formItem) return;
+    if(null==formItem){
+      return;
+    }
     int size = cache.size();
     int lb = boundary.length;
     if(size>lb){
@@ -100,24 +101,26 @@ public class DefaultWebFileUploader implements IWebFileUploader{
   }
 
   protected void appendFile(byte[] data) throws IOException{
-    if(null==formItem) return;
+    if(null==formItem){
+      return;
+    }
     File tempFile = formItem.getTempFile();
     if(null==tempFile){
       UploadFile file = formItem.getFile();
       String fileName = file.getName();
       String suffix = file.getSuffix();
-      if(fileName.contains(".")){
-        fileName = fileName.substring(0,fileName.lastIndexOf("."));
+      if(fileName.contains(Strings.DOT)){
+        fileName = fileName.substring(0,fileName.lastIndexOf(Strings.DOT));
       }
       StringBuilder prefix = new StringBuilder();
       prefix.append(fileName);
       //凑够字符数
-      while(prefix.length()<2){
-        prefix.append("_");
+      while(prefix.length()<MIN_TEMP_FILE_NAME_LENGTH){
+        prefix.append(Strings.UNDERSCORE);
       }
-      prefix.append("_");
+      prefix.append(Strings.UNDERSCORE);
       if(suffix.length()>0){
-        suffix = "."+suffix;
+        suffix = Strings.DOT+suffix;
       }
       tempFile = File.createTempFile(prefix.toString(),suffix);
       formItem.setTempFile(tempFile);
@@ -136,16 +139,16 @@ public class DefaultWebFileUploader implements IWebFileUploader{
     if(null==formItem){
       int index = cache.indexOf(new byte[]{0x0D,0x0A,0x0D,0x0A});
       while(index>-1){
-        String header = new String(cache.sub(0,index).toArray(),CHARSET);
+        String header = new String(cache.sub(0,index).toArray(), Statics.ENCODE);
         if(header.contains(FILE_TAG)){
-          String fileName = StringUtil.between(header,FILE_TAG,"\"");
+          String fileName = StringUtil.between(header,FILE_TAG,Strings.QUOTE_DOUBLE);
           if(fileName.length()>0){
             formItem = new FormItem();
             UploadFile file = new UploadFile();
             file.setName(fileName);
-            file.setSuffix(fileName.contains(".")?fileName.substring(fileName.lastIndexOf(".")+1):"");
+            file.setSuffix(fileName.contains(Strings.DOT)?fileName.substring(fileName.lastIndexOf(Strings.DOT)+1):Strings.EMPTY);
             if(header.contains(KEY_TAG)){
-              String key = StringUtil.between(header,KEY_TAG,"\"");
+              String key = StringUtil.between(header,KEY_TAG,Strings.QUOTE_DOUBLE);
               file.setKey(key);
             }
             if(header.contains("Content-Type:")){
@@ -156,7 +159,7 @@ public class DefaultWebFileUploader implements IWebFileUploader{
         }else{
           if(header.contains(KEY_TAG)){
             formItem = new FormItem();
-            String key = StringUtil.between(header,KEY_TAG,"\"");
+            String key = StringUtil.between(header,KEY_TAG,Strings.QUOTE_DOUBLE);
             formItem.setKey(key);
           }
         }
@@ -174,7 +177,7 @@ public class DefaultWebFileUploader implements IWebFileUploader{
               files.add(file);
             }else if(null!=key){
               IRequest r = App.getRequest();
-              r.getParam().set(key,new String(data,CHARSET));
+              r.getParam().set(key,new String(data,Statics.ENCODE));
             }
           }
           formItem = null;

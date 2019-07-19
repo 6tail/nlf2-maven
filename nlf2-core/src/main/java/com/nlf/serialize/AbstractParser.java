@@ -10,7 +10,18 @@ import com.nlf.serialize.node.impl.NodeList;
 import com.nlf.serialize.node.impl.NodeMap;
 import com.nlf.serialize.node.impl.NodeNumber;
 
+/**
+ * 抽象解析器
+ *
+ * @author 6tail
+ */
 public abstract class AbstractParser implements IParser{
+
+  /**
+   * 解析字符串为节点
+   * @param s 待解析字符串
+   * @return 节点
+   */
   public abstract INode parseAll(String s);
   
   public <T>T parse(String s){
@@ -60,6 +71,7 @@ public abstract class AbstractParser implements IParser{
         case LIST:
           bean.set(key,wrapAttributes(n,genList((NodeList)n)));
           break;
+        default:
       }
     }
     return bean;
@@ -95,6 +107,7 @@ public abstract class AbstractParser implements IParser{
         case LIST:
           l.add(wrapAttributes(n,genList((NodeList)n)));
           break;
+        default:
       }
     }
     return l;
@@ -116,6 +129,7 @@ public abstract class AbstractParser implements IParser{
         return (T)(wrapAttributes(n,genMap((NodeMap)n)));
       case LIST:
         return (T)(wrapAttributes(n,genList((NodeList)n)));
+      default:
     }
     return null;
   }

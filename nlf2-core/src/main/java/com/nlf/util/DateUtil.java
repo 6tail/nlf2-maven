@@ -13,6 +13,7 @@ import java.util.Map;
  * @author 6tail
  */
 public class DateUtil{
+  private static final int SHORT_YEAR_LENGTH = 2;
   /** 月份中文 */
   private static final String[] MONTH_CH = {"一","二","三","四","五","六","七","八","九","十","十一","十二"};
   /** 月份 */
@@ -85,16 +86,16 @@ public class DateUtil{
    */
   public static Date ymd2Date(String ymd) throws ParseException{
     String nymd = ymd.trim();
-    if(!nymd.contains("-")&&!nymd.contains("/")){
+    if(!nymd.contains(Strings.MINUS)&&!nymd.contains(Strings.SLASH_LEFT)){
       throw new ParseException("日期格式无法转换："+ymd,0);
     }
-    String year = "";
-    if(nymd.contains("-")){
-      year = nymd.substring(0,nymd.indexOf("-"));
-    }else if(nymd.contains("/")){
-      year = nymd.substring(0,nymd.indexOf("/"));
+    String year = Strings.EMPTY;
+    if(nymd.contains(Strings.MINUS)){
+      year = nymd.substring(0,nymd.indexOf(Strings.MINUS));
+    }else if(nymd.contains(Strings.SLASH_LEFT)){
+      year = nymd.substring(0,nymd.indexOf(Strings.SLASH_LEFT));
     }
-    if(year.length()==2){
+    if(year.length()==SHORT_YEAR_LENGTH){
       int ny = Integer.parseInt("20"+year);
       int ly = Integer.parseInt("19"+year);
       int ty = DateUtil.year(DateUtil.now());
@@ -360,6 +361,7 @@ public class DateUtil{
       case 8:
         s = "0"+s;
         break;
+      default:
     }
     s = s.substring(5)+"-"+MONTH.get(s.substring(2,5))+"-"+s.substring(0,2);
     return s;

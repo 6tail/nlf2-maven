@@ -15,6 +15,9 @@ import com.nlf.serialize.node.impl.NodeList;
 import com.nlf.serialize.node.impl.NodeMap;
 import com.nlf.serialize.node.impl.NodeNumber;
 import com.nlf.serialize.node.impl.NodeString;
+import com.nlf.util.Chars;
+import com.nlf.util.DataTypes;
+import com.nlf.util.Strings;
 
 /**
  * 默认json解析器
@@ -23,8 +26,6 @@ import com.nlf.serialize.node.impl.NodeString;
  *
  */
 public class DefaultJsonParser extends AbstractParser{
-  /** 右斜杠 */
-  public static final int RIGHT_SLASH = 92;
   /** 当前字符 */
   private int c;
   /** 位置 */
@@ -36,12 +37,15 @@ public class DefaultJsonParser extends AbstractParser{
   private Reader reader;
   
   public boolean support(String format){
-    return "json".equalsIgnoreCase(format);
+    return Strings.JSON.equalsIgnoreCase(format);
   }
 
+  @Override
   public INode parseAll(String s){
     os = s;
-    if(null==s) return null;
+    if(null==s){
+      return null;
+    }
     s = s.trim();
     reader = new StringReader(s);
     return parseNode();
@@ -50,49 +54,50 @@ public class DefaultJsonParser extends AbstractParser{
   private INode parseNode(){
     skip();
     switch(c){
-      case -1:// 结束
+      // 结束
+      case Chars.END:
         return null;
-      case '{':// 对象开始
+      // 对象开始
+      case Chars.BRACE_OPEN:
         return parseMap();
-      case '\'':// 字符串开始
+      // 字符串开始
+      case Chars.QUOTE_SINGLE:
+      case Chars.QUOTE_DOUBLE:
         return parseString();
-      case '"':// 字符串开始
-        return parseString();
-      case '[':// 数组开始
+      // 数组开始
+      case Chars.BRACKET_OPEN:
         return parseList();
-      default:// 其他，如数字，布尔类型，null
+      // 其他，如数字，布尔类型，null
+      default:
         return parseElse();
     }
   }
 
   private NodeString parseString(){
-    NodeString o = null;
-    if('\''==c){// 单引号开始的
-      next();// 跳过起始的单引号
-      o = new NodeString(readIgnoreSlash('\''));
-    }else if('"'==c){ // 双引号开始的
-      next();// 跳过起始的双引号
-      o = new NodeString(readIgnoreSlash('"'));
-    }
-    next();// 跳过结束符号
+    int tag = c;
+    // 跳过起始的引号
+    next();
+    NodeString o = new NodeString(readIgnoreSlash(tag));
+    // 跳过结束符号
+    next();
     return o;
   }
 
   private INode parseElse(){
     INode o = null;
-    String s = readUntil(new int[]{' ',',','}',']'});
+    String s = readUntil(new int[]{Chars.SPACE,Chars.COMMA,Chars.BRACE_CLOSE,Chars.BRACKET_CLOSE});
     s = s.trim();
-    if("null".equals(s)){
+    if(DataTypes.NULL.equals(s)){
       o = null;
-    }else if("true".equals(s)){
+    }else if(DataTypes.TRUE.equals(s)){
       o = new NodeBool(true);
-    }else if("false".equals(s)){
+    }else if(DataTypes.FALSE.equals(s)){
       o = new NodeBool(false);
-    }else if(s.endsWith("f")||s.endsWith("F")){
+    }else if(s.endsWith(DataTypes.FLOAT_SUFFIX_UPPER)||s.endsWith(DataTypes.FLOAT_SUFFIX_LOWER)){
       o = new NodeNumber(new Float(s));
-    }else if(s.endsWith("d")||s.endsWith("D")){
+    }else if(s.endsWith(DataTypes.DOUBLE_SUFFIX_UPPER)||s.endsWith(DataTypes.DOUBLE_SUFFIX_LOWER)){
       o = new NodeNumber(new Double(s));
-    }else if(s.endsWith("l")||s.endsWith("L")){
+    }else if(s.endsWith(DataTypes.LONG_SUFFIX_UPPER)||s.endsWith(DataTypes.LONG_SUFFIX_LOWER)){
       o = new NodeNumber(Long.parseLong(s.substring(0,s.length()-1)));
     }else{
       try{
@@ -107,8 +112,8 @@ public class DefaultJsonParser extends AbstractParser{
   private String readIgnoreSlash(int endTag){
     StringBuilder s = new StringBuilder();
     List<Integer> slash = new ArrayList<Integer>();
-    while(-1!=c){
-      if(c==RIGHT_SLASH){
+    while(Chars.END!=c){
+      if(c==Chars.SLASH_RIGHT){
         slash.add(c);
       }else{
         if(endTag==c){
@@ -126,7 +131,7 @@ public class DefaultJsonParser extends AbstractParser{
 
   private String readUntil(int[] endTags){
     StringBuilder s = new StringBuilder();
-    outer:while(-1!=c){
+    outer:while(Chars.END!=c){
       for(int t:endTags){
         if(t==c){
           break outer;
@@ -140,34 +145,37 @@ public class DefaultJsonParser extends AbstractParser{
 
   private void parseMapItem(NodeMap o){
     String key = "";
-    skip();// 先跳过无意义的字符
+    // 先跳过无意义的字符
+    skip();
     switch (c){
-      case '}':// 如果遇到对象截止符，对象解析完成返回
+      // 如果遇到对象截止符，对象解析完成返回
+      case Chars.BRACE_CLOSE:
         return;
-      case '\'': // 如果是以单引号开始
-        next(); // 跳过起始的单引号
-        key = readIgnoreSlash('\''); // 一直读，直到遇到独立的单引号才结束
-        next(); // 跳过单引号
-        skip(); // 跳过无意义字符
-        if(':'!=c){ // 接着应该有个冒号
+      // 如果是以引号开始
+      case Chars.QUOTE_SINGLE:
+      case Chars.QUOTE_DOUBLE:
+        int tag = c;
+        // 跳过起始的引号
+        next();
+        // 一直读，直到遇到独立的引号才结束
+        key = readIgnoreSlash(tag);
+        // 跳过引号
+        next();
+        // 跳过无意义字符
+        skip();
+        // 接着应该有个冒号
+        if(Chars.COLON!=c){
           throw new JsonFormatException(os);
         }
-        next(); // 跳过冒号
-        break;
-      case '"': // 如果是以双引号开始
-        next(); // 跳过起始的双引号
-        key = readIgnoreSlash('"'); // 一直读，直到遇到独立的双引号才结束
-        next(); // 跳过双引号
-        skip(); // 跳过无意义的字符
-        if(':'!=c){ // 接着应该有个冒号
-          throw new JsonFormatException(os);
-        }
-        next(); // 跳过冒号
+        // 跳过冒号
+        next();
         break;
       default:
-        key = readUntil(new int[]{':'}); // 一直读，直到遇到冒号才结束
+        // 一直读，直到遇到冒号才结束
+        key = readUntil(new int[]{Chars.COLON});
         key = key.trim();
-        next();// 跳过冒号
+        // 跳过冒号
+        next();
     }
     INode el = parseNode();
     o.set(key,el);
@@ -175,18 +183,24 @@ public class DefaultJsonParser extends AbstractParser{
 
   private NodeMap parseMap(){
     NodeMap o = new NodeMap();
-    next();// 跳过起始符号{
-    parseMapItem(o);// 解析对象的第一个属性，如果有的话
+    // 跳过起始符号{
+    next();
+    // 解析对象的第一个属性，如果有的话
+    parseMapItem(o);
     skip();
-    while(','==c){// 如果还有兄弟姐妹
-      next();// 跳过间隔符号,
+    // 如果还有兄弟姐妹
+    while(Chars.COMMA==c){
+      // 跳过间隔符号,
+      next();
       parseMapItem(o);
       skip();
     }
-    if('}'!=c){ // 接着应该有个结束符}
+    // 接着应该有个结束符}
+    if(Chars.BRACE_CLOSE!=c){
       throw new JsonFormatException(os);
     }
-    next();// 跳过结束符}
+    // 跳过结束符}
+    next();
     return o;
   }
 
@@ -197,20 +211,24 @@ public class DefaultJsonParser extends AbstractParser{
 
   private NodeList parseList(){
     NodeList l = new NodeList();
-    next();// 跳过起始符号[
+    // 跳过起始符号[
+    next();
     skip();
-    if(']'==c){
+    if(Chars.BRACKET_CLOSE==c){
       next();
       return l;
     }
     parseListItem(l);
     skip();
-    while(','==c){// 如果还有兄弟姐妹
-      next();// 跳过间隔符号,
+    // 如果还有兄弟姐妹
+    while(Chars.COMMA==c){
+      // 跳过间隔符号,
+      next();
       parseListItem(l);
       skip();
     }
-    next();// 跳过结束符号]
+    // 跳过结束符号]
+    next();
     return l;
   }
 
@@ -230,29 +248,37 @@ public class DefaultJsonParser extends AbstractParser{
    * 跳过无意义字符和注释
    */
   private void skip(){
-    if(-1==c) return;
-    if(0<=c&&32>=c){ // 忽略0到32之间的
+    if(Chars.END==c){
+      return;
+    }
+    // 忽略0到32之间的
+    if(Chars.NUT<=c&&Chars.SPACE>=c){
       next();
       skip();
     }
-    if(127==c||'\r'==c||'\n'==c){ // 忽略DEL及回车换行
+    // 忽略DEL及回车换行
+    if(Chars.DEL==c||Chars.CR==c||Chars.LF==c){
       next();
       skip();
     }
-    if('/'==c){
+    if(Chars.SLASH_LEFT==c){
       next();
-      if(-1==c) return;
-      if('/'==c){ // 忽略单行注释
+      if(Chars.END==c){
+        return;
+      }
+      // 忽略单行注释
+      if(Chars.SLASH_LEFT==c){
         do{
           next();
-        }while('\r'!=c&&'\n'!=c&&-1!=c);
+        }while(Chars.CR!=c&&Chars.LF!=c&&Chars.END!=c);
         skip();
-      }else if('*'==c){ // 忽略多行注释
-        while(-1!=c){
+      }else if(Chars.STAR==c){
+        // 忽略多行注释
+        while(Chars.END!=c){
           next();
-          if('*'==c){
+          if(Chars.STAR==c){
             next();
-            if('/'==c){
+            if(Chars.SLASH_LEFT==c){
               break;
             }
           }

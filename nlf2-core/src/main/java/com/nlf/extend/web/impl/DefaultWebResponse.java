@@ -15,6 +15,7 @@ import com.nlf.extend.web.IWebRequest;
 import com.nlf.extend.web.view.PageView;
 import com.nlf.extend.web.view.RedirectView;
 import com.nlf.extend.web.view.StreamView;
+import com.nlf.util.ContentTypes;
 import com.nlf.util.IOUtil;
 
 /**
@@ -24,8 +25,11 @@ import com.nlf.util.IOUtil;
  *
  */
 public class DefaultWebResponse extends AbstractWebResponse{
+  @Override
   public void send(Object o) throws IOException{
-    if(null==o) return;
+    if(null==o){
+      return;
+    }
     if(o instanceof RedirectView){
       sendRedirect((RedirectView)o);
     }else if(o instanceof PageView){
@@ -38,7 +42,7 @@ public class DefaultWebResponse extends AbstractWebResponse{
   }
 
   public void sendString(String s) throws IOException{
-    sendString(s,"text/plain");
+    sendString(s,ContentTypes.PLAIN_TEXT);
   }
 
   public void sendString(String s,String contentType) throws IOException{
@@ -78,12 +82,11 @@ public class DefaultWebResponse extends AbstractWebResponse{
   public void sendStream(StreamView streamView) throws IOException{
     InputStream inputStream = streamView.getInputStream();
     if(null!=streamView.getName()){
-      //servletResponse.setHeader("Content-Disposition","attachment;filename="+new String(streamView.getName().getBytes("gbk"),"ISO-8859-1"));
       servletResponse.setHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode(streamView.getName(),"utf-8"));
     }
     String contentType = streamView.getContentType();
     if(null==contentType||contentType.length()<1){
-      contentType = "application/octet-stream";
+      contentType = ContentTypes.DEFAULT;
     }
     if(streamView.getSize()>-1){
       servletResponse.setHeader("Content-Length",streamView.getSize()+"");
@@ -97,7 +100,7 @@ public class DefaultWebResponse extends AbstractWebResponse{
     try{
       os = servletResponse.getOutputStream();
       int n = 0;
-      byte b[] = new byte[IOUtil.BUFFER_SIZE];
+      byte[] b = new byte[IOUtil.BUFFER_SIZE];
       while((n = inputStream.read(b))!=-1){
         os.write(b,0,n);
       }
@@ -109,6 +112,6 @@ public class DefaultWebResponse extends AbstractWebResponse{
   }
 
   public void sendStream(InputStream inputStream) throws IOException{
-    sendStream(inputStream,"application/octet-stream");
+    sendStream(inputStream,ContentTypes.DEFAULT);
   }
 }

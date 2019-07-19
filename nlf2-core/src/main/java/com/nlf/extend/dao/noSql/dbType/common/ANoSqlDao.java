@@ -6,6 +6,11 @@ import com.nlf.dao.paging.PageData;
 import com.nlf.dao.transaction.ITransaction;
 import com.nlf.extend.dao.noSql.AbstractNoSqlDao;
 
+/**
+ * 通用NoSqlDao
+ *
+ * @author 6tail
+ */
 public class ANoSqlDao extends AbstractNoSqlDao{
   public boolean set(String key,String value){
     return getExecuter().set(key,value);

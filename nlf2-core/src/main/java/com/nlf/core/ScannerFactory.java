@@ -18,7 +18,9 @@ public class ScannerFactory{
    * @param scanner 扫描器
    */
   public static void setScanner(IScanner scanner){
-    if(scanned) return;
+    if(scanned){
+      return;
+    }
     ScannerFactory.scanner = scanner;
   }
 
@@ -35,7 +37,9 @@ public class ScannerFactory{
    * 
    */
   public static void startScan(){
-    if(scanned) return;
+    if(scanned){
+      return;
+    }
     scanned = true;
     scanner.start();
   }

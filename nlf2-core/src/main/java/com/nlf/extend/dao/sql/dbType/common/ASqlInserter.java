@@ -23,10 +23,13 @@ public class ASqlInserter extends AbstractSqlExecuter implements ISqlInserter{
   }
 
   public ISqlInserter tableIf(String tables,boolean condition){
-    if(condition) table(tables);
+    if(condition){
+      table(tables);
+    }
     return this;
   }
 
+  @Override
   public String buildSql(){
     StringBuilder s = new StringBuilder();
     s.append("INSERT INTO ");
@@ -71,12 +74,16 @@ public class ASqlInserter extends AbstractSqlExecuter implements ISqlInserter{
   }
 
   public ISqlInserter setIf(String column,Object value,boolean condition){
-    if(condition) set(column,value);
+    if(condition){
+      set(column,value);
+    }
     return this;
   }
 
   public ISqlInserter setIf(Bean bean,boolean condition){
-    if(condition) set(bean);
+    if(condition){
+      set(bean);
+    }
     return this;
   }
 }

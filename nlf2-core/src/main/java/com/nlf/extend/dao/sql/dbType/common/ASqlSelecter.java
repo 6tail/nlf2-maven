@@ -27,7 +27,9 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
   }
 
   public ISqlSelecter tableIf(String tables,boolean condition){
-    if(condition) table(tables);
+    if(condition){
+      table(tables);
+    }
     return this;
   }
 
@@ -37,41 +39,54 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
   }
 
   public ISqlSelecter columnIf(String columns,boolean condition){
-    if(condition) column(columns);
+    if(condition){
+      column(columns);
+    }
     return this;
   }
 
+  @Override
   public ISqlSelecter where(String sql){
     super.where(sql);
     return this;
   }
 
-  public ISqlSelecter where(String columnOrSql,Object valueOrBean){
+  @Override
+  public ISqlSelecter where(String columnOrSql, Object valueOrBean){
     super.where(columnOrSql,valueOrBean);
     return this;
   }
 
-  public ISqlSelecter whereIf(String sql,boolean condition){
-    if(condition) where(sql);
+  @Override
+  public ISqlSelecter whereIf(String sql, boolean condition){
+    if(condition){
+      where(sql);
+    }
     return this;
   }
 
-  public ISqlSelecter whereIf(String columnOrSql,Object valueOrBean,boolean condition){
-    if(condition) where(columnOrSql,valueOrBean);
+  @Override
+  public ISqlSelecter whereIf(String columnOrSql, Object valueOrBean, boolean condition){
+    if(condition){
+      where(columnOrSql,valueOrBean);
+    }
     return this;
   }
 
-  public ISqlSelecter whereIn(String column,Object... values){
+  @Override
+  public ISqlSelecter whereIn(String column, Object... values){
     super.whereIn(column,values);
     return this;
   }
 
-  public ISqlSelecter whereNotIn(String column,Object... values){
+  @Override
+  public ISqlSelecter whereNotIn(String column, Object... values){
     super.whereNotIn(column,values);
     return this;
   }
 
-  public ISqlSelecter whereNotEqual(String column,Object value){
+  @Override
+  public ISqlSelecter whereNotEqual(String column, Object value){
     super.whereNotEqual(column,value);
     return this;
   }
@@ -89,7 +104,7 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
       cond.setPlaceholder(" NULL");
       cond.setType(ConditionType.pure_sql);
     }else{
-      if(columnOrSql.contains(":")&&valueOrBean instanceof Bean){
+      if(columnOrSql.contains(NAMED_PLACEHOLDER_PREFIX)&&valueOrBean instanceof Bean){
         cond.setStart("");
         cond.setPlaceholder("");
         cond.setEnd("");
@@ -104,12 +119,16 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
   }
 
   public ISqlSelecter havingIf(String sql,boolean condition){
-    if(condition) having(sql);
+    if(condition){
+      having(sql);
+    }
     return this;
   }
 
   public ISqlSelecter havingIf(String columnOrSql,Object valueOrBean,boolean condition){
-    if(condition) having(columnOrSql,valueOrBean);
+    if(condition){
+      having(columnOrSql,valueOrBean);
+    }
     return this;
   }
 
@@ -119,7 +138,9 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
   }
 
   public ISqlSelecter groupByIf(String columns,boolean condition){
-    if(condition) groupBy(columns);
+    if(condition){
+      groupBy(columns);
+    }
     return this;
   }
 
@@ -134,7 +155,9 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
   }
 
   public ISqlSelecter ascIf(String columns,boolean condition){
-    if(condition) asc(columns);
+    if(condition){
+      asc(columns);
+    }
     return this;
   }
 
@@ -149,10 +172,13 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
   }
 
   public ISqlSelecter descIf(String columns,boolean condition){
-    if(condition) desc(columns);
+    if(condition){
+      desc(columns);
+    }
     return this;
   }
 
+  @Override
   public String buildSql(){
     StringBuilder s = new StringBuilder();
     s.append("SELECT ");
