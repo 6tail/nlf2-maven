@@ -6,13 +6,12 @@ import com.nlf.core.UploadFile;
 import com.nlf.exception.ValidateException;
 import com.nlf.extend.rpc.server.impl.http.IHttpRpcFileUploader;
 import com.nlf.extend.rpc.server.impl.http.IHttpRpcRequest;
-import com.nlf.util.ByteArray;
-import com.nlf.util.FileUtil;
-import com.nlf.util.IOUtil;
-import com.nlf.util.StringUtil;
+import com.nlf.util.*;
 import com.sun.net.httpserver.HttpExchange;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +63,8 @@ public class DefaultHttpRpcFileUploader implements IHttpRpcFileUploader {
   public static final String FILE_TAG = "filename=\"";
   /** 文件名标识 */
   public static final String BOUNDARY_TAG = "boundary=";
+  /** multipart标识 */
+  public static final String MULTIPART_TAG = "multipart/form-data";
   /** 表单项 */
   protected FormItem formItem;
 
@@ -76,7 +77,7 @@ public class DefaultHttpRpcFileUploader implements IHttpRpcFileUploader {
     if(null==contentType){
       return null;
     }
-    if(!contentType.contains("multipart/form-data")){
+    if(!contentType.contains(MULTIPART_TAG)){
       return null;
     }
     if(!contentType.contains(BOUNDARY_TAG)){
@@ -107,8 +108,8 @@ public class DefaultHttpRpcFileUploader implements IHttpRpcFileUploader {
       UploadFile file = formItem.getFile();
       String fileName = file.getName();
       String suffix = file.getSuffix();
-      if(fileName.contains(".")){
-        fileName = fileName.substring(0,fileName.lastIndexOf("."));
+      if(fileName.contains(Strings.DOT)){
+        fileName = fileName.substring(0,fileName.lastIndexOf(Strings.DOT));
       }
       //凑够字符数
       while(fileName.length()<2){
@@ -116,19 +117,12 @@ public class DefaultHttpRpcFileUploader implements IHttpRpcFileUploader {
       }
       fileName += "_";
       if(suffix.length()>0){
-        suffix = "."+suffix;
+        suffix = Strings.DOT+suffix;
       }
       tempFile = File.createTempFile(fileName,suffix);
       formItem.setTempFile(tempFile);
     }
-    BufferedOutputStream out = null;
-    try{
-      out = new BufferedOutputStream(new FileOutputStream(tempFile,true));
-      out.write(data);
-      out.flush();
-    }finally{
-      IOUtil.closeQuietly(out);
-    }
+    IOUtil.writeFile(tempFile,data,true);
   }
 
   protected void parseItem(byte[] boundary,ByteArray cache,List<UploadFile> files) throws IOException{

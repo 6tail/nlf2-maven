@@ -1,9 +1,6 @@
 package com.nlf.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -13,7 +10,7 @@ import java.util.zip.ZipFile;
 
 /**
  * IO处理工具
- * 
+ *
  * @author 6tail
  *
  */
@@ -21,6 +18,17 @@ public class IOUtil{
 
   /** IO缓冲区大小 */
   public static int BUFFER_SIZE = 20480;
+
+  public static void writeFile(File file,byte[] data,boolean append) throws IOException{
+    BufferedOutputStream out = null;
+    try{
+      out = new BufferedOutputStream(new FileOutputStream(file,true));
+      out.write(data);
+      out.flush();
+    }finally{
+      IOUtil.closeQuietly(out);
+    }
+  }
 
   /**
    * 输入流转字节数组
@@ -43,10 +51,10 @@ public class IOUtil{
       closeQuietly(out);
     }
   }
-  
+
   /**
    * 安静的关闭
-   * 
+   *
    * @param closeable Closeable
    */
   public static void closeQuietly(Closeable closeable){
@@ -75,7 +83,7 @@ public class IOUtil{
       socket.close();
     }catch(IOException e){}
   }
-  
+
   public static void closeQuietly(Connection connection){
     if(null==connection){
       return;
@@ -84,7 +92,7 @@ public class IOUtil{
       connection.close();
     }catch(SQLException e){}
   }
-  
+
   public static void closeQuietly(ResultSet rs){
     if(null==rs){
       return;
@@ -93,7 +101,7 @@ public class IOUtil{
       rs.close();
     }catch(SQLException e){}
   }
-  
+
   public static void closeQuietly(Statement stmt){
     if(null==stmt){
       return;

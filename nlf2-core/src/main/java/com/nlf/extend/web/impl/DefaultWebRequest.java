@@ -21,27 +21,11 @@ import javax.servlet.http.HttpSession;
 
 /**
  * 默认WEB请求
- * 
+ *
  * @author 6tail
  *
  */
 public class DefaultWebRequest extends AbstractWebRequest{
-  private static final String LOCAL_IP_V6 = "0:0:0:0:0:0:0:1";
-  private static final String LOCAL_IP_V4 = "127.0.0.1";
-  /** multipart标识 */
-  public static final String MULTIPART_TAG = "multipart/form-data";
-  /** 代理标识 */
-  public static final String[] PROXY_HEADER = {
-      "X-REAL-IP",
-      "X-FORWARDED-FOR",
-      "PROXY-CLIENT-IP",
-      "WL-PROXY-CLIENT-IP",
-      "HTTP_CLIENT_IP",
-      "HTTP_X_FORWARDED_FOR",
-      "HTTP_X_FORWARDED",
-      "HTTP_FORWARDED_FOR",
-      "HTTP_FORWARDED"
-  };
 
   protected String getIP(){
     String r = servletRequest.getRemoteAddr();

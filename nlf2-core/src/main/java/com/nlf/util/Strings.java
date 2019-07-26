@@ -9,8 +9,10 @@ public class Strings {
   public static final String EQ = "=";
   public static final String LT = "<";
   public static final String GT = ">";
+  /** 点 */
   public static final String DOT = ".";
   public static final String EMPTY = "";
+  /** 逗号 */
   public static final String COMMA = ",";
   public static final String SPACE = " ";
   public static final String MINUS = "-";

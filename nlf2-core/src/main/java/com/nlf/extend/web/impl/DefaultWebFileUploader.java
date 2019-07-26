@@ -1,8 +1,6 @@
 package com.nlf.extend.web.impl;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +17,7 @@ import com.nlf.util.*;
 
 /**
  * 默认WEB文件上传器
- * 
+ *
  * @author 6tail
  *
  */
@@ -71,7 +69,7 @@ public class DefaultWebFileUploader implements IWebFileUploader{
 
   /**
    * 获取boundary
-   * 
+   *
    * @return boundary
    */
   protected byte[] getBoundary(String contentType){
@@ -125,14 +123,7 @@ public class DefaultWebFileUploader implements IWebFileUploader{
       tempFile = File.createTempFile(prefix.toString(),suffix);
       formItem.setTempFile(tempFile);
     }
-    BufferedOutputStream out = null;
-    try{
-      out = new BufferedOutputStream(new FileOutputStream(tempFile,true));
-      out.write(data);
-      out.flush();
-    }finally{
-      IOUtil.closeQuietly(out);
-    }
+    IOUtil.writeFile(tempFile,data,true);
   }
 
   protected void parseItem(byte[] boundary,ByteArray cache,List<UploadFile> files) throws IOException{

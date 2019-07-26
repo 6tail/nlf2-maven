@@ -6,6 +6,7 @@ import com.nlf.extend.rpc.server.impl.http.AbstractHttpRpcRequest;
 import com.nlf.extend.rpc.server.impl.http.IHttpRpcFileUploader;
 import com.nlf.log.Logger;
 import com.nlf.util.StringUtil;
+import com.nlf.util.Strings;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,18 +22,6 @@ import java.util.*;
  *
  */
 public class DefaultHttpRpcRequest extends AbstractHttpRpcRequest {
-  /** 代理标识 */
-  public static final String[] PROXY_HEADER = {
-      "X-REAL-IP",
-      "X-FORWARDED-FOR",
-      "PROXY-CLIENT-IP",
-      "WL-PROXY-CLIENT-IP",
-      "HTTP_CLIENT_IP",
-      "HTTP_X_FORWARDED_FOR",
-      "HTTP_X_FORWARDED",
-      "HTTP_FORWARDED_FOR",
-      "HTTP_FORWARDED"
-  };
 
   protected String getIP(){
     String r = exchange.getRemoteAddress().getHostName();
@@ -48,8 +37,8 @@ public class DefaultHttpRpcRequest extends AbstractHttpRpcRequest {
       }
     }
     if(null!=r){
-      if(r.contains(",")){
-        String[] rs = r.split(",");
+      if(r.contains(Strings.COMMA)){
+        String[] rs = r.split(Strings.COMMA);
         for(String s:rs){
           if(s.length()>0&&!"unknown".equalsIgnoreCase(s)){
             r = s;
@@ -57,8 +46,8 @@ public class DefaultHttpRpcRequest extends AbstractHttpRpcRequest {
           }
         }
       }
-      if("0:0:0:0:0:0:0:1".equals(r)){
-        r = "127.0.0.1";
+      if(LOCAL_IP_V6.equals(r)){
+        r = LOCAL_IP_V4;
       }
     }
     return null==r?"":r;
@@ -71,13 +60,15 @@ public class DefaultHttpRpcRequest extends AbstractHttpRpcRequest {
       throw new RuntimeException(e);
     }
     String contentType = exchange.getRequestHeaders().getFirst("Content-Type");
-    if(null!=contentType&&contentType.contains("multipart/form-data")){
+    if(null!=contentType&&contentType.contains(MULTIPART_TAG)){
       IFileUploader uploader = App.getProxy().newInstance(IHttpRpcFileUploader.class.getName());
       List<UploadFile> files = uploader.getFiles();
       param.set(Statics.PARAM_FILES,files);
     }
+    initPaging();
   }
 
+  @SuppressWarnings("unchecked")
   protected Map<String,Object> parseQuery(String s){
     Map<String,Object> params = new HashMap<String, Object>(16);
     if(null!=s){
@@ -121,6 +112,7 @@ public class DefaultHttpRpcRequest extends AbstractHttpRpcRequest {
     return params;
   }
 
+  @SuppressWarnings("unchecked")
   protected void initParam() throws IOException{
     Map<String,Object> params = parseParams();
     for(String key:params.keySet()){
@@ -153,6 +145,13 @@ public class DefaultHttpRpcRequest extends AbstractHttpRpcRequest {
         param.set(key,values);
       }
     }
+  }
+
+  protected void initPaging(){
+    int pageNumber = param.getInt(Statics.PARAM_PAGE_NUMBER,this.pageNumber);
+    int pageSize = param.getInt(Statics.PARAM_PAGE_SIZE,this.pageSize);
+    setPageNumber(pageNumber);
+    setPageSize(pageSize);
   }
 
   @Override
