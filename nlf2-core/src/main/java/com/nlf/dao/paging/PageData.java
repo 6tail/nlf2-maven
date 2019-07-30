@@ -1,15 +1,17 @@
 package com.nlf.dao.paging;
 
+import com.nlf.App;
+import com.nlf.Bean;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
-import com.nlf.Bean;
 
 /**
  * 分页当前页数据封装
- * 
+ *
  * @author 6tail
- * 
+ *
  */
 public class PageData implements List<Bean>,java.io.Serializable{
   private static final long serialVersionUID = 1;
@@ -24,7 +26,10 @@ public class PageData implements List<Bean>,java.io.Serializable{
   /** 该页数据 */
   private List<Bean> data = new java.util.ArrayList<Bean>();
 
-  public PageData(){}
+  public PageData(){
+    setPageNumber(1);
+    setPageSize(1);
+  }
 
   public PageData(List<Bean> data,int pageSize,int pageNumber,int recordCount){
     setData(data);
@@ -43,7 +48,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
 
   /**
    * 获取每页记录数
-   * 
+   *
    * @return 每页记录数
    */
   public int getPageSize(){
@@ -52,7 +57,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
 
   /**
    * 设置每页记录数
-   * 
+   *
    * @param pageSize 每页记录数
    */
   public void setPageSize(int pageSize){
@@ -61,7 +66,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
 
   /**
    * 获取总记录数
-   * 
+   *
    * @return 总记录数
    */
   public int getRecordCount(){
@@ -70,7 +75,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
 
   /**
    * 设置总记录数
-   * 
+   *
    * @param recordCount 总记录数
    */
   public void setRecordCount(int recordCount){
@@ -79,7 +84,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
 
   /**
    * 获取总页数
-   * 
+   *
    * @return 总页数
    */
   public int getPageCount(){
@@ -88,7 +93,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
 
   /**
    * 获取前一页页码
-   * 
+   *
    * @return 前一页页码
    */
   public int getPreviousPageNumber(){
@@ -98,7 +103,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
 
   /**
    * 获取后一页页码
-   * 
+   *
    * @return 页码
    */
   public int getNextPageNumber(){
@@ -108,8 +113,16 @@ public class PageData implements List<Bean>,java.io.Serializable{
   }
 
   /**
+   * 是否有下一页
+   * @return true/false
+   */
+  public boolean isHasNextPage(){
+    return getPageNumber()<getLastPageNumber();
+  }
+
+  /**
    * 获取第一页页码
-   * 
+   *
    * @return 页码
    */
   public int getFirstPageNumber(){
@@ -118,7 +131,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
 
   /**
    * 获取最后页页码
-   * 
+   *
    * @return 页码
    */
   public int getLastPageNumber(){
@@ -126,12 +139,12 @@ public class PageData implements List<Bean>,java.io.Serializable{
   }
 
   /**
-   * 获取前后相邻的页码
-   * 
+   * 生成前后相邻的页码
+   *
    * @param count 页码个数
    * @return 相邻的页码数组
    */
-  public int[] getNearPageNumbers(int count){
+  public int[] genNearPageNumbers(int count){
     int pageCount = getPageCount();
     int start = pageNumber-count;
     int end = pageNumber+count;
@@ -146,8 +159,17 @@ public class PageData implements List<Bean>,java.io.Serializable{
   }
 
   /**
+   * 获取前后相邻的页码
+   *
+   * @return 相邻的页码数组
+   */
+  public int[] getNearPageNumbers(){
+    return genNearPageNumbers(App.getPropertyInt("nlf.paging.near",2));
+  }
+
+  /**
    * 获取该页数据条数
-   * 
+   *
    * @return 该页数据条数
    */
   public int getSize(){
@@ -156,7 +178,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
 
   /**
    * 获取该页页码
-   * 
+   *
    * @return 页码
    */
   public int getPageNumber(){
@@ -165,7 +187,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
 
   /**
    * 设置该页页码
-   * 
+   *
    * @param pageNumber 页码
    */
   public void setPageNumber(int pageNumber){
@@ -174,7 +196,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
 
   /**
    * 获取该页数据
-   * 
+   *
    * @return 该页数据
    */
   public List<Bean> getData(){
@@ -183,7 +205,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
 
   /**
    * 设置该页数据
-   * 
+   *
    * @param data 该页数据
    */
   public void setData(List<Bean> data){
@@ -192,7 +214,7 @@ public class PageData implements List<Bean>,java.io.Serializable{
 
   /**
    * 获取指定Bean
-   * 
+   *
    * @param index 索引
    * @return Bean
    */

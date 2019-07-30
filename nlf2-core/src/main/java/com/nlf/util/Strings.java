@@ -9,15 +9,31 @@ public class Strings {
   public static final String EQ = "=";
   public static final String LT = "<";
   public static final String GT = ">";
+  /** 回车 */
+  public static final String CR = "\r";
+  /** 换行 */
+  public static final String LF = "\n";
+  /** 翻页 */
+  public static final String FF = "\f";
   /** 点 */
   public static final String DOT = ".";
+  /** TAB */
+  public static final String TAB = "\t";
   public static final String EMPTY = "";
+  /** 冒号 */
+  public static final String COLON = ":";
   /** 逗号 */
   public static final String COMMA = ",";
   public static final String SPACE = " ";
   public static final String MINUS = "-";
   public static final String UNDERSCORE = "_";
   public static final String SLASH_LEFT = "/";
+  /** 退格 */
+  public static final String BACKSPACE = "\b";
+  /** 左大括号 */
+  public static final String BRACE_OPEN = "{";
+  /** 右大括号 */
+  public static final String BRACE_CLOSE = "}";
   public static final String EXCLAMATION = "!";
   public static final String SLASH_RIGHT = "\\";
   public static final String QUOTE_SINGLE = "'";

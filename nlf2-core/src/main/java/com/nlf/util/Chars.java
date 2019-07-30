@@ -28,6 +28,8 @@ public class Chars {
   public static final char CR = '\r';
   /** 换行 */
   public static final char LF = '\n';
+  /** 翻页 */
+  public static final char FF = '\f';
   /** 加号 */
   public static final char ADD = '+';
   /** 星号 */
@@ -40,10 +42,14 @@ public class Chars {
   public static final char COMMA = ',';
   /** 减号 */
   public static final char MINUS = '-';
+  /** TAB */
+  public static final char TAB = '\t';
   /** 问号 */
   public static final char QUESTION = '?';
   /** 左斜杠 */
   public static final char SLASH_LEFT = '/';
+  /** 退格 */
+  public static final char BACKSPACE = '\b';
   /** 左大括号 */
   public static final char BRACE_OPEN = '{';
   /** 右大括号 */
