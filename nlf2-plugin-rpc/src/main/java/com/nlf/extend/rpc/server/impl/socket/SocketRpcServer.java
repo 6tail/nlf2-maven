@@ -1,33 +1,36 @@
 package com.nlf.extend.rpc.server.impl.socket;
 
 import com.nlf.extend.rpc.server.AbstractRpcServer;
-import com.nlf.util.IOUtil;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class SocketRpcServer extends AbstractRpcServer implements Runnable{
+/**
+ * 基于Socket的RPC服务端
+ *
+ * @author 6tail
+ */
+public class SocketRpcServer extends AbstractRpcServer implements Runnable {
 
-  private ExecutorService pool;
+  private ExecutorService executor;
   private ServerSocket serverSocket;
 
-  public void bind(int port) throws IOException{
+  public void bind(int port) throws IOException {
     serverSocket = new ServerSocket(port);
     serverSocket.setSoTimeout(0);
-    pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()*100);
-    new Thread(this).start();
+    executor = getExecutor();
+    executor.execute(this);
   }
 
   public void run() {
-    while(true){
-      Socket socket = null;
+    while (Thread.currentThread().isAlive()) {
+      Socket socket;
       try {
         socket = serverSocket.accept();
-      }catch (IOException e){
-        IOUtil.closeQuietly(socket);
+        executor.execute(new SocketRpcHandler(socket));
+      } catch (IOException ignore) {
       }
     }
   }

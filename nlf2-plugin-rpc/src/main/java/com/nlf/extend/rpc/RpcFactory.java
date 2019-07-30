@@ -2,6 +2,7 @@ package com.nlf.extend.rpc;
 
 import com.nlf.App;
 import com.nlf.extend.rpc.server.IRpcServer;
+import com.nlf.extend.rpc.server.exception.ServerTypeNotSupportException;
 
 import java.util.List;
 
@@ -20,6 +21,6 @@ public class RpcFactory {
         return server;
       }
     }
-    return null;
+    throw new ServerTypeNotSupportException();
   }
 }
