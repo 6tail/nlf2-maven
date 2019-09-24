@@ -1,12 +1,5 @@
 package com.nlf.extend.serialize.xml.impl;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import com.nlf.exception.NlfException;
 import com.nlf.extend.serialize.xml.exception.XmlFormatException;
 import com.nlf.serialize.AbstractParser;
@@ -18,9 +11,17 @@ import com.nlf.util.Chars;
 import com.nlf.util.StringUtil;
 import com.nlf.util.Strings;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 默认xml解析器
- * 
+ *
  * @author 6tail
  *
  */
@@ -35,7 +36,7 @@ public class DefaultXmlParser extends AbstractParser{
   /** 注释起始符 */
   public static final String ANNO_PREFIX = "!-";
   private static final String EQ_QUOTE_DOUBLE = "=\"";
-  
+
   /** 当前字符 */
   private int c;
   /** 待解析的字符串 */
@@ -44,7 +45,7 @@ public class DefaultXmlParser extends AbstractParser{
   private Reader reader;
   /** 节点缓存栈 */
   private List<INode> stack = new ArrayList<INode>();
-  
+
   public boolean support(String format){
     return Strings.XML.equalsIgnoreCase(format);
   }
@@ -81,7 +82,7 @@ public class DefaultXmlParser extends AbstractParser{
         break;
     }
   }
-  
+
   private void parseEndTag(String tag){
     int stackSize = stack.size();
     if(stackSize<MIN_STACK_SIZE){
@@ -91,7 +92,7 @@ public class DefaultXmlParser extends AbstractParser{
     INode el = stack.remove(stackSize-1);
     stackSize--;
     INode p = stack.get(stackSize-1);
-    switch(p.type()){
+    switch(p.getType()){
       case LIST:
         ((NodeList)p).add(el);
         break;
@@ -99,14 +100,19 @@ public class DefaultXmlParser extends AbstractParser{
         NodeMap map = ((NodeMap)p);
         INode xe = map.get(tag);
         if(null!=xe){
-          NodeList xl = new NodeList();
-          xl.setName(p.getName());
-          xl.setAttributes(p.getAttributes());
-          xl.add(xe);
-          xl.add(el);
-          stack.set(stackSize-1,xl);
+          if(xe instanceof NodeList){
+            NodeList list = (NodeList)xe;
+            list.add(el);
+          }else{
+            NodeList list = new NodeList();
+            list.setName(tag);
+            list.add(xe);
+            list.add(el);
+            map.set(tag, list);
+          }
+        }else {
+          map.set(tag, el);
         }
-        map.set(tag,el);
         break;
       case STRING:
         NodeMap m = new NodeMap();
@@ -199,10 +205,10 @@ public class DefaultXmlParser extends AbstractParser{
         }
     }
   }
-  
+
   /**
    * 一直读取，直到遇到指定字符，不包括指定字符
-   * 
+   *
    * @param endTag 指定字符
    * @return 读取到的字符串
    */
@@ -214,7 +220,7 @@ public class DefaultXmlParser extends AbstractParser{
     }
     return s.toString();
   }
-  
+
   /**
    * 读取下一个字符
    */
@@ -225,7 +231,7 @@ public class DefaultXmlParser extends AbstractParser{
       throw new NlfException(e);
     }
   }
-  
+
   /**
    * 跳过无意义字符和注释
    */

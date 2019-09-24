@@ -1,16 +1,17 @@
 package com.nlf.serialize.node.impl;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.nlf.serialize.node.AbstractNode;
 import com.nlf.serialize.node.INode;
 import com.nlf.serialize.node.NodeType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * List类型节点
- * 
+ *
  * @author 6tail
- * 
+ *
  */
 public class NodeList extends AbstractNode{
   private static final long serialVersionUID = 1;
@@ -24,12 +25,16 @@ public class NodeList extends AbstractNode{
     return l.get(index);
   }
 
-  public NodeType type(){
+  public NodeType getType(){
     return NodeType.LIST;
   }
 
   public void add(INode o){
     l.add(o);
+  }
+
+  public List<INode> getValue(){
+    return l;
   }
 
   @Override

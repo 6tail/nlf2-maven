@@ -21,7 +21,7 @@ public class Chars {
   /** 小于 */
   public static final char LT = '<';
   /** 大于 */
-  public static final char GT = '<';
+  public static final char GT = '>';
   /** 等于 */
   public static final char EQ = '=';
   /** 回车 */

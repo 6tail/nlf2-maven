@@ -5,9 +5,9 @@ import com.nlf.serialize.node.NodeType;
 
 /**
  * 布尔类型节点
- * 
+ *
  * @author 6tail
- * 
+ *
  */
 public class NodeBool extends AbstractNode{
   private static final long serialVersionUID = 1;
@@ -22,7 +22,7 @@ public class NodeBool extends AbstractNode{
     return o?"true":"false";
   }
 
-  public NodeType type(){
+  public NodeType getType(){
     return NodeType.BOOL;
   }
 

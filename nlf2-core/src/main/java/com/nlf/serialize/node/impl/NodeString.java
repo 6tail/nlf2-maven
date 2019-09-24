@@ -20,12 +20,16 @@ public class NodeString extends AbstractNode{
     this.o = o;
   }
 
+  public String getValue(){
+    return o;
+  }
+
   @Override
   public String toString(){
     return o;
   }
 
-  public NodeType type(){
+  public NodeType getType(){
     return NodeType.STRING;
   }
 }

@@ -1,39 +1,44 @@
 package com.nlf.serialize.node.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import com.nlf.serialize.node.AbstractNode;
 import com.nlf.serialize.node.INode;
 import com.nlf.serialize.node.NodeType;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Map对象类型节点
  *
  * @author 6tail
  */
-public class NodeMap extends AbstractNode{
+public class NodeMap extends AbstractNode {
   private static final long serialVersionUID = 1;
-  private Map<String,INode> o = new HashMap<String,INode>();
+  private Map<String, INode> o = new HashMap<String, INode>();
 
-  public INode get(String key){
+  public INode get(String key) {
     return o.get(key);
   }
 
-  public void set(String key,INode value){
-    o.put(key,value);
+  public void set(String key, INode value) {
+    o.put(key, value);
   }
 
-  public Set<String> keySet(){
+  public Set<String> keySet() {
     return o.keySet();
   }
 
-  public NodeType type(){
+  public NodeType getType() {
     return NodeType.MAP;
   }
 
+  public Map<String, INode> getValue(){
+    return o;
+  }
+
   @Override
-  public String toString(){
-    return o.toString();
+  public String toString() {
+    return null == o ? null : o.toString();
   }
 }

@@ -5,9 +5,9 @@ import com.nlf.serialize.node.NodeType;
 
 /**
  * 数字类型节点
- * 
+ *
  * @author 6tail
- * 
+ *
  */
 public class NodeNumber extends AbstractNode{
   private static final long serialVersionUID = 1;
@@ -17,7 +17,7 @@ public class NodeNumber extends AbstractNode{
     this.n = n;
   }
 
-  public NodeType type(){
+  public NodeType getType(){
     return NodeType.NUMBER;
   }
 
@@ -26,7 +26,7 @@ public class NodeNumber extends AbstractNode{
     return n+"";
   }
 
-  public Number value(){
+  public Number getValue(){
     return n;
   }
 }
