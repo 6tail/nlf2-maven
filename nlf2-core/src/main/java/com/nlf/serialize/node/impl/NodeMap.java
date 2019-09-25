@@ -4,7 +4,7 @@ import com.nlf.serialize.node.AbstractNode;
 import com.nlf.serialize.node.INode;
 import com.nlf.serialize.node.NodeType;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class NodeMap extends AbstractNode {
   private static final long serialVersionUID = 1;
-  private Map<String, INode> o = new HashMap<String, INode>();
+  private Map<String, INode> o = new LinkedHashMap<String, INode>();
 
   public INode get(String key) {
     return o.get(key);
