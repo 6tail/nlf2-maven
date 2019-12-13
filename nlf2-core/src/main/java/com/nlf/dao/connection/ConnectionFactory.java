@@ -1,10 +1,11 @@
 package com.nlf.dao.connection;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.nlf.App;
 import com.nlf.core.Statics;
 import com.nlf.dao.setting.DbSettingFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 连接工厂
@@ -19,8 +20,20 @@ public class ConnectionFactory{
   protected ConnectionFactory(){}
 
   /**
+   * 清理连接
+   */
+  public static void closeAll(){
+    Map<String,IConnection> connections = App.get(Statics.CONNECTIONS);
+    if(null!=connections){
+      for(IConnection connection:connections.values()){
+        connection.close();
+      }
+    }
+  }
+
+  /**
    * 根据别名获取连接
-   * 
+   *
    * @param alias 别名
    * @return 连接
    */
@@ -62,7 +75,7 @@ public class ConnectionFactory{
 
   /**
    * 获取默认连接
-   * 
+   *
    * @return 默认连接
    */
   public static IConnection getConnection(){

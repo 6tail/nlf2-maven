@@ -1,12 +1,13 @@
 package com.nlf.bytecode;
 
+import com.nlf.util.StringUtil;
+
 import java.util.ArrayList;
 import java.util.List;
-import com.nlf.util.StringUtil;
 
 /**
  * 类中的方法
- * 
+ *
  * @author 6tail
  *
  */
@@ -21,6 +22,10 @@ public class Method{
   public static final String RET_FLOAT = "F";
   /** 返回类型：double */
   public static final String RET_DOUBLE = "D";
+  /** 返回类型：String */
+  public static final String RET_STRING = "Ljava/lang/String";
+  /** 返回类型：Object */
+  public static final String RET_OBJECT = "Ljava/lang/Object";
   public static final String NAME_INIT = "<init>";
   public static final String NAME_CLINIT = "<clinit>";
 
@@ -41,7 +46,7 @@ public class Method{
   /** 返回值描述 */
   private String ret;
   /** 可能的返回值描述 */
-  private String retMaybe;
+  private String retMaybe = RET_VOID;
 
   public Method(Klass klass){
     this.klass = klass;
@@ -57,7 +62,7 @@ public class Method{
 
   /**
    * 获取方法名
-   * 
+   *
    * @return 方法名
    */
   public String getName(){
@@ -69,7 +74,7 @@ public class Method{
 
   /**
    * 获取参数及返回值描述
-   * 
+   *
    * @return 参数及返回值描述
    */
   public String getDescripter(){

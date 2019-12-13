@@ -16,7 +16,7 @@ import java.util.Set;
 
 /**
  * 字节码解码为类信息封装，只解码了框架需要的东西
- * 
+ *
  * @author 6tail
  *
  */
@@ -191,6 +191,21 @@ public class Klass{
               IConstant c = getConstant(p);
               String retType;
               switch(c.getType()){
+                case IConstant.TYPE_INT:
+                  ret = Method.RET_INT;
+                  break;
+                case IConstant.TYPE_LONG:
+                  ret = Method.RET_LONG;
+                  break;
+                case IConstant.TYPE_FLOAT:
+                  ret = Method.RET_FLOAT;
+                  break;
+                case IConstant.TYPE_DOUBLE:
+                  ret = Method.RET_DOUBLE;
+                  break;
+                case IConstant.TYPE_STRING:
+                  ret = Method.RET_STRING;
+                  break;
                 case IConstant.TYPE_CLASS:
                   retType = "L"+getConstant(c.toClassConstant().getNameIndex()).toUTFConstant().getContent();
                   ret = retType;
@@ -209,6 +224,13 @@ public class Klass{
                   }
                   if(retType.contains(";")){
                     retType = retType.substring(0,retType.indexOf(";"));
+                  }
+                  // void有可能是new的，需要获取new的class
+                  if(Method.RET_VOID.equals(retType)){
+                    String methodName = getConstant(getConstant(c.toMethodConstant().getNameAndTypeIndex()).toNameAndTypeConstant().getNameIndex()).toUTFConstant().getContent();
+                    if(Method.NAME_INIT.equals(methodName)){
+                      retType = "L"+getConstant(getConstant(c.toMethodConstant().getClassIndex()).toClassConstant().getNameIndex()).toUTFConstant().getContent();
+                    }
                   }
                   ret = retType;
                   break;

@@ -1,10 +1,10 @@
 package com.nlf.core;
 
-import java.lang.reflect.Modifier;
-import java.util.Map;
 import com.nlf.App;
 import com.nlf.bytecode.Method;
-import com.nlf.dao.connection.IConnection;
+import com.nlf.dao.connection.ConnectionFactory;
+
+import java.lang.reflect.Modifier;
 
 /**
  * 抽象调度器
@@ -35,7 +35,7 @@ public abstract class AbstractDispatcher implements IDispatcher{
         if(Modifier.isStatic(m.getAccess())){
           continue;
         }
-        if("Ljava/lang/Object".equals(ret)){
+        if(Method.RET_OBJECT.equals(ret)){
           ret = m.getRetMaybe();
         }
         String method = m.getName();
@@ -96,17 +96,12 @@ public abstract class AbstractDispatcher implements IDispatcher{
    * @param cm 调用的类和方法
    */
   protected void afterReturning(ClassMethod cm){
-    Map<String,IConnection> connections = App.get(Statics.CONNECTIONS);
-    if(null!=connections){
-      for(IConnection connection:connections.values()){
-        connection.close();
-      }
-    }
+    ConnectionFactory.closeAll();
   }
 
   /**
    * 调用出错时的处理
-   * 
+   *
    * @param e 产生的异常
    * @return 返回值
    */
