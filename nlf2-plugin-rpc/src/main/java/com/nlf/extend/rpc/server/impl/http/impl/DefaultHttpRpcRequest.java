@@ -103,7 +103,7 @@ public class DefaultHttpRpcRequest extends AbstractHttpRpcRequest {
     Map<String,Object> params = parseQuery(exchange.getRequestURI().getRawQuery());
     String reqMethod = exchange.getRequestMethod();
     if("POST".equalsIgnoreCase(reqMethod)){
-      BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody()));
+      BufferedReader reader = new BufferedReader(new InputStreamReader(getInputStream()));
       Map<String,Object> postParams = parseQuery(reader.readLine());
       for(Map.Entry<String,Object> entry:postParams.entrySet()){
         params.put(entry.getKey(),entry.getValue());

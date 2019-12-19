@@ -92,7 +92,7 @@ public class MathUtil{
    * byte数组转长整型（大端、网络字节序）
    *
    * @param b byte数组
-   * @return 整型
+   * @return 长整型
    */
   public static long toLong(byte[] b){
     long n = 0;

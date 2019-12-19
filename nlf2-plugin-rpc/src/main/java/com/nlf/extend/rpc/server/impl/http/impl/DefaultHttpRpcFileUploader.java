@@ -214,7 +214,7 @@ public class DefaultHttpRpcFileUploader implements IHttpRpcFileUploader {
     byte[] buffer = new byte[IOUtil.BUFFER_SIZE];
     int l;
     try{
-      InputStream reader = req.getRequestBody();
+      InputStream reader = r.getInputStream();
       while(-1!=(l = reader.read(buffer))){
         byte[] tmp = new byte[l];
         System.arraycopy(buffer,0,tmp,0,l);

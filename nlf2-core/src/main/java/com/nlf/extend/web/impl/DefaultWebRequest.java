@@ -1,23 +1,22 @@
 package com.nlf.extend.web.impl;
 
+import com.nlf.App;
+import com.nlf.Bean;
+import com.nlf.core.*;
+import com.nlf.extend.serialize.obj.OBJ;
+import com.nlf.extend.web.AbstractWebRequest;
+import com.nlf.extend.web.AbstractWebSession;
+import com.nlf.extend.web.IWebFileUploader;
+import com.nlf.extend.web.WebStatics;
+import com.nlf.log.Logger;
+import com.nlf.util.Strings;
+
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import com.nlf.App;
-import com.nlf.Bean;
-import com.nlf.core.Client;
-import com.nlf.core.IFileUploader;
-import com.nlf.core.ISession;
-import com.nlf.core.Statics;
-import com.nlf.core.UploadFile;
-import com.nlf.extend.serialize.obj.OBJ;
-import com.nlf.extend.web.*;
-import com.nlf.log.Logger;
-import com.nlf.util.Strings;
-
-import javax.servlet.http.HttpSession;
 
 /**
  * 默认WEB请求

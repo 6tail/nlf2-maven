@@ -1,11 +1,5 @@
 package com.nlf.extend.web.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
 import com.nlf.App;
 import com.nlf.core.IRequest;
 import com.nlf.core.Statics;
@@ -14,6 +8,12 @@ import com.nlf.exception.ValidateException;
 import com.nlf.extend.web.IWebFileUploader;
 import com.nlf.extend.web.IWebRequest;
 import com.nlf.util.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 默认WEB文件上传器
@@ -206,8 +206,7 @@ public class DefaultWebFileUploader implements IWebFileUploader{
   public List<UploadFile> getFiles() throws ValidateException{
     List<UploadFile> files = new ArrayList<UploadFile>();
     IWebRequest r = (IWebRequest)App.getRequest();
-    HttpServletRequest req = r.getServletRequest();
-    byte[] boundary = getBoundary(req.getContentType());
+    byte[] boundary = getBoundary(r.getServletRequest().getContentType());
     if(null==boundary){
       return files;
     }
@@ -215,7 +214,7 @@ public class DefaultWebFileUploader implements IWebFileUploader{
     byte[] buffer = new byte[IOUtil.BUFFER_SIZE];
     int l;
     try{
-      ServletInputStream reader = req.getInputStream();
+      InputStream reader = r.getInputStream();
       while(-1!=(l = reader.read(buffer))){
         byte[] tmp = new byte[l];
         System.arraycopy(buffer,0,tmp,0,l);

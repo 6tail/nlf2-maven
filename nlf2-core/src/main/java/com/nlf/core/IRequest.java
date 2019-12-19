@@ -2,6 +2,9 @@ package com.nlf.core;
 
 import com.nlf.exception.ValidateException;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * 输入请求接口
  *
@@ -115,4 +118,11 @@ public interface IRequest extends IFileUploader{
    * @return 每页记录数
    */
   int getPageSize();
+
+  /**
+   * 获取输入流，允许多次调用
+   * @return 输入流
+   * @throws IOException
+   */
+  InputStream getInputStream() throws IOException;
 }

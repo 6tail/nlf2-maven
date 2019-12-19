@@ -6,7 +6,7 @@ import com.nlf.util.StringUtil;
 
 /**
  * 抽象请求
- * 
+ *
  * @author 6tail
  *
  */
