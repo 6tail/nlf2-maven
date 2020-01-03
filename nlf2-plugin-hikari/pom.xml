@@ -5,19 +5,19 @@
     <parent>
         <artifactId>nlf2</artifactId>
         <groupId>cn.6tail</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.8.9</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>nlf2-plugin-hikari</artifactId>
-    <version>1.8.8-SNAPSHOT</version>
+    <version>1.8.9</version>
     <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>cn.6tail</groupId>
             <artifactId>nlf2-core</artifactId>
-            <version>1.8.8-SNAPSHOT</version>
+            <version>1.8.9</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>

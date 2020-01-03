@@ -7,7 +7,7 @@
     <groupId>cn.6tail</groupId>
     <artifactId>nlf2</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.8.9</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <url>https://github.com/6tail/nlf2-maven</url>
     <description>a lightweight java framework</description>
