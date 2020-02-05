@@ -132,7 +132,7 @@ public class DefaultHttpRpcResourceHandler extends AbstractHttpRpcResourceHandle
     String fileName = file.getName();
     String ext = "";
     if (fileName.contains(Strings.DOT)) {
-      ext = fileName.substring(0, fileName.lastIndexOf(Strings.DOT));
+      ext = fileName.substring(fileName.lastIndexOf(Strings.DOT));
     }
     exchange.getResponseHeaders().add(CONTENT_TYPE, ContentTypes.getContentType(ext));
     exchange.getResponseHeaders().add(LAST_MODIFIED, DATE_FORMAT.format(new Date(file.lastModified())));
