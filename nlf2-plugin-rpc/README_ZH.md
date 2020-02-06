@@ -118,20 +118,29 @@ public class Say{
 如果要对静态资源的访问进行配置，只需在任意.properties文件中进行类似如下设置即可 (v1.8.9不支持)：
 
 ```
-#buffer size, default=20480 (bytes)
+#缓冲区大小, 默认值=20480 (字节)
 nlf.rpc.server.http.resource.buffer_size=1024
  
-#resource files root dir, default=empty string (current dir)
+#静态资源文件根目录, 默认值=空字符串 (当前目录)
 nlf.rpc.server.http.resource.root=/usr/html
  
-#charset, default=UTF-8
+#编码, 默认值=UTF-8
 nlf.rpc.server.http.resource.charset=UTF-8
  
-#home page in dir, default=index.html
+#目录下的首页文件, 默认值=index.html
 nlf.rpc.server.http.resource.home_page=index.htm
  
-#allow list dir files, default=true
+#是否允许目录文件列表展示, 默认值=true
 nlf.rpc.server.http.resource.dir_allowed=false
+ 
+#是否开启gzip, 默认值=true
+nlf.rpc.server.http.resource.gzip.enable=false
+ 
+#大于或等于该大小的文件开启gzip压缩, 默认值=10240 (字节)
+nlf.rpc.server.http.resource.gzip.min_size
+ 
+#支持gzip压缩的文件后缀, 默认值=.htm,.html,.css,.js,.bmp,.gif,.jpg,.jpeg,.png,.xml,.svg,.ttf (以,分隔)
+nlf.rpc.server.http.resource.gzip.file_ext=.html,.js,.css
 ```
 
 ## 联系

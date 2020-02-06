@@ -132,6 +132,15 @@ nlf.rpc.server.http.resource.home_page=index.htm
  
 #allow list dir files, default=true
 nlf.rpc.server.http.resource.dir_allowed=false
+ 
+#gzip, default=true
+nlf.rpc.server.http.resource.gzip.enable=false
+ 
+#min gzip file size, default=10240
+nlf.rpc.server.http.resource.gzip.min_size
+ 
+#gzip file ext, default=.htm,.html,.css,.js,.bmp,.gif,.jpg,.jpeg,.png,.xml,.svg,.ttf (split by ,)
+nlf.rpc.server.http.resource.gzip.file_ext=.html,.js,.css
 ```
 
 ## Contact
