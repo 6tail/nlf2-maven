@@ -137,7 +137,7 @@ nlf.rpc.server.http.resource.dir_allowed=false
 nlf.rpc.server.http.resource.gzip.enable=false
  
 #min gzip file size, default=10240
-nlf.rpc.server.http.resource.gzip.min_size
+nlf.rpc.server.http.resource.gzip.min_size=1024
  
 #gzip file ext, default=.htm,.html,.css,.js,.bmp,.gif,.jpg,.jpeg,.png,.xml,.svg,.ttf (split by ,)
 nlf.rpc.server.http.resource.gzip.file_ext=.html,.js,.css

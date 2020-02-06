@@ -137,7 +137,7 @@ nlf.rpc.server.http.resource.dir_allowed=false
 nlf.rpc.server.http.resource.gzip.enable=false
  
 #大于或等于该大小的文件开启gzip压缩, 默认值=10240 (字节)
-nlf.rpc.server.http.resource.gzip.min_size
+nlf.rpc.server.http.resource.gzip.min_size=1024
  
 #支持gzip压缩的文件后缀, 默认值=.htm,.html,.css,.js,.bmp,.gif,.jpg,.jpeg,.png,.xml,.svg,.ttf (以,分隔)
 nlf.rpc.server.http.resource.gzip.file_ext=.html,.js,.css
