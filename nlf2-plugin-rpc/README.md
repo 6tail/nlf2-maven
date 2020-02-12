@@ -12,7 +12,7 @@ A lightweight tool for client/server communication with nlf2.
 
 ## Usage
 
-I suggest you to use nlf2-plugin-rpc v1.8.9 on [Maven Central](https://search.maven.org/search?q=nlf2-plugin-rpc).
+I suggest you to use nlf2-plugin-rpc v1.8.91 on [Maven Central](https://search.maven.org/search?q=nlf2-plugin-rpc).
 
 ### Release
 
@@ -26,7 +26,7 @@ I suggest you to use nlf2-plugin-rpc v1.8.9 on [Maven Central](https://search.ma
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-plugin-rpc</artifactId>
-  <version>1.8.9</version>
+  <version>1.8.91</version>
 </dependency>
 ```
  
