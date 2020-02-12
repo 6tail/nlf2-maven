@@ -43,6 +43,29 @@ public class PropertiesDbSettingManager implements IDbSettingManager {
     }
   }
 
+  /**
+   * 解析额外的参数，例如：db.alias.xxx.properties.useUnicode=true将解析为{properties:{useUnicode:true}}
+   * @param config Bean
+   * @param key 参数名，例如：properties.useUnicode
+   * @param value 参数值
+   */
+  protected void buildExtra(Bean config, String key, String value) {
+    Bean node = config;
+    String nodeKey = key;
+    List<String> keys = StringUtil.list(key, Strings.SLASH_RIGHT + Strings.DOT);
+    int last = keys.size() - 1;
+    for (int i = 0; i < last; i++) {
+      nodeKey = keys.get(i);
+      Bean child = node.getBean(nodeKey);
+      if (null == child) {
+        child = new Bean();
+        node.set(nodeKey, child);
+      }
+      node = child;
+    }
+    node.set(keys.get(last), value);
+  }
+
   public List<IDbSetting> listDbSettings() {
     Map<String, String> properties = new HashMap<String, String>(16);
     Map<String, Bean> settings = new HashMap<String, Bean>(16);
@@ -79,7 +102,7 @@ public class PropertiesDbSettingManager implements IDbSettingManager {
       for (Map.Entry<String, String> prop : properties.entrySet()) {
         String key = prop.getKey();
         if (key.startsWith(prefix)) {
-          config.set(StringUtil.right(key, prefix), prop.getValue());
+          buildExtra(config, StringUtil.right(key, prefix), prop.getValue());
         }
       }
     }

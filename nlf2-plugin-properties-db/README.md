@@ -12,7 +12,7 @@ Use .properties file to replace "db" folder for db setting in nlf2.
 
 ## Usage
 
-I suggest you to use nlf2-plugin-properties-db v1.8.9 on [Maven Central](https://search.maven.org/search?q=nlf2-plugin-properties-db).
+I suggest you to use nlf2-plugin-properties-db v1.8.91 on [Maven Central](https://search.maven.org/search?q=nlf2-plugin-properties-db).
 
 ```xml
 <dependency>
@@ -24,7 +24,7 @@ I suggest you to use nlf2-plugin-properties-db v1.8.9 on [Maven Central](https:/
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-plugin-properties-db</artifactId>
-  <version>1.8.9</version>
+  <version>1.8.91</version>
 </dependency>
 ```
 
@@ -62,7 +62,9 @@ db.alias.a.type=jdbc
 #db.alias.b.dbname=mysql
 #db.alias.b.user=root
 #db.alias.b.password=
-#db.alias.b.type=jdbc
+#db.alias.b.type=HikariCP
+#db.alias.b.properties.useUnicode=true
+#db.alias.b.properties.characterEncoding=utf-8
 ```
 
 ## Contact

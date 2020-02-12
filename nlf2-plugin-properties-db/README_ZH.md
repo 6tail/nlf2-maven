@@ -12,7 +12,7 @@
 
 ## 使用
 
-建议使用[Maven仓库](https://search.maven.org/search?q=nlf2-plugin-properties-db)中的nlf2-plugin-properties-db v1.8.9版本。
+建议使用[Maven仓库](https://search.maven.org/search?q=nlf2-plugin-properties-db)中的nlf2-plugin-properties-db v1.8.91版本。
 
 ```xml
 <dependency>
@@ -24,7 +24,7 @@
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-plugin-properties-db</artifactId>
-  <version>1.8.9</version>
+  <version>1.8.91</version>
 </dependency>
 ```
 
@@ -62,7 +62,9 @@ db.alias.a.type=jdbc
 #db.alias.b.dbname=mysql
 #db.alias.b.user=root
 #db.alias.b.password=
-#db.alias.b.type=jdbc
+#db.alias.b.type=HikariCP
+#db.alias.b.properties.useUnicode=true
+#db.alias.b.properties.characterEncoding=utf-8
 ```
 
 ## 联系
