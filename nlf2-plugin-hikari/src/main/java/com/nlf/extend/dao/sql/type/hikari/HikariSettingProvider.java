@@ -1,10 +1,11 @@
 package com.nlf.extend.dao.sql.type.hikari;
 
-import java.util.Map.Entry;
 import com.nlf.App;
 import com.nlf.Bean;
 import com.nlf.dao.setting.IDbSetting;
 import com.nlf.dao.setting.IDbSettingProvider;
+
+import java.util.Map.Entry;
 
 /**
  * HikariCP连接池配置提供器
@@ -14,7 +15,6 @@ import com.nlf.dao.setting.IDbSettingProvider;
 public class HikariSettingProvider implements IDbSettingProvider{
 
   public IDbSetting buildDbSetting(Bean o){
-    //String type = o.getString("type","");
     String alias = o.getString("alias","");
     String dbType = o.getString("dbtype","");
     String user = o.getString("user","");
@@ -30,10 +30,9 @@ public class HikariSettingProvider implements IDbSettingProvider{
     String url = o.getString("url","");
     //附加参数
     String extra = o.getString("extra","");
-    if(extra.length()>0&&!extra.startsWith("?")){
-      extra = "?"+extra;
+    if(extra.length()>0 && !extra.startsWith("?")){
+      extra = "?" + extra;
     }
-    //type = type.toUpperCase();
     dbType = dbType.toLowerCase();
     HikariSetting ps = new HikariSetting();
     ps.setAlias(alias);
@@ -49,27 +48,22 @@ public class HikariSettingProvider implements IDbSettingProvider{
     ps.setConnectionTimeout(o.getLong("connectionTimeout",-1));
     ps.setIdleTimeout(o.getLong("idleTimeout",-1));
     ps.setMaxLifetime(o.getLong("maxLifeTime",-1));
-    Bean properties = o.getBean("properties");
-    if(null!=properties){
-      for(Entry<String,Object> en:properties.entrySet()){
-        ps.setProperty(en.getKey(),en.getValue());
-      }
+    Bean properties = o.getBean("properties",new Bean());
+    for(Entry<String,Object> en:properties.entrySet()){
+      ps.setProperty(en.getKey(),en.getValue());
     }
-    if(dataSource.length()>0){
-      ps.setDataSourceClassName(dataSource);
-    }else {
-      ps.setDataSourceClassName(App.getProperty("nlf.dao.setting." + dbType + ".dataSource"));
+    if(dataSource.length()<1){
+      dataSource = App.getProperty(String.format("nlf.dao.setting.%s.dataSource",dbType));
     }
-    if(driver.length()>0){
-      ps.setDriver(driver);
-    }else {
-      ps.setDriver(HikariDriver.class.getName());
+    if(driver.length()<1){
+      driver = HikariDriver.class.getName();
     }
-    if(url.length()>0){
-      ps.setUrl(url);
-    }else {
-      ps.setUrl(App.getProperty("nlf.dao.setting." + dbType + ".url", server, port, dbname) + extra);
+    if(url.length()<1){
+      url = App.getProperty(String.format("nlf.dao.setting.%s.url",dbType), server, port + "", dbname) + extra;
     }
+    ps.setDataSourceClassName(dataSource);
+    ps.setDriver(driver);
+    ps.setUrl(url);
     return ps;
   }
 
