@@ -1,10 +1,11 @@
 package com.nlf.extend.dao.sql.dbType.mysql;
 
-import java.util.List;
 import com.nlf.Bean;
 import com.nlf.dao.paging.PageData;
 import com.nlf.extend.dao.sql.dbType.common.ASqlSelecter;
 import com.nlf.log.Logger;
+
+import java.util.List;
 
 /**
  * SQL查询器的mysql实现
@@ -21,11 +22,11 @@ public class MysqlSelecter extends ASqlSelecter{
   public List<Bean> top(int count){
     params.clear();
     sql = buildSql();
-    sql = sql+" LIMIT 0,"+count;
+    sql += " LIMIT 0,"+count;
     Logger.getLog().debug(buildLog());
     return queryList();
   }
-  
+
   @Override
   public PageData page(int pageNumber, int pageSize){
     PageData d = new PageData();
@@ -37,7 +38,7 @@ public class MysqlSelecter extends ASqlSelecter{
     }
     params.clear();
     sql = buildSql();
-    sql = "SELECT * FROM ("+sql+") NLFTABLE_ LIMIT "+((d.getPageNumber()-1)*d.getPageSize())+","+d.getPageSize();
+    sql += " LIMIT "+((d.getPageNumber()-1)*d.getPageSize())+","+d.getPageSize();
     Logger.getLog().debug(buildLog());
     List<Bean> l = queryList();
     d.setData(l);

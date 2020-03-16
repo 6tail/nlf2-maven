@@ -1,12 +1,11 @@
 package com.nlf.extend.dao.sql.dbType.sqlserver;
 
-import java.util.List;
-import com.nlf.App;
 import com.nlf.Bean;
-import com.nlf.dao.exception.DaoException;
 import com.nlf.dao.paging.PageData;
 import com.nlf.extend.dao.sql.dbType.common.ASqlSelecter;
 import com.nlf.log.Logger;
+
+import java.util.List;
 
 /**
  * SQL查询器的sqlserver实现
@@ -26,26 +25,6 @@ public class SqlserverSelecter extends ASqlSelecter{
     sql = "SELECT TOP "+count+sql.replaceFirst("SELECT","");
     Logger.getLog().debug(buildLog());
     return queryList();
-  }
-
-  @Override
-  public int count(){
-    params.clear();
-    sql = buildSql();
-    sql = sql.replace("\r"," ").replace("\n"," ");
-    String upperSql = sql.toUpperCase();
-    int orderIndex = upperSql.indexOf(" ORDER ");
-    if(orderIndex>-1){
-      sql = sql.substring(0,orderIndex);
-    }
-    sql = "SELECT COUNT(*) NLFCOUNT_ FROM ("+sql+") NLFTABLE_";
-    Logger.getLog().debug(buildLog());
-    List<Bean> l = queryList();
-    if(l.size()<1){
-      throw new DaoException(App.getProperty("nlf.exception.dao.select.one.not_found"));
-    }
-    Bean o = l.get(0);
-    return o.getInt("NLFCOUNT_",0);
   }
 
   @Override

@@ -1,7 +1,5 @@
 package com.nlf.extend.dao.sql.dbType.common;
 
-import java.util.Iterator;
-import java.util.List;
 import com.nlf.App;
 import com.nlf.Bean;
 import com.nlf.core.IRequest;
@@ -14,9 +12,12 @@ import com.nlf.extend.dao.sql.ISqlSelecter;
 import com.nlf.log.Logger;
 import com.nlf.util.StringUtil;
 
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * SQL查询器的默认实现
- * 
+ *
  * @author 6tail
  *
  */
@@ -180,9 +181,17 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
 
   @Override
   public String buildSql(){
+    return buildSql(false);
+  }
+
+  public String buildSql(boolean count){
     StringBuilder s = new StringBuilder();
     s.append("SELECT ");
-    s.append(columns.size()<1?"*":StringUtil.join(columns,","));
+    if(count){
+      s.append("COUNT(1) NLFCOUNT_");
+    }else {
+      s.append(columns.size() < 1 ? "*" : StringUtil.join(columns, ","));
+    }
     s.append(" FROM ");
     s.append(StringUtil.join(tables,","));
     s.append(buildSqlWhere());
@@ -197,10 +206,12 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
       s.append(" ");
       s.append(buildSqlParams(havings.get(i)));
     }
-    for(int i = 0,j = sorts.size();i<j;i++){
-      s.append(" ");
-      s.append(i<1?"ORDER BY ":",");
-      s.append(sorts.get(i));
+    if(!count){
+      for (int i = 0, j = sorts.size(); i < j; i++) {
+        s.append(" ");
+        s.append(i < 1 ? "ORDER BY " : ",");
+        s.append(sorts.get(i));
+      }
     }
     return s.toString();
   }
@@ -234,8 +245,7 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
 
   public int count(){
     params.clear();
-    sql = buildSql();
-    sql = "SELECT COUNT(*) NLFCOUNT_ FROM ("+sql+") NLFTABLE_";
+    sql = buildSql(true);
     Logger.getLog().debug(buildLog());
     List<Bean> l = queryList();
     if(l.size()<1){
@@ -248,7 +258,7 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
   public PageData page(int pageNumber,int pageSize){
     throw new DaoException(App.getProperty("nlf.exception.dao.operation_not_support"));
   }
-  
+
   public PageData paging(){
     IRequest r = App.getRequest();
     return page(r.getPageNumber(),r.getPageSize());
