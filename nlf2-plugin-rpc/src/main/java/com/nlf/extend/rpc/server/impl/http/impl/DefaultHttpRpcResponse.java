@@ -10,6 +10,7 @@ import com.nlf.util.IOUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 
 /**
@@ -47,7 +48,7 @@ public class DefaultHttpRpcResponse extends AbstractHttpRpcResponse {
     byte[] bytes = s.getBytes(Statics.ENCODE);
     int len = bytes.length;
     exchange.getResponseHeaders().add("Content-Length",len+"");
-    exchange.sendResponseHeaders(200,len);
+    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK,len);
     OutputStream os = null;
     try{
       os = exchange.getResponseBody();
@@ -75,6 +76,7 @@ public class DefaultHttpRpcResponse extends AbstractHttpRpcResponse {
 
   protected  void sendStream(InputStream inputStream,String contentType) throws IOException{
     exchange.getResponseHeaders().add("Content-Type",contentType);
+    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
     OutputStream os = null;
     try{
       os = exchange.getResponseBody();

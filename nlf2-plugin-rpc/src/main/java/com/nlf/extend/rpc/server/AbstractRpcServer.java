@@ -16,7 +16,7 @@ public abstract class AbstractRpcServer implements IRpcServer {
   protected ExecutorService getExecutor(){
     int cpu = Runtime.getRuntime().availableProcessors();
     int corePoolSize = cpu * App.getPropertyInt("nlf.rpc.server.thread.core_pool_size",2);
-    int maximumPoolSize = cpu * App.getPropertyInt("nlf.rpc.server.thread.maximum_sool_size",100);
+    int maximumPoolSize = cpu * App.getPropertyInt("nlf.rpc.server.thread.maximum_pool_size",100);
     long keepAliveMilliSeconds = App.getPropertyLong("nlf.rpc.server.thread.keep_alive_milliseconds",60000L);
     return new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveMilliSeconds, TimeUnit.MILLISECONDS,new SynchronousQueue<Runnable>(),new ThreadPoolExecutor.AbortPolicy());
   }

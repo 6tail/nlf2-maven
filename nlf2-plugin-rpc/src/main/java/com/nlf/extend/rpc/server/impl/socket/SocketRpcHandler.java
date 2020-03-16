@@ -8,8 +8,8 @@ import java.net.Socket;
 public class SocketRpcHandler implements Runnable {
   private Socket socket;
 
-  public SocketRpcHandler(Socket socker) {
-    this.socket = socker;
+  public SocketRpcHandler(Socket socket) {
+    this.socket = socket;
   }
 
   public void run() {
