@@ -1,16 +1,17 @@
 package com.nlf.extend.dao.sql.dbType.common;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.nlf.Bean;
 import com.nlf.extend.dao.sql.AbstractSqlExecuter;
 import com.nlf.extend.dao.sql.Condition;
 import com.nlf.extend.dao.sql.ISqlInserter;
 import com.nlf.util.StringUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * SQL插入器的默认实现
- * 
+ *
  * @author 6tail
  *
  */
@@ -57,7 +58,11 @@ public class ASqlInserter extends AbstractSqlExecuter implements ISqlInserter{
     return executeUpdate();
   }
 
-  public ISqlInserter set(String column,Object value){
+  public Bean insertAndGetGenerated() {
+    return executeUpdateAndGetGenerated();
+  }
+
+  public ISqlInserter set(String column, Object value){
     Condition cond = new Condition();
     cond.setColumn(column);
     cond.setValue(value);

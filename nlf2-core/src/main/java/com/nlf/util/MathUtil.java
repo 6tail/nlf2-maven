@@ -11,6 +11,9 @@ import java.io.IOException;
  */
 public class MathUtil{
 
+  /** 字节长度 */
+  private static final int BYTE_LENGTH = 8;
+
   private MathUtil(){}
 
   /**
@@ -19,10 +22,9 @@ public class MathUtil{
    * @return byte数组
    */
   public static byte[] toBit(byte value){
-    int l = 8;
-    byte[] b = new byte[l];
-    for(int i = 0;i<l;i++){
-      b[i] = (byte)(value>>(l-i-1)&0x1);
+    byte[] b = new byte[BYTE_LENGTH];
+    for(int i = 0;i<BYTE_LENGTH;i++){
+      b[i] = (byte)(value>>(BYTE_LENGTH-i-1)&0x1);
     }
     return b;
   }
@@ -33,15 +35,63 @@ public class MathUtil{
    * @return byte数组
    */
   public static byte[] toBit(byte[] value){
-    int l = 8;
     int size = value.length;
-    byte[] b = new byte[l*size];
+    byte[] b = new byte[BYTE_LENGTH*size];
     for(int i = 0;i<size;i++){
-      for(int j = 0;j<l;j++) {
-        b[i*l+j] = (byte)(value[i]>>(l-j-1)&0x1);
+      for(int j = 0;j<BYTE_LENGTH;j++) {
+        b[i*BYTE_LENGTH+j] = (byte)(value[i]>>(BYTE_LENGTH-j-1)&0x1);
       }
     }
     return b;
+  }
+
+  /**
+   * 8bit转1byte，不足8bit的，高位补0
+   * @param bits bit数组
+   * @return byte
+   */
+  public static byte toByte(byte[] bits){
+    int len = bits.length;
+    if(len > BYTE_LENGTH){
+      throw new IllegalArgumentException();
+    }
+    byte[] padded = bits;
+    if(len < BYTE_LENGTH) {
+      padded = new byte[BYTE_LENGTH];
+      System.arraycopy(bits, 0, padded, BYTE_LENGTH - len, len);
+    }
+    StringBuilder s = new StringBuilder();
+    for(byte bit:padded){
+      s.append(bit);
+    }
+    int b = Integer.parseInt(s.toString(),2);
+    if(bits[0]==1){
+      b -= 256;
+    }
+    return (byte)b;
+  }
+
+  /**
+   * bit数组转byte数组，不足位数的，高位补0
+   * @param bits bit数组
+   * @return byte数组
+   */
+  public static byte[] toBytes(byte[] bits){
+    int len = bits.length;
+    int size = (int)Math.ceil(len*1D/BYTE_LENGTH);
+    int total = size*BYTE_LENGTH;
+    byte[] bytes = new byte[size];
+    byte[] padded = bits;
+    if(total!=len) {
+      padded = new byte[total];
+      System.arraycopy(bits, 0, padded, total - len, len);
+    }
+    for(int i=0;i<size;i++){
+      byte[] b = new byte[BYTE_LENGTH];
+      System.arraycopy(padded,i*BYTE_LENGTH,b,0,BYTE_LENGTH);
+      bytes[i] = toByte(b);
+    }
+    return bytes;
   }
 
   /**
@@ -54,7 +104,7 @@ public class MathUtil{
   public static byte[] toByte(int value,int size){
     byte[] b = new byte[size];
     for(int i = 0;i<size;i++){
-      b[i] = (byte)((value>>>(b.length-i-1)*8)&0xFF);
+      b[i] = (byte)((value>>>(size-i-1)*BYTE_LENGTH)&0xFF);
     }
     return b;
   }
@@ -69,7 +119,7 @@ public class MathUtil{
   public static byte[] toByte(long value,int size){
     byte[] b = new byte[size];
     for(int i = 0;i<size;i++){
-      b[i] = (byte)((value>>>(b.length-i-1)*8)&0xFF);
+      b[i] = (byte)((value>>>(size-i-1)*BYTE_LENGTH)&0xFF);
     }
     return b;
   }
@@ -82,8 +132,8 @@ public class MathUtil{
    */
   public static int toInt(byte[] b){
     int n = 0;
-    for(int i=0;i<b.length;i++){
-      n += (b[i]&0xFF)<<((b.length-i-1)*8);
+    for(int i=0,j=b.length;i<j;i++){
+      n += (b[i]&0xFF)<<((j-i-1)*BYTE_LENGTH);
     }
     return n;
   }
@@ -96,8 +146,8 @@ public class MathUtil{
    */
   public static long toLong(byte[] b){
     long n = 0;
-    for(int i=0;i<b.length;i++){
-      n += (b[i]&0xFF)<<((b.length-i-1)*8);
+    for(int i=0,j=b.length;i<j;i++){
+      n += (b[i]&0xFF)<<((j-i-1)*BYTE_LENGTH);
     }
     return n;
   }
@@ -139,8 +189,8 @@ public class MathUtil{
    * 获取一个byte数组的一部分
    *
    * @param src 源数组
-   * @param from 开始点，从0开始计算
-   * @param to 结束点，从0开始计算
+   * @param from 开始点，从0开始计算，包含
+   * @param to 结束点，从0开始计算，包含
    * @return byte数组
    */
   public static byte[] sub(byte[] src,int from,int to){

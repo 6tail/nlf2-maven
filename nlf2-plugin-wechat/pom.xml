@@ -10,13 +10,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>nlf2-plugin-wechat</artifactId>
-    <version>1.8.9</version>
+    <version>1.8.93</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
             <groupId>cn.6tail</groupId>
             <artifactId>nlf2-core</artifactId>
-            <version>1.8.9</version>
+            <version>1.8.93</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>

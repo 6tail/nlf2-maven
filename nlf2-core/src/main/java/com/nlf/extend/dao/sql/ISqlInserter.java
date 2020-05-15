@@ -2,7 +2,6 @@ package com.nlf.extend.dao.sql;
 
 import com.nlf.Bean;
 
-
 /**
  * SQL插入器
  *
@@ -59,9 +58,15 @@ public interface ISqlInserter extends ISqlExecuter{
   ISqlInserter setIf(String column,Object value,boolean condition);
 
   /**
-   * 执行删除操作
+   * 执行插入操作，注意：批量插入时返回值恒为-1
    * @return 受影响的记录数
    */
   int insert();
+
+  /**
+   * 执行插入操作，并返回自动生成的内容（一般用于自增ID的获取），注意：批量插入时无效
+   * @return Bean 不同的数据库可能返回的键不同，例如mysql返回键为GENERATED_KEY
+   */
+  Bean insertAndGetGenerated();
 
 }
