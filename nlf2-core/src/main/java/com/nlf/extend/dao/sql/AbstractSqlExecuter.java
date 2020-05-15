@@ -1,19 +1,16 @@
 package com.nlf.extend.dao.sql;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import com.nlf.App;
 import com.nlf.Bean;
 import com.nlf.dao.exception.DaoException;
 import com.nlf.dao.executer.AbstractDaoExecuter;
 import com.nlf.log.Logger;
 import com.nlf.util.IOUtil;
+
+import java.sql.*;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 抽象Sql Dao执行器
@@ -438,6 +435,45 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
         return -1;
       }
       return stmt.executeUpdate();
+    }catch(SQLException e){
+      throw new DaoException(e);
+    }finally{
+      if(!conn.isInBatch()){
+        finalize(stmt);
+      }
+    }
+  }
+
+  protected Bean executeUpdateAndGetGenerated(){
+    Bean ret = new Bean();
+    params.clear();
+    sql = buildSql();
+    Logger.getLog().debug(buildLog());
+    PreparedStatement stmt = null;
+    SqlConnection conn = null;
+    try{
+      conn = ((SqlConnection)connection);
+      if(conn.isInBatch()){
+        stmt = conn.getStatement();
+        if(null==stmt){
+          stmt = conn.getConnection().prepareStatement(sql);
+          conn.setStatement(stmt);
+        }
+      }else{
+        stmt = conn.getConnection().prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+      }
+      bindParams(stmt);
+      if(conn.isInBatch()){
+        stmt.addBatch();
+      }else {
+        stmt.executeUpdate();
+        ResultSet rs = stmt.getGeneratedKeys();
+        List<Bean> l = toBeans(rs);
+        if(!l.isEmpty()){
+          ret = l.get(0);
+        }
+      }
+      return ret;
     }catch(SQLException e){
       throw new DaoException(e);
     }finally{

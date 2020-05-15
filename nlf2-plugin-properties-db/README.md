@@ -12,19 +12,19 @@ Use .properties file to replace "db" folder for db setting in nlf2.
 
 ## Usage
 
-I suggest you to use nlf2-plugin-properties-db v1.8.91 on [Maven Central](https://search.maven.org/search?q=nlf2-plugin-properties-db).
+I suggest you to use nlf2-plugin-properties-db v1.8.93 on [Maven Central](https://search.maven.org/search?q=nlf2-plugin-properties-db).
 
 ```xml
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-core</artifactId>
-  <version>1.8.9</version>
+  <version>1.8.93</version>
 </dependency>
  
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-plugin-properties-db</artifactId>
-  <version>1.8.91</version>
+  <version>1.8.93</version>
 </dependency>
 ```
 

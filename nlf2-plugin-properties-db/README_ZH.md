@@ -12,19 +12,19 @@
 
 ## 使用
 
-建议使用[Maven仓库](https://search.maven.org/search?q=nlf2-plugin-properties-db)中的nlf2-plugin-properties-db v1.8.91版本。
+建议使用[Maven仓库](https://search.maven.org/search?q=nlf2-plugin-properties-db)中的nlf2-plugin-properties-db v1.8.93版本。
 
 ```xml
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-core</artifactId>
-  <version>1.8.9</version>
+  <version>1.8.93</version>
 </dependency>
  
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-plugin-properties-db</artifactId>
-  <version>1.8.91</version>
+  <version>1.8.93</version>
 </dependency>
 ```
 
