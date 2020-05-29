@@ -1,5 +1,10 @@
 package com.nlf.extend.serialize.xml.impl;
 
+import com.nlf.dao.paging.IPageable;
+import com.nlf.serialize.AbstractWrapper;
+import com.nlf.util.Base64Util;
+import com.nlf.util.DateUtil;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -10,13 +15,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Map;
-import com.nlf.serialize.AbstractWrapper;
-import com.nlf.util.Base64Util;
-import com.nlf.util.DateUtil;
 
 /**
  * 默认xml包装器
- * 
+ *
  * @author 6tail
  *
  */
@@ -169,6 +171,8 @@ public class DefaultXmlWrapper extends AbstractWrapper{
       s.append(wrapDate(o,tag));
     }else if(o.getClass().isArray()){
       s.append(wrapArray(o,tag));
+    }else if(o instanceof IPageable){
+      s.append(wrapObject(o));
     }else if(o instanceof Collection){
       s.append(wrapCollection(o,tag));
     }else if(o instanceof Map){

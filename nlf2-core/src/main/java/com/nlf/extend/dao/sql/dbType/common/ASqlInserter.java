@@ -62,7 +62,7 @@ public class ASqlInserter extends AbstractSqlExecuter implements ISqlInserter{
     return executeUpdateAndGetGenerated();
   }
 
-  public ISqlInserter set(String column,Object value){
+  public ISqlInserter set(String column, Object value){
     Condition cond = new Condition();
     cond.setColumn(column);
     cond.setValue(value);

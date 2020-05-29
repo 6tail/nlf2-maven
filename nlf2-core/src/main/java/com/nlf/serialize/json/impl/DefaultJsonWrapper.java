@@ -1,6 +1,6 @@
 package com.nlf.serialize.json.impl;
 
-import com.nlf.dao.paging.PageData;
+import com.nlf.dao.paging.IPageable;
 import com.nlf.serialize.AbstractWrapper;
 import com.nlf.util.Base64Util;
 import com.nlf.util.DateUtil;
@@ -214,7 +214,7 @@ public class DefaultJsonWrapper extends AbstractWrapper{
       s.append(wrapDate(o));
     }else if(o.getClass().isArray()){
       s.append(wrapArray(o));
-    }else if(o instanceof PageData){
+    }else if(o instanceof IPageable){
       s.append(wrapObject(o));
     }else if(o instanceof Collection){
       s.append(wrapCollection(o));

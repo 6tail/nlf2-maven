@@ -2,7 +2,6 @@ package com.nlf.extend.dao.sql;
 
 import com.nlf.Bean;
 
-
 /**
  * SQL插入器
  *
@@ -59,7 +58,7 @@ public interface ISqlInserter extends ISqlExecuter{
   ISqlInserter setIf(String column,Object value,boolean condition);
 
   /**
-   * 执行删除操作
+   * 执行插入操作，注意：批量插入时返回值恒为-1
    * @return 受影响的记录数
    */
   int insert();
