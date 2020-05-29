@@ -42,7 +42,7 @@ I suggest you to use nlf2-core v1.8.94 on [Maven Central](http://search.maven.or
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-core</artifactId>
-  <version>1.8.8-SNAPSHOT</version>
+  <version>1.8.9-SNAPSHOT</version>
 </dependency>
 ```
 
