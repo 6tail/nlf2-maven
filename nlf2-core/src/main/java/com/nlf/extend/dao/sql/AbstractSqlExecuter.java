@@ -186,6 +186,9 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
   }
 
   public String getSql(){
+    if(null==sql){
+      sql = buildSql();
+    }
     return sql;
   }
 

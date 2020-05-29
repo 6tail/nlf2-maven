@@ -4,8 +4,8 @@ import com.nlf.App;
 import com.nlf.Bean;
 import com.nlf.core.IRequest;
 import com.nlf.core.Statics;
+import com.nlf.dao.paging.IPageable;
 import com.nlf.dao.paging.IPagingRender;
-import com.nlf.dao.paging.PageData;
 import com.nlf.extend.serialize.obj.OBJ;
 import com.nlf.extend.web.IWebRequest;
 import com.nlf.extend.web.WebApp;
@@ -97,7 +97,7 @@ public class DefaultWebPagingRender implements IPagingRender{
    * @param uri 请求地址
    * @return 渲染结果
    */
-  protected String renderScript(PageData pd,Bean pageParam,String uri){
+  protected String renderScript(IPageable pd,Bean pageParam,String uri){
     return javascript.replace("${uri}",uri)
         .replace("${id}",pd.getId())
         .replace("${hook}",hook)
@@ -118,7 +118,7 @@ public class DefaultWebPagingRender implements IPagingRender{
    * @param uri 请求地址
    * @return 渲染结果
    */
-  protected String renderPageSize(PageData pd,Bean pageParam,String uri){
+  protected String renderPageSize(IPageable pd,Bean pageParam,String uri){
     int pageSize = pd.getPageSize();
     Set<Integer> pages = new TreeSet<Integer>();
     pages.add(pageSize);
@@ -153,7 +153,7 @@ public class DefaultWebPagingRender implements IPagingRender{
    * @param uri 请求地址
    * @return 渲染结果
    */
-  protected String renderPageNumber(PageData pd,Bean pageParam,String uri){
+  protected String renderPageNumber(IPageable pd,Bean pageParam,String uri){
     return String.format("<i>%s</i><input name=\"%s\" type=\"text\" value=\"%d\"></input><i>%s</i>",labelPageNumberPrefix,Statics.PARAM_PAGE_NUMBER,pd.getPageNumber(),labelPageNumberSuffix);
   }
 
@@ -164,7 +164,7 @@ public class DefaultWebPagingRender implements IPagingRender{
    * @param uri 请求地址
    * @return 渲染结果
    */
-  protected String renderRecordCount(PageData pd,Bean pageParam,String uri){
+  protected String renderRecordCount(IPageable pd,Bean pageParam,String uri){
     return String.format("<i>%s</i><i>%d</i><i>%s</i>",labelRecordCountPrefix,pd.getRecordCount(),labelRecordCountSuffix);
   }
 
@@ -175,7 +175,7 @@ public class DefaultWebPagingRender implements IPagingRender{
    * @param uri 请求地址
    * @return 渲染结果
    */
-  protected String renderPageNumberPrev(PageData pd,Bean pageParam,String uri){
+  protected String renderPageNumberPrev(IPageable pd,Bean pageParam,String uri){
     int prev = pd.getPreviousPageNumber();
     StringBuilder s = new StringBuilder();
     s.append("<li");
@@ -199,7 +199,7 @@ public class DefaultWebPagingRender implements IPagingRender{
    * @param uri 请求地址
    * @return 渲染结果
    */
-  protected String renderPageNumberNext(PageData pd,Bean pageParam,String uri){
+  protected String renderPageNumberNext(IPageable pd,Bean pageParam,String uri){
     int next = pd.getNextPageNumber();
     StringBuilder s = new StringBuilder();
     s.append("<li");
@@ -223,7 +223,7 @@ public class DefaultWebPagingRender implements IPagingRender{
    * @param uri 请求地址
    * @return 渲染结果
    */
-  protected String renderPageNumbers(PageData pd,Bean pageParam,String uri){
+  protected String renderPageNumbers(IPageable pd,Bean pageParam,String uri){
     StringBuilder s = new StringBuilder();
     int first = pd.getFirstPageNumber();
     int last = pd.getLastPageNumber();
@@ -302,7 +302,7 @@ public class DefaultWebPagingRender implements IPagingRender{
    * @param uri 请求地址
    * @return 渲染结果
    */
-  protected String renderComponents(PageData pd,Bean pageParam,String uri){
+  protected String renderComponents(IPageable pd,Bean pageParam,String uri){
     return renderRecordCount(pd,pageParam,uri)+renderPageSize(pd,pageParam,uri)+renderPageNumbers(pd,pageParam,uri)+renderPageNumber(pd,pageParam,uri);
   }
 
@@ -311,7 +311,7 @@ public class DefaultWebPagingRender implements IPagingRender{
    * @param pd 分页数据
    * @return 渲染结果
    */
-  public String render(PageData pd){
+  public String render(IPageable pd){
     IRequest r = App.getRequest();
     String pg = (String)((IWebRequest)r).getServletRequest().getAttribute(Statics.PARAM_PAGE_PARAM);
     Bean pageParam = OBJ.toBean(pg);
@@ -348,5 +348,10 @@ public class DefaultWebPagingRender implements IPagingRender{
     s.append("</form>");
     s.append(renderScript(pd,pageParam,uri));
     return s.toString();
+  }
+
+  public boolean support() {
+    IRequest r = App.getRequest();
+    return null != r && r instanceof IWebRequest;
   }
 }

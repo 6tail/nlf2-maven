@@ -28,6 +28,7 @@
         <module>nlf2-plugin-rpc</module>
         <module>nlf2-plugin-session</module>
         <module>nlf2-plugin-properties-db</module>
+        <module>nlf-plugin-model</module>
     </modules>
     <licenses>
         <license>

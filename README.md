@@ -12,7 +12,7 @@ NLF2 is a lightweight java framework.
 
 ## Usage
 
-I suggest you to use nlf2-core v1.8.93 on [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Cnlf2).
+I suggest you to use nlf2-core v1.8.94 on [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Cnlf2).
 
 ### Release
 
@@ -20,7 +20,7 @@ I suggest you to use nlf2-core v1.8.93 on [Maven Central](http://search.maven.or
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-core</artifactId>
-  <version>1.8.93</version>
+  <version>1.8.94</version>
 </dependency>
 ```
  
@@ -50,7 +50,7 @@ I suggest you to use nlf2-core v1.8.93 on [Maven Central](http://search.maven.or
 
 If you will use jars in your projects, I suggest you to download latest snapshot versions with less bugs.
 
-[Download](https://oss.sonatype.org/content/groups/public/cn/6tail/)
+[Download](https://github.com/6tail/nlf2-maven/releases)
 
 ## Example
 

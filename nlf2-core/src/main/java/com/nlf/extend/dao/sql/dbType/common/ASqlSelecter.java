@@ -145,14 +145,39 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
     return this;
   }
 
-  public ISqlSelecter asc(String columns){
-    String[] cols = columns.split(",",-1);
-    for(String col:cols){
-      if(col.length()>0){
-        sorts.add(col+" ASC");
+  protected ISqlSelecter sorts(String columns,String order){
+    String right = columns;
+    int index = right.indexOf(",");
+    StringBuilder col = new StringBuilder();
+    int bracketOpen = 0;
+    int bracketClose = 0;
+    while(index>-1){
+      String left = right.substring(0,index);
+      bracketOpen += left.length()-left.replace("(","").length();
+      bracketClose += left.length()-left.replace(")","").length();
+      col.append(left);
+      if(bracketOpen>bracketClose){
+        col.append(",");
+      }else{
+        if(col.length()>0){
+          sorts.add(col+" "+order);
+        }
+        col.setLength(0);
+        bracketOpen = 0;
+        bracketClose = 0;
       }
+      right = right.substring(index+1);
+      index = right.indexOf(",");
+    }
+    if(right.length()>0){
+      col.append(right);
+      sorts.add(col+" "+order);
     }
     return this;
+  }
+
+  public ISqlSelecter asc(String columns){
+    return sorts(columns,"ASC");
   }
 
   public ISqlSelecter ascIf(String columns,boolean condition){
@@ -163,13 +188,7 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
   }
 
   public ISqlSelecter desc(String columns){
-    String[] cols = columns.split(",",-1);
-    for(String col:cols){
-      if(col.length()>0){
-        sorts.add(col+" DESC");
-      }
-    }
-    return this;
+    return sorts(columns,"DESC");
   }
 
   public ISqlSelecter descIf(String columns,boolean condition){
