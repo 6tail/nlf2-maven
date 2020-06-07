@@ -1,21 +1,20 @@
 package com.nlf.extend.rpc.server.impl.http;
 
 import com.nlf.core.IResponse;
-import com.sun.net.httpserver.HttpExchange;
+
+import java.io.IOException;
 
 /**
+ * HTTP RPC响应接口
  * @author 6tail
  */
-public interface IHttpRpcResponse extends IResponse{
+public interface IHttpRpcResponse extends IResponse,IHttpRpcExchange{
 
-  String KEY_CORS_ENABLE = "nlf.rpc.server.http.cors.enable";
-  String KEY_CORS_ALLOW_CREDENTIALS = "nlf.rpc.server.http.cors.allow_credentials";
-  String KEY_CORS_ALLOW_ORIGIN = "nlf.rpc.server.http.cors.allow_origin";
-  String KEY_CORS_ALLOW_METHODS = "nlf.rpc.server.http.cors.allow_methods";
-  String KEY_CORS_ALLOW_HEADERS = "nlf.rpc.server.http.cors.allow_headers";
-  String KEY_CORS_MAX_AGE = "nlf.rpc.server.http.cors.max_age";
-
-  void setHttpExchange(HttpExchange exchange);
-
-  HttpExchange getHttpExchange();
+  /**
+   * 发送资源
+   * @param path 资源路径
+   * @param dynamic 是否动态资源
+   * @throws IOException IO异常
+   */
+  void sendResource(String path,boolean dynamic) throws IOException;
 }

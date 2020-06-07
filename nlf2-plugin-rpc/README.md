@@ -12,7 +12,7 @@ A lightweight tool for client/server communication with nlf2.
 
 ## Usage
 
-I suggest you to use nlf2-plugin-rpc v1.8.93 on [Maven Central](https://search.maven.org/search?q=nlf2-plugin-rpc).
+I suggest you to use nlf2-plugin-rpc v1.8.94 on [Maven Central](https://search.maven.org/search?q=nlf2-plugin-rpc).
 
 ### Release
 
@@ -26,7 +26,7 @@ I suggest you to use nlf2-plugin-rpc v1.8.93 on [Maven Central](https://search.m
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-plugin-rpc</artifactId>
-  <version>1.8.93</version>
+  <version>1.8.94</version>
 </dependency>
 ```
  
@@ -118,6 +118,9 @@ public class Say{
 Just put a .properties file into anywhere with settings as below to support static resources access (v1.8.9 not supported):
 
 ```
+#context path, starts with /, default=/
+nlf.rpc.server.context=/myapp
+
 #buffer size, default=20480 (bytes)
 nlf.rpc.server.http.resource.buffer_size=1024
  

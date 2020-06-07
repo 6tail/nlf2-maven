@@ -7,13 +7,15 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 
 /**
+ * 静态资源处理器
  * @author 6tail
  */
 public class HttpRpcHandler implements HttpHandler {
 
   public void handle(HttpExchange exchange) throws IOException {
-    IHttpRpcResourceHandler handler = App.getProxy().newInstance(IHttpRpcResourceHandler.class.getName());
-    handler.handle(exchange);
+    IHttpRpcResponse response = App.getProxy().newInstance(IHttpRpcResponse.class.getName());
+    response.setHttpExchange(exchange);
+    response.sendResource(exchange.getRequestURI().getRawPath(),false);
   }
 
 }

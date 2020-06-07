@@ -12,7 +12,7 @@
 
 ## 使用
 
-建议使用[Maven仓库](https://search.maven.org/search?q=nlf2-plugin-rpc)中的nlf2-plugin-rpc v1.8.93版本。
+建议使用[Maven仓库](https://search.maven.org/search?q=nlf2-plugin-rpc)中的nlf2-plugin-rpc v1.8.94版本。
 
 ### 稳定版本
 
@@ -26,7 +26,7 @@
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-plugin-rpc</artifactId>
-  <version>1.8.93</version>
+  <version>1.8.94</version>
 </dependency>
 ```
  
@@ -118,6 +118,9 @@ public class Say{
 如果要对静态资源的访问进行配置，只需在任意.properties文件中进行类似如下设置即可 (v1.8.9不支持)：
 
 ```
+#虚拟路径，以/开头，默认值=/
+nlf.rpc.server.context=/myapp
+
 #缓冲区大小, 默认值=20480 (字节)
 nlf.rpc.server.http.resource.buffer_size=1024
  
