@@ -26,7 +26,7 @@ public abstract class AbstractHttpRpcRequest extends com.nlf.core.AbstractReques
   }
 
   public String getPath(){
-    return exchange.getRequestURI().getPath();
+    return exchange.getRequestURI().getPath().replaceFirst(HttpRpcServer.contextPath,"");
   }
 
   public InputStream getInputStream() throws IOException {

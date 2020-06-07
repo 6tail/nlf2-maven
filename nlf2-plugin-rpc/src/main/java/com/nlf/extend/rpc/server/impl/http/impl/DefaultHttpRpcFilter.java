@@ -10,7 +10,7 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 
 /**
- * 默认HttpRpc过滤器
+ * 默认HTTP RPC过滤器
  *
  * @author 6tail
  */
@@ -18,12 +18,10 @@ public class DefaultHttpRpcFilter extends Filter implements IHttpRpcFilter {
 
   @Override
   public String description() {
-    return null;
+    return "Default Http Rpc Filter";
   }
 
-  public void destroy() {
-
-  }
+  public void destroy() {}
 
   @Override
   public void doFilter(HttpExchange exchange, Chain filterChain) throws IOException {

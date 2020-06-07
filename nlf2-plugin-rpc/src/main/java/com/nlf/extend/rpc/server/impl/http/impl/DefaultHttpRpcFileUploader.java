@@ -4,6 +4,7 @@ import com.nlf.App;
 import com.nlf.core.IRequest;
 import com.nlf.core.UploadFile;
 import com.nlf.exception.ValidateException;
+import com.nlf.extend.rpc.server.impl.http.IHttpRpcExchange;
 import com.nlf.extend.rpc.server.impl.http.IHttpRpcFileUploader;
 import com.nlf.extend.rpc.server.impl.http.IHttpRpcRequest;
 import com.nlf.util.*;
@@ -141,7 +142,7 @@ public class DefaultHttpRpcFileUploader implements IHttpRpcFileUploader {
               String key = StringUtil.between(header,KEY_TAG,"\"");
               file.setKey(key);
             }
-            if(header.contains("Content-Type:")){
+            if(header.contains(IHttpRpcExchange.CONTENT_TYPE+":")){
               file.setContentType(StringUtil.right(header,":").trim());
             }
             formItem.setFile(file);
@@ -206,7 +207,7 @@ public class DefaultHttpRpcFileUploader implements IHttpRpcFileUploader {
     List<UploadFile> files = new ArrayList<UploadFile>();
     IHttpRpcRequest r = (IHttpRpcRequest)App.getRequest();
     HttpExchange req = r.getHttpExchange();
-    byte[] boundary = getBoundary(req.getRequestHeaders().getFirst("Content-Type"));
+    byte[] boundary = getBoundary(req.getRequestHeaders().getFirst(IHttpRpcExchange.CONTENT_TYPE));
     if(null==boundary){
       return files;
     }

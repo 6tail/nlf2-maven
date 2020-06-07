@@ -15,10 +15,15 @@ import java.net.InetSocketAddress;
  * @author 6tail
  */
 public class HttpRpcServer extends AbstractRpcServer {
+
+  /** 应用虚拟路径 */
+  public static String contextPath = "/";
+
   public void bind(int port) throws IOException {
+    contextPath = App.getPropertyString("nlf.rpc.server.context","/");
     HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
     server.setExecutor(getExecutor());
-    HttpContext context = server.createContext("/", new HttpRpcHandler());
+    HttpContext context = server.createContext(contextPath, new HttpRpcHandler());
     IHttpRpcFilter filter = App.getProxy().newInstance(App.getImplement(IHttpRpcFilter.class));
     context.getFilters().add((Filter) filter);
     server.start();

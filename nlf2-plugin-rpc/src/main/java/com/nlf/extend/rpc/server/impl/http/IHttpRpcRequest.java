@@ -1,10 +1,11 @@
 package com.nlf.extend.rpc.server.impl.http;
 
 import com.nlf.core.IHttpRequest;
-import com.sun.net.httpserver.HttpExchange;
 
-public interface IHttpRpcRequest extends IHttpRequest {
+/**
+ * HTTP RPC请求接口
+ * @author 6tail
+ */
+public interface IHttpRpcRequest extends IHttpRequest,IHttpRpcExchange {
   void init();
-  void setHttpExchange(HttpExchange exchange);
-  HttpExchange getHttpExchange();
 }

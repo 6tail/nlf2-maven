@@ -3,6 +3,7 @@ package com.nlf.extend.rpc.server.impl.http.impl;
 import com.nlf.App;
 import com.nlf.core.*;
 import com.nlf.extend.rpc.server.impl.http.AbstractHttpRpcRequest;
+import com.nlf.extend.rpc.server.impl.http.IHttpRpcExchange;
 import com.nlf.extend.rpc.server.impl.http.IHttpRpcFileUploader;
 import com.nlf.log.Logger;
 import com.nlf.util.StringUtil;
@@ -24,7 +25,7 @@ import java.util.*;
 public class DefaultHttpRpcRequest extends AbstractHttpRpcRequest {
 
   protected String getIP(){
-    String r = exchange.getRemoteAddress().getHostName();
+    String r = exchange.getRemoteAddress().getAddress().getHostAddress();
     out:for(String k:exchange.getRequestHeaders().keySet()) {
       for (String s : PROXY_HEADER) {
         if (s.equalsIgnoreCase(k)) {
@@ -59,7 +60,7 @@ public class DefaultHttpRpcRequest extends AbstractHttpRpcRequest {
     }catch(IOException e){
       throw new RuntimeException(e);
     }
-    String contentType = exchange.getRequestHeaders().getFirst("Content-Type");
+    String contentType = exchange.getRequestHeaders().getFirst(IHttpRpcExchange.CONTENT_TYPE);
     if(null!=contentType&&contentType.contains(MULTIPART_TAG)){
       IFileUploader uploader = App.getProxy().newInstance(IHttpRpcFileUploader.class.getName());
       List<UploadFile> files = uploader.getFiles();
@@ -159,7 +160,7 @@ public class DefaultHttpRpcRequest extends AbstractHttpRpcRequest {
     if(null==client){
       client = new Client();
       client.setIp(getIP());
-      String al = exchange.getRequestHeaders().getFirst("Accept-Language");
+      String al = exchange.getRequestHeaders().getFirst(IHttpRpcExchange.ACCEPT_LANGUAGE);
       if(null==al){
         client.setLocale(Locale.getDefault());
       }else{
