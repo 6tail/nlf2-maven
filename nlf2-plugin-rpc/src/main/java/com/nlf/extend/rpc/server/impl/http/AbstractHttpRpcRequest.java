@@ -1,6 +1,7 @@
 package com.nlf.extend.rpc.server.impl.http;
 
 import com.nlf.util.InputStreamCache;
+import com.nlf.util.Strings;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
@@ -26,7 +27,11 @@ public abstract class AbstractHttpRpcRequest extends com.nlf.core.AbstractReques
   }
 
   public String getPath(){
-    return exchange.getRequestURI().getPath().replaceFirst(HttpRpcServer.contextPath,"");
+    String path = exchange.getRequestURI().getPath().replaceFirst(HttpRpcServer.contextPath,"");
+    if(!path.startsWith(Strings.SLASH_LEFT)){
+      path = Strings.SLASH_LEFT+path;
+    }
+    return path;
   }
 
   public InputStream getInputStream() throws IOException {
