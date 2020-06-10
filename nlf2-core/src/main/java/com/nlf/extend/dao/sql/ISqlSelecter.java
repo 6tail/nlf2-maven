@@ -1,18 +1,25 @@
 package com.nlf.extend.dao.sql;
 
-import java.util.Iterator;
-import java.util.List;
 import com.nlf.Bean;
 import com.nlf.dao.exception.DaoException;
 import com.nlf.dao.paging.PageData;
 
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * SQL查询器
- * 
+ *
  * @author 6tail
  *
  */
 public interface ISqlSelecter extends ISqlExecuter{
+
+  /**
+   * 获取SQL JOIN封装器
+   * @return JOIN封装器
+   */
+  ISqlJoiner getJoiner();
 
   /**
    * 指定表
@@ -41,7 +48,7 @@ public interface ISqlSelecter extends ISqlExecuter{
 
   /**
    * 当满足条件时指定列
-   * 
+   *
    * @param columns 列名，多列以逗号间隔
    * @param condition 条件是否满足
    * @return SQL查询器
@@ -50,7 +57,7 @@ public interface ISqlSelecter extends ISqlExecuter{
 
   /**
    * 纯SQL语句的where
-   * 
+   *
    * @param sql SQL语句
    * @return SQL查询器
    */
@@ -58,7 +65,7 @@ public interface ISqlSelecter extends ISqlExecuter{
 
   /**
    * 带参数的where
-   * 
+   *
    * @param columnOrSql 列名或SQL语句，SQL语句使用冒号加参数名绑定参数，如(age>:age or name=:name)中:age将绑定到bean中key为age的值，:name将绑定到bean中key为name的值
    * @param valueOrBean 参数值或Bean，Bean用于给多个参数赋值
    * @return SQL查询器
@@ -67,7 +74,7 @@ public interface ISqlSelecter extends ISqlExecuter{
 
   /**
    * 当满足条件时执行where
-   * 
+   *
    * @param sql SQL语句
    * @param condition 条件是否满足
    * @return SQL查询器
@@ -200,7 +207,7 @@ public interface ISqlSelecter extends ISqlExecuter{
 
   /**
    * 查询
-   * 
+   *
    * @return Bean列表
    */
   List<Bean> query();
@@ -222,7 +229,7 @@ public interface ISqlSelecter extends ISqlExecuter{
 
   /**
    * 获取一条记录，如果未获取到，抛出异常，如果获取到多条记录，返回第一条
-   * 
+   *
    * @return Bean
    * @throws DaoException 数据异常
    */
@@ -243,7 +250,7 @@ public interface ISqlSelecter extends ISqlExecuter{
    * @return 分页
    */
   PageData page(int pageNumber,int pageSize);
-  
+
   /**
    * 全自动分页
    *
