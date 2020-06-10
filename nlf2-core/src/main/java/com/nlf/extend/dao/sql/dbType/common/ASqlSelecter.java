@@ -5,10 +5,7 @@ import com.nlf.Bean;
 import com.nlf.core.IRequest;
 import com.nlf.dao.exception.DaoException;
 import com.nlf.dao.paging.PageData;
-import com.nlf.extend.dao.sql.AbstractSqlExecuter;
-import com.nlf.extend.dao.sql.Condition;
-import com.nlf.extend.dao.sql.ConditionType;
-import com.nlf.extend.dao.sql.ISqlSelecter;
+import com.nlf.extend.dao.sql.*;
 import com.nlf.log.Logger;
 import com.nlf.util.StringUtil;
 
@@ -22,6 +19,17 @@ import java.util.List;
  *
  */
 public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
+
+  protected ISqlJoiner joiner;
+
+  public ISqlJoiner getJoiner(){
+    if(null==joiner){
+      joiner = App.getProxy().newInstance(ISqlJoiner.class.getName());
+      joiner.setSelecter(this);
+    }
+    return joiner;
+  }
+
   public ISqlSelecter table(String tables){
     this.tables.add(tables);
     return this;
@@ -209,10 +217,10 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
     if(count){
       s.append("COUNT(1) NLFCOUNT_");
     }else {
-      s.append(columns.size() < 1 ? "*" : StringUtil.join(columns, ","));
+      s.append(columns.isEmpty() ? "*" : StringUtil.join(columns, ","));
     }
     s.append(" FROM ");
-    s.append(StringUtil.join(tables,","));
+    s.append(buildTables());
     s.append(buildSqlWhere());
     for(int i = 0,j = groupBys.size();i<j;i++){
       s.append(" ");

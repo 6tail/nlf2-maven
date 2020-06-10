@@ -6,6 +6,7 @@ import com.nlf.dao.exception.DaoException;
 import com.nlf.dao.executer.AbstractDaoExecuter;
 import com.nlf.log.Logger;
 import com.nlf.util.IOUtil;
+import com.nlf.util.StringUtil;
 
 import java.sql.*;
 import java.util.*;
@@ -30,6 +31,8 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
   protected List<Condition> havings = new ArrayList<Condition>();
   /** 带名称的变量占位符 */
   protected Pattern namedPlaceHolderPattern = Pattern.compile(":\\w+");
+  /** 提取on的表名 */
+  protected Pattern onPattern = Pattern.compile("\\w+(?=\\.)");
 
   /** 变量占位符 */
   public static final String PLACEHOLDER = "?";
@@ -411,6 +414,94 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
       s.append(i<1?"WHERE":"AND");
       s.append(" ");
       s.append(buildSqlParams(wheres.get(i)));
+    }
+    return s.toString();
+  }
+
+  protected String buildTables(){
+    StringBuilder s = new StringBuilder();
+    Set<String> onAliases = new HashSet<String>();
+    Set<String> existAliases = new HashSet<String>();
+    Map<String,String> joinTables = new HashMap<String, String>(8);
+    Map<String,String> notJoinTables = new HashMap<String, String>(8);
+    Map<String,Set<String>> ons = new HashMap<String, Set<String>>(8);
+    for(String table:tables){
+      if(table.startsWith("*ON ")){
+        Set<String> aliases = new HashSet<String>();
+        Matcher m = onPattern.matcher(table);
+        while(m.find()){
+          String alias = m.group().toUpperCase();
+          aliases.add(alias);
+          onAliases.add(alias);
+        }
+        ons.put(table,aliases);
+      }else if(table.startsWith("*")&&table.contains(" JOIN ")){
+        String name = StringUtil.right(table," JOIN ").toUpperCase();
+        String alias = name;
+        if(name.contains(" AS ")){
+          alias = StringUtil.right(name," AS ");
+        }else if(name.contains(" ")){
+          alias = StringUtil.right(name," ");
+        }
+        alias = alias.trim();
+        joinTables.put(alias,table);
+      }else{
+        String alias = table;
+        if(table.contains(" AS ")){
+          alias = StringUtil.right(table," AS ");
+        }else if(table.contains(" ")){
+          alias = StringUtil.right(table," ");
+        }
+        alias = alias.toUpperCase().trim();
+        existAliases.add(alias);
+        notJoinTables.put(table,alias);
+      }
+    }
+    for(Map.Entry<String,String> entry:notJoinTables.entrySet()){
+      if(!onAliases.contains(entry.getValue())){
+        if(s.length() > 0){
+          s.append(", ");
+        }
+        s.append(entry.getKey());
+      }
+    }
+    for(Map.Entry<String,String> entry:notJoinTables.entrySet()){
+      if(onAliases.contains(entry.getValue())){
+        if(s.length() > 0){
+          s.append(", ");
+        }
+        s.append(entry.getKey());
+      }
+    }
+    while(!ons.isEmpty()) {
+      Set<String> already = new HashSet<String>();
+      for(Map.Entry<String, Set<String>> on : ons.entrySet()) {
+        int notMatched = 0;
+        Set<String> value = on.getValue();
+        for (String alias : value) {
+          if (!existAliases.contains(alias)) {
+            notMatched++;
+          }
+        }
+        if(notMatched>1){
+          continue;
+        }
+        for (String alias : value) {
+          String table = joinTables.remove(alias);
+          if(null!=table) {
+            s.append(" ");
+            s.append(table.substring(1));
+            existAliases.add(alias);
+          }
+        }
+        String key = on.getKey();
+        s.append(" ");
+        s.append(key.substring(1));
+        already.add(key);
+      }
+      for(String key:already) {
+        ons.remove(key);
+      }
     }
     return s.toString();
   }
