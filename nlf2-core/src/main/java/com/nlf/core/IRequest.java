@@ -122,7 +122,7 @@ public interface IRequest extends IFileUploader{
   /**
    * 获取输入流，允许多次调用
    * @return 输入流
-   * @throws IOException
+   * @throws IOException IOException
    */
   InputStream getInputStream() throws IOException;
 }

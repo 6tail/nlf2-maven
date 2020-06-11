@@ -107,7 +107,9 @@ public class DefaultHttpRpcResponse extends AbstractHttpRpcResponse {
   }
 
   public void sendResource(String path, boolean dynamic) throws IOException {
-    path = path.replaceFirst(HttpRpcServer.contextPath,"");
+    if(path.equals(HttpRpcServer.contextPath)||path.startsWith(HttpRpcServer.contextPath+Strings.SLASH_LEFT)){
+      path = path.substring(HttpRpcServer.contextPath.length());
+    }
     while (path.startsWith(Strings.SLASH_LEFT)) {
       path = path.substring(1);
     }

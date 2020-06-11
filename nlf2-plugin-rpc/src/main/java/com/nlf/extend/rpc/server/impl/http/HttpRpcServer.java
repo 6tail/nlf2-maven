@@ -16,11 +16,7 @@ import java.net.InetSocketAddress;
  */
 public class HttpRpcServer extends AbstractRpcServer {
 
-  /** 应用虚拟路径 */
-  public static String contextPath = "/";
-
   public void bind(int port) throws IOException {
-    contextPath = App.getPropertyString("nlf.rpc.server.context","/");
     HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
     server.setExecutor(getExecutor());
     HttpContext context = server.createContext(contextPath, new HttpRpcHandler());

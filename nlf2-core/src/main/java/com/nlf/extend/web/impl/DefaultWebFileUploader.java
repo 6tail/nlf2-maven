@@ -22,7 +22,6 @@ import java.util.List;
  *
  */
 public class DefaultWebFileUploader implements IWebFileUploader{
-  private static final int MIN_TEMP_FILE_NAME_LENGTH = 2;
 
   /**
    * 表单项

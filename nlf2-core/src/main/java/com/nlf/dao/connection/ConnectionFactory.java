@@ -32,6 +32,20 @@ public class ConnectionFactory{
   }
 
   /**
+   * 关闭指定连接
+   * @param alias 别名
+   */
+  public static void close(String alias){
+    Map<String,IConnection> connections = App.get(Statics.CONNECTIONS);
+    if(null!=connections){
+      IConnection conn = connections.get(alias);
+      if(null!=conn&&!conn.isClosed()){
+        conn.close();
+      }
+    }
+  }
+
+  /**
    * 根据别名获取连接
    *
    * @param alias 别名
