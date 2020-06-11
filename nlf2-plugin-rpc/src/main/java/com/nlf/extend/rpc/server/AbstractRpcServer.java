@@ -13,6 +13,10 @@ import java.util.concurrent.TimeUnit;
  * @author 6tail
  */
 public abstract class AbstractRpcServer implements IRpcServer {
+
+  /** 应用虚拟路径 */
+  public static String contextPath = App.getPropertyString("nlf.rpc.server.context","/");
+
   protected ExecutorService getExecutor(){
     int cpu = Runtime.getRuntime().availableProcessors();
     int corePoolSize = cpu * App.getPropertyInt("nlf.rpc.server.thread.core_pool_size",2);

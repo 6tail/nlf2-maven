@@ -4,7 +4,7 @@
 
 # nlf2-plugin-rpc [![License](https://img.shields.io/badge/license-MIT-4EB1BA.svg?style=flat-square)](https://github.com/6tail/nlf2/blob/master/LICENSE)
 
-一款基于nlf2的轻量级工具，用来进行客户端和服务器端的通信。
+一款基于nlf2的轻量级工具，用来进行客户端和服务器端的通信，目前支持http和socket两种方式。
 
 > 支持java 1.5及以上版本。
 
@@ -12,7 +12,7 @@
 
 ## 使用
 
-建议使用[Maven仓库](https://search.maven.org/search?q=nlf2-plugin-rpc)中的nlf2-plugin-rpc v1.8.94版本。
+建议使用[Maven仓库](https://search.maven.org/search?q=nlf2-plugin-rpc)中的nlf2-plugin-rpc v1.8.96版本。
 
 ### 稳定版本
 
@@ -20,13 +20,13 @@
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-core</artifactId>
-  <version>1.8.93</version>
+  <version>1.8.96</version>
 </dependency>
  
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-plugin-rpc</artifactId>
-  <version>1.8.94</version>
+  <version>1.8.96</version>
 </dependency>
 ```
  
@@ -62,7 +62,7 @@
 
 如果使用jar，建议下载最新的SNAPSHOT版本，bug将得到及时的修复。
 
-[下载地址](https://oss.sonatype.org/content/groups/public/cn/6tail/)
+[下载地址](https://github.com/6tail/nlf2-maven/releases)
 
 ## 示例
 

@@ -4,7 +4,7 @@
 
 # nlf2-plugin-rpc [![License](https://img.shields.io/badge/license-MIT-4EB1BA.svg?style=flat-square)](https://github.com/6tail/nlf2/blob/master/LICENSE)
 
-A lightweight tool for client/server communication with nlf2.
+A lightweight tool for client/server communication with nlf2, support http or socket.
 
 > Support since java 1.5
 
@@ -12,7 +12,7 @@ A lightweight tool for client/server communication with nlf2.
 
 ## Usage
 
-I suggest you to use nlf2-plugin-rpc v1.8.94 on [Maven Central](https://search.maven.org/search?q=nlf2-plugin-rpc).
+I suggest you to use nlf2-plugin-rpc v1.8.96 on [Maven Central](https://search.maven.org/search?q=nlf2-plugin-rpc).
 
 ### Release
 
@@ -20,13 +20,13 @@ I suggest you to use nlf2-plugin-rpc v1.8.94 on [Maven Central](https://search.m
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-core</artifactId>
-  <version>1.8.93</version>
+  <version>1.8.96</version>
 </dependency>
  
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-plugin-rpc</artifactId>
-  <version>1.8.94</version>
+  <version>1.8.96</version>
 </dependency>
 ```
  
@@ -62,7 +62,7 @@ I suggest you to use nlf2-plugin-rpc v1.8.94 on [Maven Central](https://search.m
 
 If you will use jars in your projects, I suggest you to download latest snapshot versions with less bugs.
 
-[Download](https://oss.sonatype.org/content/groups/public/cn/6tail/)
+[Download](https://github.com/6tail/nlf2-maven/releases)
 
 ## Example
 

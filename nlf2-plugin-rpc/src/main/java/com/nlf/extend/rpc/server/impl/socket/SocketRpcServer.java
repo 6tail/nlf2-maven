@@ -1,5 +1,6 @@
 package com.nlf.extend.rpc.server.impl.socket;
 
+import com.nlf.App;
 import com.nlf.extend.rpc.server.AbstractRpcServer;
 
 import java.io.IOException;
@@ -25,6 +26,8 @@ public class SocketRpcServer extends AbstractRpcServer implements Runnable {
   }
 
   public void run() {
+    ISocketRpcFilter filter = App.getProxy().newInstance(ISocketRpcFilter.class.getName());
+    filter.init();
     while (Thread.currentThread().isAlive()) {
       Socket socket;
       try {
