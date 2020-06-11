@@ -14,6 +14,7 @@ import java.io.InputStream;
 public class InputStreamCache{
   /** 缓存输出流 */
   private ByteArrayOutputStream cachedStream;
+  private long size = 0;
 
   public InputStreamCache(InputStream inputStream) throws IOException{
     if(null==inputStream){
@@ -24,8 +25,13 @@ public class InputStreamCache{
     int l;
     while(-1!=(l = inputStream.read(buffer))){
       cachedStream.write(buffer,0,l);
+      size += l;
     }
     cachedStream.flush();
+  }
+
+  public long getSize(){
+    return size;
   }
 
   /**
