@@ -13,6 +13,10 @@
     <version>1.8.9-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <properties>
+        <project.root>${basedir}/..</project.root>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>cn.6tail</groupId>
