@@ -12,6 +12,11 @@
     <artifactId>nlf2-plugin-wechat</artifactId>
     <version>1.8.93</version>
     <packaging>jar</packaging>
+
+    <properties>
+        <project.root>${basedir}/..</project.root>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>cn.6tail</groupId>

@@ -5,21 +5,23 @@
     <parent>
         <artifactId>nlf2</artifactId>
         <groupId>cn.6tail</groupId>
-        <version>1.8.9</version>
+        <version>1.8.9-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>nlf2-plugin-properties-db</artifactId>
-    <version>1.8.93</version>
-
+    <version>1.8.9-SNAPSHOT</version>
     <packaging>jar</packaging>
+
+    <properties>
+        <project.root>${basedir}/..</project.root>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>cn.6tail</groupId>
             <artifactId>nlf2-core</artifactId>
-            <version>1.8.93</version>
-            <scope>provided</scope>
+            <version>1.8.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

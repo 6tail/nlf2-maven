@@ -64,6 +64,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sourceEncoding>UTF-8</sourceEncoding>
+        <project.root>${basedir}</project.root>
     </properties>
 
     <dependencies>
@@ -154,6 +155,16 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <finalName>${project.artifactId}-${project.version}</finalName>
+                    <descriptors>
+                        <descriptor>${project.root}/src/assembly/assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
             </plugin>
         </plugins>
         <finalName>${project.artifactId}-${project.version}</finalName>
