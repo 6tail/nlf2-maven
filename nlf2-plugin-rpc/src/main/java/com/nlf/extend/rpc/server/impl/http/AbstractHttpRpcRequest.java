@@ -1,5 +1,7 @@
 package com.nlf.extend.rpc.server.impl.http;
 
+import com.nlf.core.Statics;
+import com.nlf.util.IOUtil;
 import com.nlf.util.InputStreamCache;
 import com.nlf.util.Strings;
 import com.sun.net.httpserver.HttpExchange;
@@ -42,5 +44,14 @@ public abstract class AbstractHttpRpcRequest extends com.nlf.core.AbstractReques
       inputStreamCache = new InputStreamCache(exchange.getRequestBody());
     }
     return inputStreamCache.getInputStream();
+  }
+
+  public String getBodyString(){
+    String body = "";
+    try {
+      body = new String(IOUtil.toBytes(getInputStream()), Statics.ENCODE);
+    }catch(IOException ignore){
+    }
+    return body;
   }
 }

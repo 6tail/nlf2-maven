@@ -1,5 +1,7 @@
 package com.nlf.extend.web;
 
+import com.nlf.core.Statics;
+import com.nlf.util.IOUtil;
 import com.nlf.util.InputStreamCache;
 
 import javax.servlet.RequestDispatcher;
@@ -49,5 +51,14 @@ public abstract class AbstractWebRequest extends com.nlf.core.AbstractRequest im
       inputStreamCache = new InputStreamCache(servletRequest.getInputStream());
     }
     return inputStreamCache.getInputStream();
+  }
+
+  public String getBodyString(){
+    String body = "";
+    try {
+      body = new String(IOUtil.toBytes(getInputStream()), Statics.ENCODE);
+    }catch(IOException ignore){
+    }
+    return body;
   }
 }

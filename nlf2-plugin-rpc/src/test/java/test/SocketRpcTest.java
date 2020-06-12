@@ -17,7 +17,7 @@ public class SocketRpcTest {
 
     Map<String,String> args = new HashMap<String,String>();
     args.put("name","张三");
-    IRpcResponse response = RpcFactory.getClient("socket").call("localhost",port,"/test/action.Say/hello",args);
+    IRpcResponse response = RpcFactory.getClient("socket").call("localhost",port,"/test/action.Say/hello",args,"{name:'张三',age:12}");
     if(response.isSuccess()){
       System.out.println(response.getData());
     }else{
