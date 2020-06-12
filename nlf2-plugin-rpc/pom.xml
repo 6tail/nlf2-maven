@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>nlf2-plugin-rpc</artifactId>
-    <version>1.8.96</version>
+    <version>1.8.97</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>cn.6tail</groupId>
             <artifactId>nlf2-core</artifactId>
-            <version>1.8.96</version>
+            <version>1.8.97</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
