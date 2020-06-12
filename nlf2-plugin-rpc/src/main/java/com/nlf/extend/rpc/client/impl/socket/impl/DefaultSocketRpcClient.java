@@ -60,7 +60,7 @@ public class DefaultSocketRpcClient extends AbstractSocketRpcClient {
     return response;
   }
 
-  public IRpcResponse call(String host, int port, String path, Map<String, String> args, File... file) {
+  public IRpcResponse call(String host, int port, String path, Map<String, String> args, String body, File... file) {
     Socket socket = null;
     DataInputStream in = null;
     DataOutputStream out = null;
@@ -87,6 +87,11 @@ public class DefaultSocketRpcClient extends AbstractSocketRpcClient {
           out.writeShort(TYPE_PARAM_VALUE);
           out.writeUTF(entry.getValue());
         }
+      }
+
+      if(null!=body&&body.length()>0){
+        out.writeShort(TYPE_BODY);
+        out.writeUTF(body);
       }
 
       byte[] buffer = null;

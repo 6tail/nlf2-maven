@@ -1,5 +1,6 @@
 package com.nlf.core;
 
+import com.nlf.Bean;
 import com.nlf.exception.ValidateException;
 
 import java.io.IOException;
@@ -47,6 +48,28 @@ public interface IRequest extends IFileUploader{
    * @return 请求参数
    */
   com.nlf.Bean getParam();
+
+  /**
+   * 获取请求体字符串
+   *
+   * @return 请求体字符串
+   */
+  String getBodyString();
+
+  /**
+   * 获取请求体转换的Bean，使用默认数据格式
+   *
+   * @return 请求体转换为Bean
+   */
+  Bean getBody();
+
+  /**
+   * 获取请求体转换的Bean
+   *
+   * @param format 数据格式，如json/xml等
+   * @return 请求体转换为Bean
+   */
+  Bean getBody(String format);
 
   /**
    * 获取请求参数值

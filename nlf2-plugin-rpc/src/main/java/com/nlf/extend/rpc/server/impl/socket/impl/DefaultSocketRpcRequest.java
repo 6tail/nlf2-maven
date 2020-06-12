@@ -23,6 +23,8 @@ import java.util.*;
  */
 public class DefaultSocketRpcRequest extends AbstractSocketRpcRequest {
 
+  /** 数据体 */
+  protected String body = "";
   protected ISocketRpcFileUploader uploader = App.getProxy().newInstance(ISocketRpcFileUploader.class.getName());
 
   protected String getIp(){
@@ -98,6 +100,9 @@ public class DefaultSocketRpcRequest extends AbstractSocketRpcRequest {
           case TYPE_FILE_DATA:
             uploader.parseFile(fileName,fileSize,in);
             break;
+          case TYPE_BODY:
+            body = in.readUTF();
+            break;
           default:
         }
         type = in.readShort();
@@ -163,5 +168,9 @@ public class DefaultSocketRpcRequest extends AbstractSocketRpcRequest {
 
   public List<UploadFile> getFiles(){
     return uploader.getFiles();
+  }
+
+  public String getBodyString(){
+    return null==body?"":body;
   }
 }

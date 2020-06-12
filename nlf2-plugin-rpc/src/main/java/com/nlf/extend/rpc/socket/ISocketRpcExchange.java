@@ -41,4 +41,7 @@ public interface ISocketRpcExchange {
 
   /** 类型：json字符串 */
   short TYPE_JSON = 8;
+
+  /** 类型：数据体 */
+  short TYPE_BODY = 9;
 }

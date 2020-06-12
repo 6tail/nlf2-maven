@@ -2,7 +2,10 @@ package com.nlf.core;
 
 import com.nlf.App;
 import com.nlf.Bean;
+import com.nlf.log.Logger;
+import com.nlf.serialize.ConvertFactory;
 import com.nlf.util.StringUtil;
+import com.nlf.util.Strings;
 
 /**
  * 抽象请求
@@ -110,5 +113,23 @@ public abstract class AbstractRequest implements IRequest{
       validator.validate(name,value,rules);
     }
     return array;
+  }
+
+  public Bean getBody() {
+    return getBody(Strings.JSON);
+  }
+
+  public Bean getBody(String format){
+    String body = getBodyString();
+    Bean ret = null;
+    try{
+      ret = ConvertFactory.getParser(format).parse(body);
+    }catch(Exception e){
+      Logger.getLog().warn(App.getProperty("nlf.serialize.format",body));
+    }
+    if(null==ret){
+      ret = new Bean();
+    }
+    return ret;
   }
 }

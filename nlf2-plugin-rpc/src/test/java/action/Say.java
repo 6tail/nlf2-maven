@@ -11,6 +11,8 @@ public class Say {
     System.out.println("name="+name);
     System.out.println("ip="+r.getClient().getIp());
     System.out.println("locale="+r.getClient().getLocale());
+    System.out.println(r.getBodyString());
+    System.out.println(r.getBody());
     return View.json(name+"，你好");
   }
 }
