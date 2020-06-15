@@ -14,6 +14,7 @@ import java.util.Iterator;
  *
  */
 public class ModelIterator<M extends Model> implements Iterator<M>{
+  private Model model;
   private Class<M> klass;
   /** 结果集 */
   private ResultSet rs;
@@ -22,8 +23,9 @@ public class ModelIterator<M extends Model> implements Iterator<M>{
   /** 是否还有记录 */
   private boolean hasNext;
 
-  public ModelIterator(Class<M> klass, ResultSet rs){
+  public ModelIterator(Class<M> klass, Model model, ResultSet rs){
     this.klass = klass;
+    this.model = model;
     this.rs = rs;
   }
 
@@ -41,6 +43,7 @@ public class ModelIterator<M extends Model> implements Iterator<M>{
     return hasNext;
   }
 
+  @SuppressWarnings("unchecked")
   public M next(){
     if(!calledHasNext){
       hasNext();
@@ -50,7 +53,7 @@ public class ModelIterator<M extends Model> implements Iterator<M>{
       int columnCount = rsmd.getColumnCount();
       Bean o = new Bean();
       for(int i = 0;i<columnCount;i++){
-        o.set(rsmd.getColumnName(i+1),rs.getObject(i+1));
+        o.set(model.decode(rsmd.getColumnName(i+1)),rs.getObject(i+1));
       }
       Model m = o.toObject(klass);
       return (M)m;

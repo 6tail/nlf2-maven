@@ -5,12 +5,12 @@
     <parent>
         <artifactId>nlf2</artifactId>
         <groupId>cn.6tail</groupId>
-        <version>1.8.9</version>
+        <version>1.8.9-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>nlf-plugin-model</artifactId>
-    <version>1.8.95</version>
+    <artifactId>nlf2-plugin-model</artifactId>
+    <version>1.8.9-SNAPSHOT</version>
 
     <properties>
         <project.root>${basedir}/..</project.root>
@@ -20,8 +20,14 @@
         <dependency>
             <groupId>cn.6tail</groupId>
             <artifactId>nlf2-core</artifactId>
-            <version>1.8.94</version>
+            <version>1.8.9-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.6</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
