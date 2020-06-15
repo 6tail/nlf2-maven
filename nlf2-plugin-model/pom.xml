@@ -5,12 +5,12 @@
     <parent>
         <artifactId>nlf2</artifactId>
         <groupId>cn.6tail</groupId>
-        <version>1.8.9-SNAPSHOT</version>
+        <version>1.8.9</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>nlf2-plugin-model</artifactId>
-    <version>1.8.9-SNAPSHOT</version>
+    <version>1.8.95</version>
 
     <properties>
         <project.root>${basedir}/..</project.root>
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>cn.6tail</groupId>
             <artifactId>nlf2-core</artifactId>
-            <version>1.8.9-SNAPSHOT</version>
+            <version>1.8.95</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
