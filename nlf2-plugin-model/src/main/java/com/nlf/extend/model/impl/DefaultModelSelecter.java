@@ -6,6 +6,7 @@ import com.nlf.core.IRequest;
 import com.nlf.dao.exception.DaoException;
 import com.nlf.dao.paging.PageData;
 import com.nlf.dao.transaction.ITransaction;
+import com.nlf.extend.dao.sql.ISqlDao;
 import com.nlf.extend.dao.sql.ISqlSelecter;
 import com.nlf.extend.dao.sql.SqlConnection;
 import com.nlf.extend.dao.sql.SqlDaoFactory;
@@ -32,7 +33,9 @@ public class DefaultModelSelecter<M extends Model> implements IModelSelecter<M>{
 
   public DefaultModelSelecter(Model model){
     this.model = model;
-    selecter = SqlDaoFactory.getDao().getSelecter().table(model.tableName());
+    String alias = model.alias();
+    ISqlDao dao = (null==alias)?SqlDaoFactory.getDao():SqlDaoFactory.getDao(alias);
+    selecter = dao.getSelecter().table(model.tableName());
   }
 
   public IModelSelecter<M> column(String columns) {
@@ -159,6 +162,9 @@ public class DefaultModelSelecter<M extends Model> implements IModelSelecter<M>{
     PageData pd = selecter.page(pageNumber,pageSize);
     List<M> l = new ArrayList<M>(pd.getSize());
     for(Bean o:pd){
+      for(String key:o.keySet()){
+        o.set(model.decode(key),o.get(key));
+      }
       try {
         l.add((M)o.toObject(model.getClass()));
       } catch (Exception e) {
@@ -191,7 +197,9 @@ public class DefaultModelSelecter<M extends Model> implements IModelSelecter<M>{
 
   @SuppressWarnings("unchecked")
   public Iterator<M> iterator() {
-    ITransaction t = SqlDaoFactory.getDao().beginTransaction();
+    String alias = model.alias();
+    ISqlDao dao = (null==alias)?SqlDaoFactory.getDao():SqlDaoFactory.getDao(alias);
+    ITransaction t = dao.beginTransaction();
     SqlConnection connection = (SqlConnection)t.getConnection();
     Iterator<M> iterator = null;
     PreparedStatement stmt = null;
@@ -200,7 +208,7 @@ public class DefaultModelSelecter<M extends Model> implements IModelSelecter<M>{
       stmt = connection.getConnection().prepareStatement(selecter.getSql());
       bindParams(stmt);
       rs = stmt.executeQuery();
-      iterator = new ModelIterator(model.getClass(),rs);
+      iterator = new ModelIterator(model.getClass(),model,rs);
     }catch(SQLException e){
       IOUtil.closeQuietly(stmt);
       throw new DaoException(e);
@@ -213,6 +221,9 @@ public class DefaultModelSelecter<M extends Model> implements IModelSelecter<M>{
     List<Bean> l = selecter.query();
     List<M> ret = new ArrayList<M>(l.size());
     for(Bean o:l){
+      for(String key:o.keySet()){
+        o.set(model.decode(key),o.get(key));
+      }
       try {
         Model m = o.toObject(model.getClass());
         ret.add((M)m);

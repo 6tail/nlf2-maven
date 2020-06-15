@@ -46,13 +46,13 @@
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-core</artifactId>
-  <version>1.8.8-SNAPSHOT</version>
+  <version>1.8.9-SNAPSHOT</version>
 </dependency>
  
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-plugin-model</artifactId>
-  <version>1.8.8-SNAPSHOT</version>
+  <version>1.8.9-SNAPSHOT</version>
 </dependency>
 ```
 

@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>nlf-plugin-model</artifactId>
+    <artifactId>nlf2-plugin-model</artifactId>
     <version>1.8.9-SNAPSHOT</version>
 
     <properties>
@@ -22,6 +22,12 @@
             <artifactId>nlf2-core</artifactId>
             <version>1.8.9-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.6</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
