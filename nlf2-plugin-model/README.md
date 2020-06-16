@@ -10,7 +10,7 @@
 
 ## 使用
 
-建议使用[Maven仓库](https://search.maven.org/search?q=nlf2-plugin-model)中的nlf2-plugin-model v1.8.95版本。
+建议使用[Maven仓库](https://search.maven.org/search?q=nlf2-plugin-model)中的nlf2-plugin-model v1.8.96版本。
 
 ### 稳定版本
 
@@ -24,7 +24,7 @@
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-plugin-model</artifactId>
-  <version>1.8.95</version>
+  <version>1.8.96</version>
 </dependency>
 ```
  

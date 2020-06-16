@@ -84,7 +84,7 @@ public class UserTest {
     User user = new User();
 
     //不存在该ID的记录时保存可插入数据
-    user.setId(17);
+    user.setId(21);
     user.setName("李四");
     user.setLoverName("王二");
     user.save();
@@ -104,11 +104,12 @@ public class UserTest {
     user.load();
 
     //修改姓名
-    user.setName("李四17");
+    user.setId(28);
+    user.setName("李四2");
     user.save();
 
     //当再次修改为相同的姓名时，实际并不会执行update语句
-    user.setName("李四17");
+    user.setName("李四2");
     user.save();
   }
 
@@ -120,10 +121,14 @@ public class UserTest {
     User user = new User();
 
     //数据库已存在ID为17的记录时，先不加载即可全量更新字段
-    user.setId(17);
+    user.setId(28);
 
     user.setName("李四18");
     user.setTime(new Date());
+    user.save();
+
+    //刚刚已更新过，则增量更新
+    user.setName("李四2");
     user.save();
   }
 }

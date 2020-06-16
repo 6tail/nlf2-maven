@@ -153,6 +153,9 @@ public class Model<M extends Model> extends AbstractBean{
     return autoIncrement;
   }
 
+  /**
+   * delete
+   */
   public void delete(){
     Bean param = JSON.toBean(JSON.fromObject(this));
     ISqlDao dao = (null==alias)?SqlDaoFactory.getDao():SqlDaoFactory.getDao(alias);
@@ -163,101 +166,122 @@ public class Model<M extends Model> extends AbstractBean{
     deleter.delete();
   }
 
+  /**
+   * auto insert or update
+   */
   public void save(){
-    Bean param = JSON.toBean(JSON.fromObject(this));
-    if(param.isEmpty()){
+    Bean record = JSON.toBean(JSON.fromObject(this));
+    if(record.isEmpty()){
       return;
     }
     Set<String> needEncode = new HashSet<String>();
-    for(String key:param.keySet()){
+    for(String key:record.keySet()){
       if(!encode(key).equals(key)){
         needEncode.add(key);
       }
     }
     for(String key:needEncode){
-      param.set(encode(key), param.get(key));
-      param.remove(key);
+      record.set(encode(key), record.get(key));
+      record.remove(key);
     }
-    boolean insert = false;
-    for(String key:primaryKeys){
-      //如果自增长的主键赋值为<1的，肯定是insert
-      if(key.equals(autoIncrement)){
-        if(param.getLong(key, 0) < 1){
-          insert = true;
+    //操作类型：0-unknown，1-insert，2-增量更新，3-全量更新
+    int type = 0;
+    if(null!=cache){
+      type = 2;
+    }else{
+      for(String key : primaryKeys){
+        if(record.getString(key, "").length() < 1){
+          //如果有主键未赋值，肯定是insert
+          type = 1;
           break;
         }
-      }else if (param.getString(key, "").length() < 1){
-        //如果主键未赋值，肯定是insert
-        insert = true;
-        break;
       }
     }
     ISqlDao dao = (null==alias)?SqlDaoFactory.getDao():SqlDaoFactory.getDao(alias);
-    //如果是update，先检查是否存在记录，如果不存在，更改为insert
-    if(!insert){
+    //如果还不能确定，则检查数据库是否已存在该记录
+    if(0==type){
       ISqlSelecter selecter = dao.getSelecter().table(tableName);
       for(String key : primaryKeys){
-        selecter.where(key, param.get(decode(key)));
+        selecter.where(key, record.get(key));
       }
-      insert = selecter.count()<1;
+      type = selecter.count()>0?3:1;
     }
-    if (insert){
-      if (null == autoIncrement){
-        //未设置自增字段，直接insert
-        dao.getInserter().table(tableName).set(param).insert();
-      } else{
-        param.remove(autoIncrement);
-        Bean ret = dao.getInserter().table(tableName).set(param).insertAndGetGenerated();
-        if(!ret.isEmpty()){
-          try{
-            String autoIncrementProperty = decode(autoIncrement);
-            BeanInfo info = Introspector.getBeanInfo(this.getClass(), Object.class);
-            PropertyDescriptor[] props = info.getPropertyDescriptors();
-            for(PropertyDescriptor p : props){
-              if(!p.getName().equals(autoIncrementProperty)){
-                continue;
+    Bean temp;
+    switch(type){
+      case 1:
+        //insert
+        if(null==autoIncrement||record.getString(autoIncrement,"").length()>0){
+          dao.getInserter().table(tableName).set(record).insert();
+        }else{
+          record.remove(autoIncrement);
+          Bean ret = dao.getInserter().table(tableName).set(record).insertAndGetGenerated();
+          if(!ret.isEmpty()){
+            try{
+              String property = decode(autoIncrement);
+              BeanInfo info = Introspector.getBeanInfo(this.getClass(), Object.class);
+              PropertyDescriptor[] props = info.getPropertyDescriptors();
+              for(PropertyDescriptor p : props){
+                if(!p.getName().equals(property)){
+                  continue;
+                }
+                Method setter = p.getWriteMethod();
+                if(null == setter){
+                  continue;
+                }
+                Object value = convert(ret.get("GENERATED_KEY"), p.getPropertyType(), setter.getGenericParameterTypes()[0]);
+                setter.invoke(this, value);
+                break;
               }
-              Method setter = p.getWriteMethod();
-              if(null == setter){
-                continue;
-              }
-              Object value = convert(ret.get("GENERATED_KEY"), p.getPropertyType(), setter.getGenericParameterTypes()[0]);
-              setter.invoke(this, value);
-              break;
-            }
-          } catch (Exception ignore){
+            }catch(Exception ignore){}
           }
         }
-      }
-    }else{
-      if(null != cache){
-        for(String property : cache.keySet()){
+        break;
+      case 2:
+        //增量更新
+        temp = new Bean();
+        for(String property:cache.keySet()){
+          temp.set(property,cache.get(property));
+        }
+        for(String property:cache.keySet()){
           String field = encode(property);
           String cacheValue = cache.getString(property, "");
-          String value = param.getString(field, "");
+          String value = record.getString(field, "");
           if(cacheValue.equals(value)){
-            if(!primaryKeys.contains(field)) {
-              param.remove(field);
-            }
-          } else{
-            cache.set(property, param.get(field));
+            record.remove(field);
+          }else{
+            temp.set(property, record.get(field));
           }
         }
-      }
-
-      ISqlUpdater updater = dao.getUpdater().table(tableName);
-      for(String key : primaryKeys){
-        updater.where(key, param.get(key));
-      }
-      for(String key : primaryKeys){
-        param.remove(key);
-      }
-      if(!param.isEmpty()){
-        updater.set(param).update();
-      }
+        if(!record.isEmpty()){
+          ISqlUpdater updater = dao.getUpdater().table(tableName);
+          for(String key:primaryKeys){
+            updater.where(key, cache.get(decode(key)));
+          }
+          updater.set(record).update();
+          cache = temp;
+        }
+        break;
+      case 3:
+        //全量更新
+        temp = new Bean();
+        for(String field:record.keySet()){
+          temp.set(decode(field),record.get(field));
+        }
+        ISqlUpdater updater = dao.getUpdater().table(tableName);
+        for(String key:primaryKeys){
+          updater.where(key, record.get(key));
+          record.remove(key);
+        }
+        updater.set(record).update();
+        cache = temp;
+        break;
+      default:
     }
   }
 
+  /**
+   * 通过主键加载
+   */
   @SuppressWarnings("unchecked")
   public void load(){
     Bean param = JSON.toBean(JSON.fromObject(this));

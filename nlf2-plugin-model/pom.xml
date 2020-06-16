@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>nlf2-plugin-model</artifactId>
-    <version>1.8.95</version>
+    <version>1.8.96</version>
 
     <properties>
         <project.root>${basedir}/..</project.root>
