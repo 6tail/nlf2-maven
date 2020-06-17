@@ -65,6 +65,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sourceEncoding>UTF-8</sourceEncoding>
         <project.root>${basedir}</project.root>
+        <creator>6tail</creator>
     </properties>
 
     <dependencies>
@@ -108,6 +109,19 @@
                     <source>1.5</source>
                     <target>1.5</target>
                     <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Created-By>${creator}</Created-By>
+                            <Built-By>${creator}</Built-By>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
             <plugin>
@@ -164,6 +178,12 @@
                     <descriptors>
                         <descriptor>${project.root}/src/assembly/assembly.xml</descriptor>
                     </descriptors>
+                    <archive>
+                        <manifestEntries>
+                            <Created-By>${creator}</Created-By>
+                            <Built-By>${creator}</Built-By>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
