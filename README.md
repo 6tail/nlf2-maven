@@ -20,7 +20,7 @@ I suggest you to use nlf2-core v1.8.96 on [Maven Central](http://search.maven.or
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-core</artifactId>
-  <version>1.8.96</version>
+  <version>1.8.98</version>
 </dependency>
 ```
  
