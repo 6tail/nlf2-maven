@@ -7,7 +7,6 @@ import com.nlf.dao.exception.DaoException;
 import com.nlf.dao.paging.PageData;
 import com.nlf.extend.dao.sql.*;
 import com.nlf.log.Logger;
-import com.nlf.util.StringUtil;
 
 import java.util.Iterator;
 import java.util.List;
@@ -43,7 +42,9 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
   }
 
   public ISqlSelecter column(String columns){
-    this.columns.add(columns);
+    Condition cond = new Condition();
+    cond.setColumn(columns);
+    this.columns.add(cond);
     return this;
   }
 
@@ -217,7 +218,16 @@ public class ASqlSelecter extends AbstractSqlExecuter implements ISqlSelecter{
     if(count){
       s.append("COUNT(1) NLFCOUNT_");
     }else {
-      s.append(columns.isEmpty() ? "*" : StringUtil.join(columns, ","));
+      if(columns.isEmpty()){
+        s.append("*");
+      }else{
+        for(int i=0,j=columns.size();i<j;i++){
+          if(i>0){
+            s.append(",");
+          }
+          s.append(columns.get(i).getColumn());
+        }
+      }
     }
     s.append(" FROM ");
     s.append(buildTables());

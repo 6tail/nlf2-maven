@@ -6,9 +6,6 @@ import com.nlf.extend.dao.sql.Condition;
 import com.nlf.extend.dao.sql.ISqlInserter;
 import com.nlf.util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * SQL插入器的默认实现
  *
@@ -16,7 +13,6 @@ import java.util.List;
  *
  */
 public class ASqlInserter extends AbstractSqlExecuter implements ISqlInserter{
-  protected List<Condition> columns = new ArrayList<Condition>();
 
   public ISqlInserter table(String tables){
     this.tables.add(tables);

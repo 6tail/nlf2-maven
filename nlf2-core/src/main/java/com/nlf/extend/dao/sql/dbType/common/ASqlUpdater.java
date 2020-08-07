@@ -1,20 +1,20 @@
 package com.nlf.extend.dao.sql.dbType.common;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.nlf.Bean;
-import com.nlf.extend.dao.sql.*;
+import com.nlf.extend.dao.sql.AbstractSqlExecuter;
+import com.nlf.extend.dao.sql.Condition;
+import com.nlf.extend.dao.sql.ConditionType;
+import com.nlf.extend.dao.sql.ISqlUpdater;
 import com.nlf.util.StringUtil;
 
 /**
  * SQL更新器的默认实现
- * 
+ *
  * @author 6tail
  *
  */
 public class ASqlUpdater extends AbstractSqlExecuter implements ISqlUpdater{
-  protected List<Condition> columns = new ArrayList<Condition>();
-  
+
   public ISqlUpdater table(String tables){
     this.tables.add(tables);
     return this;

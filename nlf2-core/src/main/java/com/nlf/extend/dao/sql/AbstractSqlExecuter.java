@@ -24,16 +24,21 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
   /** 最近一次操作的参数列表 */
   protected List<Object> params = new ArrayList<Object>();
   protected List<String> tables = new ArrayList<String>();
-  protected List<String> columns = new ArrayList<String>();
+  protected List<Condition> columns = new ArrayList<Condition>();
   protected List<String> groupBys = new ArrayList<String>();
   protected List<String> sorts = new ArrayList<String>();
   protected List<Condition> wheres = new ArrayList<Condition>();
   protected List<Condition> havings = new ArrayList<Condition>();
   /** 带名称的变量占位符 */
-  protected Pattern namedPlaceHolderPattern = Pattern.compile(":\\w+");
+  protected static Pattern namedPlaceHolderPattern = Pattern.compile(":\\w+");
   /** 提取on的表名 */
-  protected Pattern onPattern = Pattern.compile("\\w+(?=\\.)");
-
+  protected static Pattern onPattern = Pattern.compile("\\w+(?=\\.)");
+  /** 变量排序器 */
+  protected static Comparator<String> keyComparator = new Comparator<String>(){
+    public int compare(String a,String b){
+      return b.length()-a.length();
+    }
+  };
   /** 变量占位符 */
   public static final String PLACEHOLDER = "?";
   /** 变量占位符正则 */
@@ -60,11 +65,11 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
 
   protected List<Bean> toBeans(ResultSet rs) throws SQLException{
     List<Bean> l = new ArrayList<Bean>();
+    ResultSetMetaData md = rs.getMetaData();
     while(rs.next()){
-      ResultSetMetaData rsmd = rs.getMetaData();
       Bean o = new Bean();
-      for(int i = 1,j = rsmd.getColumnCount();i<=j;i++){
-        o.set(rsmd.getColumnLabel(i),rs.getObject(i));
+      for(int i = 1,j = md.getColumnCount();i<=j;i++){
+        o.set(md.getColumnLabel(i),rs.getObject(i));
       }
       l.add(o);
     }
@@ -79,8 +84,7 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
     PreparedStatement stmt = null;
     ResultSet rs = null;
     try{
-      stmt = ((SqlConnection)connection).getConnection().prepareStatement(sql);
-      bindParams(stmt);
+      stmt = prepareStatement((SqlConnection)connection);
       rs = stmt.executeQuery();
       if(row>0){
         rs.absolute(row);
@@ -98,8 +102,7 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
     PreparedStatement stmt = null;
     ResultSet rs = null;
     try{
-      stmt = ((SqlConnection)connection).getConnection().prepareStatement(sql);
-      bindParams(stmt);
+      stmt = prepareStatement((SqlConnection)connection);
       rs = stmt.executeQuery();
       iterator = new ResultSetIterator(rs);
     }catch(SQLException e){
@@ -155,11 +158,7 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
       params.add(o.get(key.substring(1)));
     }
     //排序，让更长的变量名先替换，如果存在包含关系的变量名，先替换短的会出问题，如:name、:names
-    Collections.sort(keys,new Comparator<String>(){
-      public int compare(String a,String b){
-        return b.length()-a.length();
-      }
-    });
+    Collections.sort(keys,keyComparator);
     //将变量替换为占位符
     String newSql = sql;
     for(String key:keys){
@@ -200,13 +199,7 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
   }
 
   protected Condition buildPureSqlCondition(String sql){
-    Condition cond = new Condition();
-    cond.setColumn(sql);
-    cond.setStart("");
-    cond.setPlaceholder("");
-    cond.setEnd("");
-    cond.setType(ConditionType.pure_sql);
-    return cond;
+    return new Condition(ConditionType.pure_sql,sql,"","",null,"");
   }
 
   protected ISqlExecuter where(String sql){
@@ -329,15 +322,9 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
     if(1==values.length){
       return where(column,values[0]);
     }
-    Condition cond = new Condition();
-    cond.setColumn(column);
-    cond.setStart(" IN(");
     Bean param = new Bean();
-    cond.setPlaceholder(buildSqlIn(column,param,values));
-    cond.setEnd(")");
-    cond.setValue(param);
-    cond.setType(ConditionType.multi_params);
-    wheres.add(cond);
+    String placeholder = buildSqlIn(column,param,values);
+    wheres.add(new Condition(ConditionType.multi_params,column," IN(",placeholder,param,")"));
     return this;
   }
 
@@ -350,15 +337,9 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
         return where(column+" != :"+column,new Bean(column,v));
       }
     }
-    Condition cond = new Condition();
-    cond.setColumn(column);
-    cond.setStart(" NOT IN(");
     Bean param = new Bean();
-    cond.setPlaceholder(buildSqlIn(column,param,values));
-    cond.setEnd(")");
-    cond.setValue(param);
-    cond.setType(ConditionType.multi_params);
-    wheres.add(cond);
+    String placeholder = buildSqlIn(column,param,values);
+    wheres.add(new Condition(ConditionType.multi_params,column," NOT IN(",placeholder,param,")"));
     return this;
   }
 
@@ -506,6 +487,35 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
     return s.toString();
   }
 
+  protected PreparedStatement prepareStatement(SqlConnection conn) throws SQLException {
+    return prepareStatement(conn,false);
+  }
+
+  protected PreparedStatement prepareStatement(SqlConnection conn, boolean generatedKeys) throws SQLException {
+    PreparedStatement stmt = null;
+    if(!conn.isInBatch()){
+      if(!generatedKeys) {
+        stmt = conn.getConnection().prepareStatement(sql);
+      }else{
+        stmt = conn.getConnection().prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+      }
+    }else{
+      stmt = conn.getStatement();
+      if(null!=stmt){
+        stmt.clearParameters();
+        if(!sql.equals(conn.getSql())){
+          throw new DaoException(App.getProperty("nlf.exception.dao.batch_sql_not_match"));
+        }
+      }else{
+        stmt = conn.getConnection().prepareStatement(sql);
+        conn.setStatement(stmt);
+        conn.setSql(sql);
+      }
+    }
+    bindParams(stmt);
+    return stmt;
+  }
+
   protected int executeUpdate(){
     params.clear();
     sql = buildSql();
@@ -513,17 +523,8 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
     PreparedStatement stmt = null;
     SqlConnection conn = null;
     try{
-      conn = ((SqlConnection)connection);
-      if(conn.isInBatch()){
-        stmt = conn.getStatement();
-        if(null==stmt){
-          stmt = conn.getConnection().prepareStatement(sql);
-          conn.setStatement(stmt);
-        }
-      }else{
-        stmt = conn.getConnection().prepareStatement(sql);
-      }
-      bindParams(stmt);
+      conn = (SqlConnection)connection;
+      stmt = prepareStatement(conn);
       if(conn.isInBatch()){
         stmt.addBatch();
         return -1;
@@ -546,17 +547,8 @@ public abstract class AbstractSqlExecuter extends AbstractDaoExecuter implements
     PreparedStatement stmt = null;
     SqlConnection conn = null;
     try{
-      conn = ((SqlConnection)connection);
-      if(conn.isInBatch()){
-        stmt = conn.getStatement();
-        if(null==stmt){
-          stmt = conn.getConnection().prepareStatement(sql);
-          conn.setStatement(stmt);
-        }
-      }else{
-        stmt = conn.getConnection().prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
-      }
-      bindParams(stmt);
+      conn = (SqlConnection)connection;
+      stmt = prepareStatement(conn,true);
       if(conn.isInBatch()){
         stmt.addBatch();
       }else {
