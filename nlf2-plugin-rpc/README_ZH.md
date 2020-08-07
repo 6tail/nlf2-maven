@@ -20,13 +20,13 @@
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-core</artifactId>
-  <version>1.8.96</version>
+  <version>1.8.98</version>
 </dependency>
  
 <dependency>
   <groupId>cn.6tail</groupId>
   <artifactId>nlf2-plugin-rpc</artifactId>
-  <version>1.8.96</version>
+  <version>1.8.97</version>
 </dependency>
 ```
  
@@ -110,6 +110,29 @@ public class Say{
     return View.json("Hello world!");
   }
   
+}
+```
+
+```java
+package test;
+ 
+import com.nlf.extend.rpc.RpcFactory;
+import com.nlf.extend.rpc.client.IRpcResponse;
+ 
+/**
+ * 客户端调用
+ */
+public class Client{
+   
+  public static void main(String[] args) {
+    IRpcResponse response = RpcFactory.getClient("http").call("localhost", 8080, "/test.Say/hello", null, null);
+    if(response.isSuccess()){
+      System.out.println(response.getData());
+    }else{
+      System.out.println(response.getMessage());
+    }
+  }
+   
 }
 ```
 
