@@ -2,7 +2,7 @@ package com.nlf.extend.dao.sql;
 
 /**
  * 条件
- * 
+ *
  * @author 6tail
  *
  */
@@ -19,6 +19,17 @@ public class Condition{
   private Object value;
   /** 操作结束 */
   private String end = "";
+
+  public Condition(){}
+
+  public Condition(ConditionType type, String column, String start, String placeholder, Object value, String end) {
+    this.type = type;
+    this.column = column;
+    this.start = start;
+    this.placeholder = placeholder;
+    this.value = value;
+    this.end = end;
+  }
 
   public ConditionType getType(){
     return type;

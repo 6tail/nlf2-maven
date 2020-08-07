@@ -1,15 +1,16 @@
 package com.nlf.extend.dao.sql;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import com.nlf.dao.connection.AbstractConnection;
 import com.nlf.dao.exception.DaoException;
 import com.nlf.util.IOUtil;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 /**
  * SQL连接
- * 
+ *
  * @author 6tail
  *
  */
@@ -18,6 +19,8 @@ public class SqlConnection extends AbstractConnection{
   protected boolean inBatch;
   /** 最近一次操作的statement */
   protected PreparedStatement statement;
+  /** 最近一次操作的SQL */
+  protected String sql;
   /** 实际的连接 */
   protected Connection connection;
 
@@ -30,7 +33,7 @@ public class SqlConnection extends AbstractConnection{
 
   /**
    * 获取实际的连接
-   * 
+   *
    * @return 实际的连接
    */
   public Connection getConnection(){
@@ -63,5 +66,13 @@ public class SqlConnection extends AbstractConnection{
 
   public void setStatement(PreparedStatement statement){
     this.statement = statement;
+  }
+
+  public String getSql() {
+    return sql;
+  }
+
+  public void setSql(String sql) {
+    this.sql = sql;
   }
 }
