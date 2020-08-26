@@ -44,6 +44,23 @@ public class SqlTransaction extends AbstractTransaction{
     conn.setInBatch(true);
   }
 
+  public void cancelBatch(){
+    SqlConnection conn = (SqlConnection)connection;
+    if(!conn.isInBatch()){
+      return;
+    }
+    PreparedStatement stmt = conn.getStatement();
+    try{
+      if(null!=stmt){
+        stmt.clearBatch();
+      }
+    }catch(SQLException ignore){
+    }finally{
+      IOUtil.closeQuietly(stmt);
+      conn.setInBatch(false);
+    }
+  }
+
   public int[] executeBatch(){
     SqlConnection conn = (SqlConnection)connection;
     if(!conn.isInBatch()){
@@ -55,11 +72,11 @@ public class SqlTransaction extends AbstractTransaction{
       if(null!=stmt) {
         n = stmt.executeBatch();
       }
-      conn.setInBatch(false);
     }catch(SQLException e){
       throw new DaoException(e);
     }finally{
       IOUtil.closeQuietly(stmt);
+      conn.setInBatch(false);
     }
     return n;
   }
