@@ -5,12 +5,12 @@
     <parent>
         <artifactId>nlf2</artifactId>
         <groupId>cn.6tail</groupId>
-        <version>1.8.9</version>
+        <version>1.8.9-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>nlf2-plugin-rpc</artifactId>
-    <version>1.8.98</version>
+    <version>1.8.9-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>cn.6tail</groupId>
             <artifactId>nlf2-core</artifactId>
-            <version>1.8.97</version>
+            <version>1.8.9-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
