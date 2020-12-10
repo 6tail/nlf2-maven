@@ -1,20 +1,5 @@
 package com.nlf.core.impl;
 
-import static com.nlf.App.CLASS;
-import static com.nlf.App.I18N;
-import static com.nlf.App.I18N_RESOURCE;
-import static com.nlf.App.INTERFACE_IMPLEMENTS;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import com.nlf.App;
 import com.nlf.bytecode.ByteCodeReader;
 import com.nlf.core.AbstractScanner;
@@ -27,6 +12,20 @@ import com.nlf.resource.klass.comparator.ClassComparator;
 import com.nlf.resource.klass.filter.JarFileFilter;
 import com.nlf.util.IOUtil;
 import com.nlf.util.StringUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import static com.nlf.App.*;
 
 /**
  * 默认扫描器
@@ -265,6 +264,10 @@ public class DefaultScanner extends AbstractScanner{
     }
   }
 
+  protected boolean isModuleInfo(String className) {
+    return "module-info".equals(className) || (className.contains(".") && ".module-info".equals(className.substring(className.lastIndexOf("."))));
+  }
+
   protected void scanClasses(File file,String root){
     if(file.isDirectory()){
       File[] fs = file.listFiles(resourceFilter);
@@ -281,6 +284,9 @@ public class DefaultScanner extends AbstractScanner{
     }
     if(fileName.endsWith(SUF_CLS)){
       String name = fileName.substring(0,fileName.lastIndexOf(".")).replace(File.separator,".");
+      if(isModuleInfo(name)){
+        return;
+      }
       ClassResource cr = new ClassResource();
       cr.setClassName(name);
       cr.setRoot(root);
@@ -363,6 +369,9 @@ public class DefaultScanner extends AbstractScanner{
         String fileName = entry.getName();
         if(fileName.endsWith(SUF_CLS)){
           String name = fileName.substring(0,fileName.lastIndexOf(".")).replace("/",".");
+          if(isModuleInfo(name)){
+            continue;
+          }
           ClassResource ci = new ClassResource();
           ci.setClassName(name);
           ci.setRoot(root);

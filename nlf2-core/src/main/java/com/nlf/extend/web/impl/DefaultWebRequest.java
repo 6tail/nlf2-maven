@@ -11,6 +11,7 @@ import com.nlf.extend.web.WebStatics;
 import com.nlf.log.Logger;
 import com.nlf.util.Strings;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -25,6 +26,15 @@ import java.util.List;
  *
  */
 public class DefaultWebRequest extends AbstractWebRequest{
+
+  @Override
+  public void setServletRequest(HttpServletRequest servletRequest){
+    if(servletRequest instanceof DefaultHttpServletRequest){
+      this.servletRequest = servletRequest;
+    }else {
+      this.servletRequest = new DefaultHttpServletRequest(servletRequest);
+    }
+  }
 
   protected String getIP(){
     String r = servletRequest.getRemoteAddr();

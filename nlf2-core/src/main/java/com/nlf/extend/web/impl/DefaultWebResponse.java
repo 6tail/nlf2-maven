@@ -1,12 +1,5 @@
 package com.nlf.extend.web.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URLEncoder;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import com.nlf.App;
 import com.nlf.Bean;
 import com.nlf.core.Statics;
@@ -18,9 +11,17 @@ import com.nlf.extend.web.view.StreamView;
 import com.nlf.util.ContentTypes;
 import com.nlf.util.IOUtil;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+
 /**
  * 默认WEB响应
- * 
+ *
  * @author 6tail
  *
  */
@@ -59,6 +60,9 @@ public class DefaultWebResponse extends AbstractWebResponse{
   public void sendPage(PageView v) throws IOException{
     IWebRequest request = App.get(Statics.REQUEST);
     HttpServletRequest req = request.getServletRequest();
+    if(req instanceof DefaultHttpServletRequest){
+      req = ((DefaultHttpServletRequest)req).getHttpServletRequest();
+    }
     Bean attrs = v.getAttributes();
     Bean param = request.getParam();
     for(String key:param.keySet()){

@@ -1,9 +1,6 @@
 package com.nlf.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * 输入流缓存，以便多次使用
@@ -12,26 +9,62 @@ import java.io.InputStream;
  *
  */
 public class InputStreamCache{
-  /** 缓存输出流 */
-  private ByteArrayOutputStream cachedStream;
-  private long size = 0;
+  /** 内存数据 */
+  private byte[] data;
+  /** 临时文件 */
+  private File tempFile;
+  /** 临时文件前缀 */
+  private static final String TMP_PREFIX = "___";
+  /** 临时文件后缀 */
+  private static final String TMP_SUFFIX = ".tmp";
 
   public InputStreamCache(InputStream inputStream) throws IOException{
     if(null==inputStream){
       return;
     }
-    cachedStream = new ByteArrayOutputStream();
+    boolean mem = true;
     byte[] buffer = new byte[IOUtil.BUFFER_SIZE];
     int l;
-    while(-1!=(l = inputStream.read(buffer))){
-      cachedStream.write(buffer,0,l);
-      size += l;
+    ByteArrayOutputStream byteOut = null;
+    try {
+      byteOut = new ByteArrayOutputStream();
+      while (-1 != (l = inputStream.read(buffer))) {
+        byteOut.write(buffer, 0, l);
+        byteOut.flush();
+        if (byteOut.size() > IOUtil.BUFFER_SIZE) {
+          mem = false;
+          break;
+        }
+      }
+    }finally {
+      IOUtil.closeQuietly(byteOut);
     }
-    cachedStream.flush();
+    if(mem){
+      data = byteOut.toByteArray();
+    }else{
+      BufferedOutputStream fileOut = null;
+      try {
+        tempFile = File.createTempFile(TMP_PREFIX, TMP_SUFFIX);
+        fileOut = new BufferedOutputStream(new FileOutputStream(tempFile));
+        fileOut.write(byteOut.toByteArray());
+        while (-1 != (l = inputStream.read(buffer))) {
+          fileOut.write(buffer, 0, l);
+        }
+        fileOut.flush();
+      }finally {
+        IOUtil.closeQuietly(fileOut);
+      }
+    }
   }
 
   public long getSize(){
-    return size;
+    if(null!=data){
+      return data.length;
+    }
+    if(null!=tempFile){
+      return tempFile.length();
+    }
+    return 0;
   }
 
   /**
@@ -39,10 +72,13 @@ public class InputStreamCache{
    *
    * @return 输入流
    */
-  public InputStream getInputStream(){
-    if(null==cachedStream){
-      return null;
+  public InputStream getInputStream() throws IOException {
+    if(null!=data){
+      return new ByteArrayInputStream(data);
     }
-    return new ByteArrayInputStream(cachedStream.toByteArray());
+    if(null!=tempFile){
+      return new FileInputStream(tempFile);
+    }
+    return null;
   }
 }
